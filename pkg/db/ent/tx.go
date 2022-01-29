@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// AppEmailTemplate is the client for interacting with the AppEmailTemplate builders.
 	AppEmailTemplate *AppEmailTemplateClient
+	// AppSMSTemplate is the client for interacting with the AppSMSTemplate builders.
+	AppSMSTemplate *AppSMSTemplateClient
 
 	// lazily loaded.
 	client     *Client
@@ -150,6 +152,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.AppEmailTemplate = NewAppEmailTemplateClient(tx.config)
+	tx.AppSMSTemplate = NewAppSMSTemplateClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

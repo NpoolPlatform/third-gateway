@@ -27,9 +27,26 @@ var (
 		Columns:    AppEmailTemplatesColumns,
 		PrimaryKey: []*schema.Column{AppEmailTemplatesColumns[0]},
 	}
+	// AppSmsTemplatesColumns holds the columns for the "app_sms_templates" table.
+	AppSmsTemplatesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "lang_id", Type: field.TypeUUID},
+		{Name: "subject", Type: field.TypeString},
+		{Name: "message", Type: field.TypeString},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+	}
+	// AppSmsTemplatesTable holds the schema information for the "app_sms_templates" table.
+	AppSmsTemplatesTable = &schema.Table{
+		Name:       "app_sms_templates",
+		Columns:    AppSmsTemplatesColumns,
+		PrimaryKey: []*schema.Column{AppSmsTemplatesColumns[0]},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppEmailTemplatesTable,
+		AppSmsTemplatesTable,
 	}
 )
 

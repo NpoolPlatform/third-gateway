@@ -4,6 +4,7 @@ package ent
 
 import (
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appsmstemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/schema"
 	"github.com/google/uuid"
 )
@@ -28,4 +29,20 @@ func init() {
 	appemailtemplateDescID := appemailtemplateFields[0].Descriptor()
 	// appemailtemplate.DefaultID holds the default value on creation for the id field.
 	appemailtemplate.DefaultID = appemailtemplateDescID.Default.(func() uuid.UUID)
+	appsmstemplateFields := schema.AppSMSTemplate{}.Fields()
+	_ = appsmstemplateFields
+	// appsmstemplateDescCreateAt is the schema descriptor for create_at field.
+	appsmstemplateDescCreateAt := appsmstemplateFields[5].Descriptor()
+	// appsmstemplate.DefaultCreateAt holds the default value on creation for the create_at field.
+	appsmstemplate.DefaultCreateAt = appsmstemplateDescCreateAt.Default.(func() uint32)
+	// appsmstemplateDescUpdateAt is the schema descriptor for update_at field.
+	appsmstemplateDescUpdateAt := appsmstemplateFields[6].Descriptor()
+	// appsmstemplate.DefaultUpdateAt holds the default value on creation for the update_at field.
+	appsmstemplate.DefaultUpdateAt = appsmstemplateDescUpdateAt.Default.(func() uint32)
+	// appsmstemplate.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	appsmstemplate.UpdateDefaultUpdateAt = appsmstemplateDescUpdateAt.UpdateDefault.(func() uint32)
+	// appsmstemplateDescID is the schema descriptor for id field.
+	appsmstemplateDescID := appsmstemplateFields[0].Descriptor()
+	// appsmstemplate.DefaultID holds the default value on creation for the id field.
+	appsmstemplate.DefaultID = appsmstemplateDescID.Default.(func() uuid.UUID)
 }

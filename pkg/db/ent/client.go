@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appsmstemplate"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -23,6 +24,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// AppEmailTemplate is the client for interacting with the AppEmailTemplate builders.
 	AppEmailTemplate *AppEmailTemplateClient
+	// AppSMSTemplate is the client for interacting with the AppSMSTemplate builders.
+	AppSMSTemplate *AppSMSTemplateClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -37,6 +40,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.AppEmailTemplate = NewAppEmailTemplateClient(c.config)
+	c.AppSMSTemplate = NewAppSMSTemplateClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -71,6 +75,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:              ctx,
 		config:           cfg,
 		AppEmailTemplate: NewAppEmailTemplateClient(cfg),
+		AppSMSTemplate:   NewAppSMSTemplateClient(cfg),
 	}, nil
 }
 
@@ -91,6 +96,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ctx:              ctx,
 		config:           cfg,
 		AppEmailTemplate: NewAppEmailTemplateClient(cfg),
+		AppSMSTemplate:   NewAppSMSTemplateClient(cfg),
 	}, nil
 }
 
@@ -121,6 +127,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.AppEmailTemplate.Use(hooks...)
+	c.AppSMSTemplate.Use(hooks...)
 }
 
 // AppEmailTemplateClient is a client for the AppEmailTemplate schema.
@@ -211,4 +218,94 @@ func (c *AppEmailTemplateClient) GetX(ctx context.Context, id uuid.UUID) *AppEma
 // Hooks returns the client hooks.
 func (c *AppEmailTemplateClient) Hooks() []Hook {
 	return c.hooks.AppEmailTemplate
+}
+
+// AppSMSTemplateClient is a client for the AppSMSTemplate schema.
+type AppSMSTemplateClient struct {
+	config
+}
+
+// NewAppSMSTemplateClient returns a client for the AppSMSTemplate from the given config.
+func NewAppSMSTemplateClient(c config) *AppSMSTemplateClient {
+	return &AppSMSTemplateClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appsmstemplate.Hooks(f(g(h())))`.
+func (c *AppSMSTemplateClient) Use(hooks ...Hook) {
+	c.hooks.AppSMSTemplate = append(c.hooks.AppSMSTemplate, hooks...)
+}
+
+// Create returns a create builder for AppSMSTemplate.
+func (c *AppSMSTemplateClient) Create() *AppSMSTemplateCreate {
+	mutation := newAppSMSTemplateMutation(c.config, OpCreate)
+	return &AppSMSTemplateCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppSMSTemplate entities.
+func (c *AppSMSTemplateClient) CreateBulk(builders ...*AppSMSTemplateCreate) *AppSMSTemplateCreateBulk {
+	return &AppSMSTemplateCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppSMSTemplate.
+func (c *AppSMSTemplateClient) Update() *AppSMSTemplateUpdate {
+	mutation := newAppSMSTemplateMutation(c.config, OpUpdate)
+	return &AppSMSTemplateUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppSMSTemplateClient) UpdateOne(ast *AppSMSTemplate) *AppSMSTemplateUpdateOne {
+	mutation := newAppSMSTemplateMutation(c.config, OpUpdateOne, withAppSMSTemplate(ast))
+	return &AppSMSTemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppSMSTemplateClient) UpdateOneID(id uuid.UUID) *AppSMSTemplateUpdateOne {
+	mutation := newAppSMSTemplateMutation(c.config, OpUpdateOne, withAppSMSTemplateID(id))
+	return &AppSMSTemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppSMSTemplate.
+func (c *AppSMSTemplateClient) Delete() *AppSMSTemplateDelete {
+	mutation := newAppSMSTemplateMutation(c.config, OpDelete)
+	return &AppSMSTemplateDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *AppSMSTemplateClient) DeleteOne(ast *AppSMSTemplate) *AppSMSTemplateDeleteOne {
+	return c.DeleteOneID(ast.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *AppSMSTemplateClient) DeleteOneID(id uuid.UUID) *AppSMSTemplateDeleteOne {
+	builder := c.Delete().Where(appsmstemplate.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppSMSTemplateDeleteOne{builder}
+}
+
+// Query returns a query builder for AppSMSTemplate.
+func (c *AppSMSTemplateClient) Query() *AppSMSTemplateQuery {
+	return &AppSMSTemplateQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppSMSTemplate entity by its id.
+func (c *AppSMSTemplateClient) Get(ctx context.Context, id uuid.UUID) (*AppSMSTemplate, error) {
+	return c.Query().Where(appsmstemplate.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppSMSTemplateClient) GetX(ctx context.Context, id uuid.UUID) *AppSMSTemplate {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppSMSTemplateClient) Hooks() []Hook {
+	return c.hooks.AppSMSTemplate
 }

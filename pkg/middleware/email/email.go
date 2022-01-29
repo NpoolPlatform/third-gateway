@@ -30,6 +30,9 @@ func SendCode(ctx context.Context, in *npool.SendEmailCodeRequest) (*npool.SendE
 		return nil, xerrors.Errorf("fail create code cache: %v", err)
 	}
 
+	// TODO: get email template
+	// TODO: send email
+
 	return nil, nil
 }
 

@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appsmstemplate"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -30,6 +31,7 @@ type OrderFunc func(*sql.Selector)
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
 		appemailtemplate.Table: appemailtemplate.ValidColumn,
+		appsmstemplate.Table:   appsmstemplate.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {
