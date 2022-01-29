@@ -22,9 +22,10 @@ func (AppEmailTemplate) Fields() []ent.Field {
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("lang_id", uuid.UUID{}),
+		field.String("used_for"),
 		field.String("sender"),
-		field.String("reply_to"),
-		field.String("cc_to"),
+		field.JSON("reply_to", []string{}),
+		field.JSON("cc_to", []string{}),
 		field.String("subject"),
 		field.String("body"),
 		field.Uint32("create_at").

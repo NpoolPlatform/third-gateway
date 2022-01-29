@@ -22,6 +22,7 @@ func (AppSMSTemplate) Fields() []ent.Field {
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.UUID("lang_id", uuid.UUID{}),
+		field.String("used_for"),
 		field.String("subject"),
 		field.String("message"),
 		field.Uint32("create_at").
