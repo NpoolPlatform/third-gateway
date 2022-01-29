@@ -72,7 +72,7 @@ func (auetd *AppUserEmailTemplateDelete) sqlExec(ctx context.Context) (int, erro
 		Node: &sqlgraph.NodeSpec{
 			Table: appuseremailtemplate.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: appuseremailtemplate.FieldID,
 			},
 		},

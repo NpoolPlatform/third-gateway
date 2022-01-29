@@ -10,7 +10,14 @@ import (
 var (
 	// AppEmailTemplatesColumns holds the columns for the "app_email_templates" table.
 	AppEmailTemplatesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "lang_id", Type: field.TypeUUID},
+		{Name: "subject", Type: field.TypeString},
+		{Name: "body", Type: field.TypeString},
+		{Name: "sender", Type: field.TypeString},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
 	}
 	// AppEmailTemplatesTable holds the schema information for the "app_email_templates" table.
 	AppEmailTemplatesTable = &schema.Table{
@@ -20,7 +27,15 @@ var (
 	}
 	// AppUserEmailTemplatesColumns holds the columns for the "app_user_email_templates" table.
 	AppUserEmailTemplatesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "lang_id", Type: field.TypeUUID},
+		{Name: "subject", Type: field.TypeString},
+		{Name: "body", Type: field.TypeString},
+		{Name: "sender", Type: field.TypeString},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
 	}
 	// AppUserEmailTemplatesTable holds the schema information for the "app_user_email_templates" table.
 	AppUserEmailTemplatesTable = &schema.Table{

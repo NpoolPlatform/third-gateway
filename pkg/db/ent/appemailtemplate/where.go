@@ -5,31 +5,32 @@ package appemailtemplate
 import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.AppEmailTemplate {
+func ID(id uuid.UUID) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.AppEmailTemplate {
+func IDEQ(id uuid.UUID) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.AppEmailTemplate {
+func IDNEQ(id uuid.UUID) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldID), id))
 	})
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.AppEmailTemplate {
+func IDIn(ids ...uuid.UUID) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
@@ -46,7 +47,7 @@ func IDIn(ids ...int) predicate.AppEmailTemplate {
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.AppEmailTemplate {
+func IDNotIn(ids ...uuid.UUID) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
@@ -63,30 +64,716 @@ func IDNotIn(ids ...int) predicate.AppEmailTemplate {
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.AppEmailTemplate {
+func IDGT(id uuid.UUID) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldID), id))
 	})
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.AppEmailTemplate {
+func IDGTE(id uuid.UUID) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldID), id))
 	})
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.AppEmailTemplate {
+func IDLT(id uuid.UUID) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldID), id))
 	})
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.AppEmailTemplate {
+func IDLTE(id uuid.UUID) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
+	})
+}
+
+// AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
+func AppID(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppID), v))
+	})
+}
+
+// LangID applies equality check predicate on the "lang_id" field. It's identical to LangIDEQ.
+func LangID(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLangID), v))
+	})
+}
+
+// Subject applies equality check predicate on the "subject" field. It's identical to SubjectEQ.
+func Subject(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSubject), v))
+	})
+}
+
+// Body applies equality check predicate on the "body" field. It's identical to BodyEQ.
+func Body(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldBody), v))
+	})
+}
+
+// Sender applies equality check predicate on the "sender" field. It's identical to SenderEQ.
+func Sender(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSender), v))
+	})
+}
+
+// CreateAt applies equality check predicate on the "create_at" field. It's identical to CreateAtEQ.
+func CreateAt(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreateAt), v))
+	})
+}
+
+// UpdateAt applies equality check predicate on the "update_at" field. It's identical to UpdateAtEQ.
+func UpdateAt(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUpdateAt), v))
+	})
+}
+
+// AppIDEQ applies the EQ predicate on the "app_id" field.
+func AppIDEQ(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDNEQ applies the NEQ predicate on the "app_id" field.
+func AppIDNEQ(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDIn applies the In predicate on the "app_id" field.
+func AppIDIn(vs ...uuid.UUID) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldAppID), v...))
+	})
+}
+
+// AppIDNotIn applies the NotIn predicate on the "app_id" field.
+func AppIDNotIn(vs ...uuid.UUID) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldAppID), v...))
+	})
+}
+
+// AppIDGT applies the GT predicate on the "app_id" field.
+func AppIDGT(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDGTE applies the GTE predicate on the "app_id" field.
+func AppIDGTE(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDLT applies the LT predicate on the "app_id" field.
+func AppIDLT(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAppID), v))
+	})
+}
+
+// AppIDLTE applies the LTE predicate on the "app_id" field.
+func AppIDLTE(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAppID), v))
+	})
+}
+
+// LangIDEQ applies the EQ predicate on the "lang_id" field.
+func LangIDEQ(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLangID), v))
+	})
+}
+
+// LangIDNEQ applies the NEQ predicate on the "lang_id" field.
+func LangIDNEQ(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldLangID), v))
+	})
+}
+
+// LangIDIn applies the In predicate on the "lang_id" field.
+func LangIDIn(vs ...uuid.UUID) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldLangID), v...))
+	})
+}
+
+// LangIDNotIn applies the NotIn predicate on the "lang_id" field.
+func LangIDNotIn(vs ...uuid.UUID) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldLangID), v...))
+	})
+}
+
+// LangIDGT applies the GT predicate on the "lang_id" field.
+func LangIDGT(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldLangID), v))
+	})
+}
+
+// LangIDGTE applies the GTE predicate on the "lang_id" field.
+func LangIDGTE(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldLangID), v))
+	})
+}
+
+// LangIDLT applies the LT predicate on the "lang_id" field.
+func LangIDLT(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldLangID), v))
+	})
+}
+
+// LangIDLTE applies the LTE predicate on the "lang_id" field.
+func LangIDLTE(v uuid.UUID) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldLangID), v))
+	})
+}
+
+// SubjectEQ applies the EQ predicate on the "subject" field.
+func SubjectEQ(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSubject), v))
+	})
+}
+
+// SubjectNEQ applies the NEQ predicate on the "subject" field.
+func SubjectNEQ(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSubject), v))
+	})
+}
+
+// SubjectIn applies the In predicate on the "subject" field.
+func SubjectIn(vs ...string) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldSubject), v...))
+	})
+}
+
+// SubjectNotIn applies the NotIn predicate on the "subject" field.
+func SubjectNotIn(vs ...string) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldSubject), v...))
+	})
+}
+
+// SubjectGT applies the GT predicate on the "subject" field.
+func SubjectGT(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldSubject), v))
+	})
+}
+
+// SubjectGTE applies the GTE predicate on the "subject" field.
+func SubjectGTE(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldSubject), v))
+	})
+}
+
+// SubjectLT applies the LT predicate on the "subject" field.
+func SubjectLT(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldSubject), v))
+	})
+}
+
+// SubjectLTE applies the LTE predicate on the "subject" field.
+func SubjectLTE(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldSubject), v))
+	})
+}
+
+// SubjectContains applies the Contains predicate on the "subject" field.
+func SubjectContains(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldSubject), v))
+	})
+}
+
+// SubjectHasPrefix applies the HasPrefix predicate on the "subject" field.
+func SubjectHasPrefix(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldSubject), v))
+	})
+}
+
+// SubjectHasSuffix applies the HasSuffix predicate on the "subject" field.
+func SubjectHasSuffix(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldSubject), v))
+	})
+}
+
+// SubjectEqualFold applies the EqualFold predicate on the "subject" field.
+func SubjectEqualFold(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldSubject), v))
+	})
+}
+
+// SubjectContainsFold applies the ContainsFold predicate on the "subject" field.
+func SubjectContainsFold(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldSubject), v))
+	})
+}
+
+// BodyEQ applies the EQ predicate on the "body" field.
+func BodyEQ(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldBody), v))
+	})
+}
+
+// BodyNEQ applies the NEQ predicate on the "body" field.
+func BodyNEQ(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldBody), v))
+	})
+}
+
+// BodyIn applies the In predicate on the "body" field.
+func BodyIn(vs ...string) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldBody), v...))
+	})
+}
+
+// BodyNotIn applies the NotIn predicate on the "body" field.
+func BodyNotIn(vs ...string) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldBody), v...))
+	})
+}
+
+// BodyGT applies the GT predicate on the "body" field.
+func BodyGT(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldBody), v))
+	})
+}
+
+// BodyGTE applies the GTE predicate on the "body" field.
+func BodyGTE(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldBody), v))
+	})
+}
+
+// BodyLT applies the LT predicate on the "body" field.
+func BodyLT(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldBody), v))
+	})
+}
+
+// BodyLTE applies the LTE predicate on the "body" field.
+func BodyLTE(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldBody), v))
+	})
+}
+
+// BodyContains applies the Contains predicate on the "body" field.
+func BodyContains(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldBody), v))
+	})
+}
+
+// BodyHasPrefix applies the HasPrefix predicate on the "body" field.
+func BodyHasPrefix(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldBody), v))
+	})
+}
+
+// BodyHasSuffix applies the HasSuffix predicate on the "body" field.
+func BodyHasSuffix(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldBody), v))
+	})
+}
+
+// BodyEqualFold applies the EqualFold predicate on the "body" field.
+func BodyEqualFold(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldBody), v))
+	})
+}
+
+// BodyContainsFold applies the ContainsFold predicate on the "body" field.
+func BodyContainsFold(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldBody), v))
+	})
+}
+
+// SenderEQ applies the EQ predicate on the "sender" field.
+func SenderEQ(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSender), v))
+	})
+}
+
+// SenderNEQ applies the NEQ predicate on the "sender" field.
+func SenderNEQ(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSender), v))
+	})
+}
+
+// SenderIn applies the In predicate on the "sender" field.
+func SenderIn(vs ...string) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldSender), v...))
+	})
+}
+
+// SenderNotIn applies the NotIn predicate on the "sender" field.
+func SenderNotIn(vs ...string) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldSender), v...))
+	})
+}
+
+// SenderGT applies the GT predicate on the "sender" field.
+func SenderGT(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldSender), v))
+	})
+}
+
+// SenderGTE applies the GTE predicate on the "sender" field.
+func SenderGTE(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldSender), v))
+	})
+}
+
+// SenderLT applies the LT predicate on the "sender" field.
+func SenderLT(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldSender), v))
+	})
+}
+
+// SenderLTE applies the LTE predicate on the "sender" field.
+func SenderLTE(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldSender), v))
+	})
+}
+
+// SenderContains applies the Contains predicate on the "sender" field.
+func SenderContains(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldSender), v))
+	})
+}
+
+// SenderHasPrefix applies the HasPrefix predicate on the "sender" field.
+func SenderHasPrefix(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldSender), v))
+	})
+}
+
+// SenderHasSuffix applies the HasSuffix predicate on the "sender" field.
+func SenderHasSuffix(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldSender), v))
+	})
+}
+
+// SenderEqualFold applies the EqualFold predicate on the "sender" field.
+func SenderEqualFold(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldSender), v))
+	})
+}
+
+// SenderContainsFold applies the ContainsFold predicate on the "sender" field.
+func SenderContainsFold(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldSender), v))
+	})
+}
+
+// CreateAtEQ applies the EQ predicate on the "create_at" field.
+func CreateAtEQ(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreateAt), v))
+	})
+}
+
+// CreateAtNEQ applies the NEQ predicate on the "create_at" field.
+func CreateAtNEQ(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCreateAt), v))
+	})
+}
+
+// CreateAtIn applies the In predicate on the "create_at" field.
+func CreateAtIn(vs ...uint32) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldCreateAt), v...))
+	})
+}
+
+// CreateAtNotIn applies the NotIn predicate on the "create_at" field.
+func CreateAtNotIn(vs ...uint32) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldCreateAt), v...))
+	})
+}
+
+// CreateAtGT applies the GT predicate on the "create_at" field.
+func CreateAtGT(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCreateAt), v))
+	})
+}
+
+// CreateAtGTE applies the GTE predicate on the "create_at" field.
+func CreateAtGTE(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCreateAt), v))
+	})
+}
+
+// CreateAtLT applies the LT predicate on the "create_at" field.
+func CreateAtLT(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCreateAt), v))
+	})
+}
+
+// CreateAtLTE applies the LTE predicate on the "create_at" field.
+func CreateAtLTE(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCreateAt), v))
+	})
+}
+
+// UpdateAtEQ applies the EQ predicate on the "update_at" field.
+func UpdateAtEQ(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUpdateAt), v))
+	})
+}
+
+// UpdateAtNEQ applies the NEQ predicate on the "update_at" field.
+func UpdateAtNEQ(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUpdateAt), v))
+	})
+}
+
+// UpdateAtIn applies the In predicate on the "update_at" field.
+func UpdateAtIn(vs ...uint32) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUpdateAt), v...))
+	})
+}
+
+// UpdateAtNotIn applies the NotIn predicate on the "update_at" field.
+func UpdateAtNotIn(vs ...uint32) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUpdateAt), v...))
+	})
+}
+
+// UpdateAtGT applies the GT predicate on the "update_at" field.
+func UpdateAtGT(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUpdateAt), v))
+	})
+}
+
+// UpdateAtGTE applies the GTE predicate on the "update_at" field.
+func UpdateAtGTE(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUpdateAt), v))
+	})
+}
+
+// UpdateAtLT applies the LT predicate on the "update_at" field.
+func UpdateAtLT(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUpdateAt), v))
+	})
+}
+
+// UpdateAtLTE applies the LTE predicate on the "update_at" field.
+func UpdateAtLTE(v uint32) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUpdateAt), v))
 	})
 }
 

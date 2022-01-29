@@ -8,13 +8,28 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
+	"github.com/google/uuid"
 )
 
 // AppEmailTemplate is the model entity for the AppEmailTemplate schema.
 type AppEmailTemplate struct {
-	config
+	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID uuid.UUID `json:"id,omitempty"`
+	// AppID holds the value of the "app_id" field.
+	AppID uuid.UUID `json:"app_id,omitempty"`
+	// LangID holds the value of the "lang_id" field.
+	LangID uuid.UUID `json:"lang_id,omitempty"`
+	// Subject holds the value of the "subject" field.
+	Subject string `json:"subject,omitempty"`
+	// Body holds the value of the "body" field.
+	Body string `json:"body,omitempty"`
+	// Sender holds the value of the "sender" field.
+	Sender string `json:"sender,omitempty"`
+	// CreateAt holds the value of the "create_at" field.
+	CreateAt uint32 `json:"create_at,omitempty"`
+	// UpdateAt holds the value of the "update_at" field.
+	UpdateAt uint32 `json:"update_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -22,8 +37,12 @@ func (*AppEmailTemplate) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case appemailtemplate.FieldID:
+		case appemailtemplate.FieldCreateAt, appemailtemplate.FieldUpdateAt:
 			values[i] = new(sql.NullInt64)
+		case appemailtemplate.FieldSubject, appemailtemplate.FieldBody, appemailtemplate.FieldSender:
+			values[i] = new(sql.NullString)
+		case appemailtemplate.FieldID, appemailtemplate.FieldAppID, appemailtemplate.FieldLangID:
+			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AppEmailTemplate", columns[i])
 		}
@@ -40,11 +59,53 @@ func (aet *AppEmailTemplate) assignValues(columns []string, values []interface{}
 	for i := range columns {
 		switch columns[i] {
 		case appemailtemplate.FieldID:
-			value, ok := values[i].(*sql.NullInt64)
-			if !ok {
-				return fmt.Errorf("unexpected type %T for field id", value)
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field id", values[i])
+			} else if value != nil {
+				aet.ID = *value
 			}
-			aet.ID = int(value.Int64)
+		case appemailtemplate.FieldAppID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field app_id", values[i])
+			} else if value != nil {
+				aet.AppID = *value
+			}
+		case appemailtemplate.FieldLangID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field lang_id", values[i])
+			} else if value != nil {
+				aet.LangID = *value
+			}
+		case appemailtemplate.FieldSubject:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field subject", values[i])
+			} else if value.Valid {
+				aet.Subject = value.String
+			}
+		case appemailtemplate.FieldBody:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field body", values[i])
+			} else if value.Valid {
+				aet.Body = value.String
+			}
+		case appemailtemplate.FieldSender:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field sender", values[i])
+			} else if value.Valid {
+				aet.Sender = value.String
+			}
+		case appemailtemplate.FieldCreateAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field create_at", values[i])
+			} else if value.Valid {
+				aet.CreateAt = uint32(value.Int64)
+			}
+		case appemailtemplate.FieldUpdateAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field update_at", values[i])
+			} else if value.Valid {
+				aet.UpdateAt = uint32(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -73,6 +134,20 @@ func (aet *AppEmailTemplate) String() string {
 	var builder strings.Builder
 	builder.WriteString("AppEmailTemplate(")
 	builder.WriteString(fmt.Sprintf("id=%v", aet.ID))
+	builder.WriteString(", app_id=")
+	builder.WriteString(fmt.Sprintf("%v", aet.AppID))
+	builder.WriteString(", lang_id=")
+	builder.WriteString(fmt.Sprintf("%v", aet.LangID))
+	builder.WriteString(", subject=")
+	builder.WriteString(aet.Subject)
+	builder.WriteString(", body=")
+	builder.WriteString(aet.Body)
+	builder.WriteString(", sender=")
+	builder.WriteString(aet.Sender)
+	builder.WriteString(", create_at=")
+	builder.WriteString(fmt.Sprintf("%v", aet.CreateAt))
+	builder.WriteString(", update_at=")
+	builder.WriteString(fmt.Sprintf("%v", aet.UpdateAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

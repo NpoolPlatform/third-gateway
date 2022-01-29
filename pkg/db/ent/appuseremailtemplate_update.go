@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appuseremailtemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // AppUserEmailTemplateUpdate is the builder for updating AppUserEmailTemplate entities.
@@ -27,6 +28,76 @@ func (auetu *AppUserEmailTemplateUpdate) Where(ps ...predicate.AppUserEmailTempl
 	return auetu
 }
 
+// SetAppID sets the "app_id" field.
+func (auetu *AppUserEmailTemplateUpdate) SetAppID(u uuid.UUID) *AppUserEmailTemplateUpdate {
+	auetu.mutation.SetAppID(u)
+	return auetu
+}
+
+// SetUserID sets the "user_id" field.
+func (auetu *AppUserEmailTemplateUpdate) SetUserID(u uuid.UUID) *AppUserEmailTemplateUpdate {
+	auetu.mutation.SetUserID(u)
+	return auetu
+}
+
+// SetLangID sets the "lang_id" field.
+func (auetu *AppUserEmailTemplateUpdate) SetLangID(u uuid.UUID) *AppUserEmailTemplateUpdate {
+	auetu.mutation.SetLangID(u)
+	return auetu
+}
+
+// SetSubject sets the "subject" field.
+func (auetu *AppUserEmailTemplateUpdate) SetSubject(s string) *AppUserEmailTemplateUpdate {
+	auetu.mutation.SetSubject(s)
+	return auetu
+}
+
+// SetBody sets the "body" field.
+func (auetu *AppUserEmailTemplateUpdate) SetBody(s string) *AppUserEmailTemplateUpdate {
+	auetu.mutation.SetBody(s)
+	return auetu
+}
+
+// SetSender sets the "sender" field.
+func (auetu *AppUserEmailTemplateUpdate) SetSender(s string) *AppUserEmailTemplateUpdate {
+	auetu.mutation.SetSender(s)
+	return auetu
+}
+
+// SetCreateAt sets the "create_at" field.
+func (auetu *AppUserEmailTemplateUpdate) SetCreateAt(u uint32) *AppUserEmailTemplateUpdate {
+	auetu.mutation.ResetCreateAt()
+	auetu.mutation.SetCreateAt(u)
+	return auetu
+}
+
+// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
+func (auetu *AppUserEmailTemplateUpdate) SetNillableCreateAt(u *uint32) *AppUserEmailTemplateUpdate {
+	if u != nil {
+		auetu.SetCreateAt(*u)
+	}
+	return auetu
+}
+
+// AddCreateAt adds u to the "create_at" field.
+func (auetu *AppUserEmailTemplateUpdate) AddCreateAt(u int32) *AppUserEmailTemplateUpdate {
+	auetu.mutation.AddCreateAt(u)
+	return auetu
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (auetu *AppUserEmailTemplateUpdate) SetUpdateAt(u uint32) *AppUserEmailTemplateUpdate {
+	auetu.mutation.ResetUpdateAt()
+	auetu.mutation.SetUpdateAt(u)
+	return auetu
+}
+
+// AddUpdateAt adds u to the "update_at" field.
+func (auetu *AppUserEmailTemplateUpdate) AddUpdateAt(u int32) *AppUserEmailTemplateUpdate {
+	auetu.mutation.AddUpdateAt(u)
+	return auetu
+}
+
 // Mutation returns the AppUserEmailTemplateMutation object of the builder.
 func (auetu *AppUserEmailTemplateUpdate) Mutation() *AppUserEmailTemplateMutation {
 	return auetu.mutation
@@ -38,6 +109,7 @@ func (auetu *AppUserEmailTemplateUpdate) Save(ctx context.Context) (int, error) 
 		err      error
 		affected int
 	)
+	auetu.defaults()
 	if len(auetu.hooks) == 0 {
 		affected, err = auetu.sqlSave(ctx)
 	} else {
@@ -86,13 +158,21 @@ func (auetu *AppUserEmailTemplateUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (auetu *AppUserEmailTemplateUpdate) defaults() {
+	if _, ok := auetu.mutation.UpdateAt(); !ok {
+		v := appuseremailtemplate.UpdateDefaultUpdateAt()
+		auetu.mutation.SetUpdateAt(v)
+	}
+}
+
 func (auetu *AppUserEmailTemplateUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   appuseremailtemplate.Table,
 			Columns: appuseremailtemplate.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: appuseremailtemplate.FieldID,
 			},
 		},
@@ -103,6 +183,76 @@ func (auetu *AppUserEmailTemplateUpdate) sqlSave(ctx context.Context) (n int, er
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := auetu.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appuseremailtemplate.FieldAppID,
+		})
+	}
+	if value, ok := auetu.mutation.UserID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appuseremailtemplate.FieldUserID,
+		})
+	}
+	if value, ok := auetu.mutation.LangID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appuseremailtemplate.FieldLangID,
+		})
+	}
+	if value, ok := auetu.mutation.Subject(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuseremailtemplate.FieldSubject,
+		})
+	}
+	if value, ok := auetu.mutation.Body(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuseremailtemplate.FieldBody,
+		})
+	}
+	if value, ok := auetu.mutation.Sender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuseremailtemplate.FieldSender,
+		})
+	}
+	if value, ok := auetu.mutation.CreateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuseremailtemplate.FieldCreateAt,
+		})
+	}
+	if value, ok := auetu.mutation.AddedCreateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuseremailtemplate.FieldCreateAt,
+		})
+	}
+	if value, ok := auetu.mutation.UpdateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuseremailtemplate.FieldUpdateAt,
+		})
+	}
+	if value, ok := auetu.mutation.AddedUpdateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuseremailtemplate.FieldUpdateAt,
+		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, auetu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -123,6 +273,76 @@ type AppUserEmailTemplateUpdateOne struct {
 	mutation *AppUserEmailTemplateMutation
 }
 
+// SetAppID sets the "app_id" field.
+func (auetuo *AppUserEmailTemplateUpdateOne) SetAppID(u uuid.UUID) *AppUserEmailTemplateUpdateOne {
+	auetuo.mutation.SetAppID(u)
+	return auetuo
+}
+
+// SetUserID sets the "user_id" field.
+func (auetuo *AppUserEmailTemplateUpdateOne) SetUserID(u uuid.UUID) *AppUserEmailTemplateUpdateOne {
+	auetuo.mutation.SetUserID(u)
+	return auetuo
+}
+
+// SetLangID sets the "lang_id" field.
+func (auetuo *AppUserEmailTemplateUpdateOne) SetLangID(u uuid.UUID) *AppUserEmailTemplateUpdateOne {
+	auetuo.mutation.SetLangID(u)
+	return auetuo
+}
+
+// SetSubject sets the "subject" field.
+func (auetuo *AppUserEmailTemplateUpdateOne) SetSubject(s string) *AppUserEmailTemplateUpdateOne {
+	auetuo.mutation.SetSubject(s)
+	return auetuo
+}
+
+// SetBody sets the "body" field.
+func (auetuo *AppUserEmailTemplateUpdateOne) SetBody(s string) *AppUserEmailTemplateUpdateOne {
+	auetuo.mutation.SetBody(s)
+	return auetuo
+}
+
+// SetSender sets the "sender" field.
+func (auetuo *AppUserEmailTemplateUpdateOne) SetSender(s string) *AppUserEmailTemplateUpdateOne {
+	auetuo.mutation.SetSender(s)
+	return auetuo
+}
+
+// SetCreateAt sets the "create_at" field.
+func (auetuo *AppUserEmailTemplateUpdateOne) SetCreateAt(u uint32) *AppUserEmailTemplateUpdateOne {
+	auetuo.mutation.ResetCreateAt()
+	auetuo.mutation.SetCreateAt(u)
+	return auetuo
+}
+
+// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
+func (auetuo *AppUserEmailTemplateUpdateOne) SetNillableCreateAt(u *uint32) *AppUserEmailTemplateUpdateOne {
+	if u != nil {
+		auetuo.SetCreateAt(*u)
+	}
+	return auetuo
+}
+
+// AddCreateAt adds u to the "create_at" field.
+func (auetuo *AppUserEmailTemplateUpdateOne) AddCreateAt(u int32) *AppUserEmailTemplateUpdateOne {
+	auetuo.mutation.AddCreateAt(u)
+	return auetuo
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (auetuo *AppUserEmailTemplateUpdateOne) SetUpdateAt(u uint32) *AppUserEmailTemplateUpdateOne {
+	auetuo.mutation.ResetUpdateAt()
+	auetuo.mutation.SetUpdateAt(u)
+	return auetuo
+}
+
+// AddUpdateAt adds u to the "update_at" field.
+func (auetuo *AppUserEmailTemplateUpdateOne) AddUpdateAt(u int32) *AppUserEmailTemplateUpdateOne {
+	auetuo.mutation.AddUpdateAt(u)
+	return auetuo
+}
+
 // Mutation returns the AppUserEmailTemplateMutation object of the builder.
 func (auetuo *AppUserEmailTemplateUpdateOne) Mutation() *AppUserEmailTemplateMutation {
 	return auetuo.mutation
@@ -141,6 +361,7 @@ func (auetuo *AppUserEmailTemplateUpdateOne) Save(ctx context.Context) (*AppUser
 		err  error
 		node *AppUserEmailTemplate
 	)
+	auetuo.defaults()
 	if len(auetuo.hooks) == 0 {
 		node, err = auetuo.sqlSave(ctx)
 	} else {
@@ -189,13 +410,21 @@ func (auetuo *AppUserEmailTemplateUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (auetuo *AppUserEmailTemplateUpdateOne) defaults() {
+	if _, ok := auetuo.mutation.UpdateAt(); !ok {
+		v := appuseremailtemplate.UpdateDefaultUpdateAt()
+		auetuo.mutation.SetUpdateAt(v)
+	}
+}
+
 func (auetuo *AppUserEmailTemplateUpdateOne) sqlSave(ctx context.Context) (_node *AppUserEmailTemplate, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   appuseremailtemplate.Table,
 			Columns: appuseremailtemplate.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: appuseremailtemplate.FieldID,
 			},
 		},
@@ -223,6 +452,76 @@ func (auetuo *AppUserEmailTemplateUpdateOne) sqlSave(ctx context.Context) (_node
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := auetuo.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appuseremailtemplate.FieldAppID,
+		})
+	}
+	if value, ok := auetuo.mutation.UserID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appuseremailtemplate.FieldUserID,
+		})
+	}
+	if value, ok := auetuo.mutation.LangID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appuseremailtemplate.FieldLangID,
+		})
+	}
+	if value, ok := auetuo.mutation.Subject(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuseremailtemplate.FieldSubject,
+		})
+	}
+	if value, ok := auetuo.mutation.Body(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuseremailtemplate.FieldBody,
+		})
+	}
+	if value, ok := auetuo.mutation.Sender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appuseremailtemplate.FieldSender,
+		})
+	}
+	if value, ok := auetuo.mutation.CreateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuseremailtemplate.FieldCreateAt,
+		})
+	}
+	if value, ok := auetuo.mutation.AddedCreateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuseremailtemplate.FieldCreateAt,
+		})
+	}
+	if value, ok := auetuo.mutation.UpdateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuseremailtemplate.FieldUpdateAt,
+		})
+	}
+	if value, ok := auetuo.mutation.AddedUpdateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appuseremailtemplate.FieldUpdateAt,
+		})
 	}
 	_node = &AppUserEmailTemplate{config: auetuo.config}
 	_spec.Assign = _node.assignValues

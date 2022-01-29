@@ -8,6 +8,7 @@ import (
 	"log"
 
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/migrate"
+	"github.com/google/uuid"
 
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appuseremailtemplate"
@@ -169,7 +170,7 @@ func (c *AppEmailTemplateClient) UpdateOne(aet *AppEmailTemplate) *AppEmailTempl
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *AppEmailTemplateClient) UpdateOneID(id int) *AppEmailTemplateUpdateOne {
+func (c *AppEmailTemplateClient) UpdateOneID(id uuid.UUID) *AppEmailTemplateUpdateOne {
 	mutation := newAppEmailTemplateMutation(c.config, OpUpdateOne, withAppEmailTemplateID(id))
 	return &AppEmailTemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -186,7 +187,7 @@ func (c *AppEmailTemplateClient) DeleteOne(aet *AppEmailTemplate) *AppEmailTempl
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *AppEmailTemplateClient) DeleteOneID(id int) *AppEmailTemplateDeleteOne {
+func (c *AppEmailTemplateClient) DeleteOneID(id uuid.UUID) *AppEmailTemplateDeleteOne {
 	builder := c.Delete().Where(appemailtemplate.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -201,12 +202,12 @@ func (c *AppEmailTemplateClient) Query() *AppEmailTemplateQuery {
 }
 
 // Get returns a AppEmailTemplate entity by its id.
-func (c *AppEmailTemplateClient) Get(ctx context.Context, id int) (*AppEmailTemplate, error) {
+func (c *AppEmailTemplateClient) Get(ctx context.Context, id uuid.UUID) (*AppEmailTemplate, error) {
 	return c.Query().Where(appemailtemplate.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *AppEmailTemplateClient) GetX(ctx context.Context, id int) *AppEmailTemplate {
+func (c *AppEmailTemplateClient) GetX(ctx context.Context, id uuid.UUID) *AppEmailTemplate {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -259,7 +260,7 @@ func (c *AppUserEmailTemplateClient) UpdateOne(auet *AppUserEmailTemplate) *AppU
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *AppUserEmailTemplateClient) UpdateOneID(id int) *AppUserEmailTemplateUpdateOne {
+func (c *AppUserEmailTemplateClient) UpdateOneID(id uuid.UUID) *AppUserEmailTemplateUpdateOne {
 	mutation := newAppUserEmailTemplateMutation(c.config, OpUpdateOne, withAppUserEmailTemplateID(id))
 	return &AppUserEmailTemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -276,7 +277,7 @@ func (c *AppUserEmailTemplateClient) DeleteOne(auet *AppUserEmailTemplate) *AppU
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *AppUserEmailTemplateClient) DeleteOneID(id int) *AppUserEmailTemplateDeleteOne {
+func (c *AppUserEmailTemplateClient) DeleteOneID(id uuid.UUID) *AppUserEmailTemplateDeleteOne {
 	builder := c.Delete().Where(appuseremailtemplate.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -291,12 +292,12 @@ func (c *AppUserEmailTemplateClient) Query() *AppUserEmailTemplateQuery {
 }
 
 // Get returns a AppUserEmailTemplate entity by its id.
-func (c *AppUserEmailTemplateClient) Get(ctx context.Context, id int) (*AppUserEmailTemplate, error) {
+func (c *AppUserEmailTemplateClient) Get(ctx context.Context, id uuid.UUID) (*AppUserEmailTemplate, error) {
 	return c.Query().Where(appuseremailtemplate.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *AppUserEmailTemplateClient) GetX(ctx context.Context, id int) *AppUserEmailTemplate {
+func (c *AppUserEmailTemplateClient) GetX(ctx context.Context, id uuid.UUID) *AppUserEmailTemplate {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)

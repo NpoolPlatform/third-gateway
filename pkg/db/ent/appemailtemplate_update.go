@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // AppEmailTemplateUpdate is the builder for updating AppEmailTemplate entities.
@@ -27,6 +28,70 @@ func (aetu *AppEmailTemplateUpdate) Where(ps ...predicate.AppEmailTemplate) *App
 	return aetu
 }
 
+// SetAppID sets the "app_id" field.
+func (aetu *AppEmailTemplateUpdate) SetAppID(u uuid.UUID) *AppEmailTemplateUpdate {
+	aetu.mutation.SetAppID(u)
+	return aetu
+}
+
+// SetLangID sets the "lang_id" field.
+func (aetu *AppEmailTemplateUpdate) SetLangID(u uuid.UUID) *AppEmailTemplateUpdate {
+	aetu.mutation.SetLangID(u)
+	return aetu
+}
+
+// SetSubject sets the "subject" field.
+func (aetu *AppEmailTemplateUpdate) SetSubject(s string) *AppEmailTemplateUpdate {
+	aetu.mutation.SetSubject(s)
+	return aetu
+}
+
+// SetBody sets the "body" field.
+func (aetu *AppEmailTemplateUpdate) SetBody(s string) *AppEmailTemplateUpdate {
+	aetu.mutation.SetBody(s)
+	return aetu
+}
+
+// SetSender sets the "sender" field.
+func (aetu *AppEmailTemplateUpdate) SetSender(s string) *AppEmailTemplateUpdate {
+	aetu.mutation.SetSender(s)
+	return aetu
+}
+
+// SetCreateAt sets the "create_at" field.
+func (aetu *AppEmailTemplateUpdate) SetCreateAt(u uint32) *AppEmailTemplateUpdate {
+	aetu.mutation.ResetCreateAt()
+	aetu.mutation.SetCreateAt(u)
+	return aetu
+}
+
+// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
+func (aetu *AppEmailTemplateUpdate) SetNillableCreateAt(u *uint32) *AppEmailTemplateUpdate {
+	if u != nil {
+		aetu.SetCreateAt(*u)
+	}
+	return aetu
+}
+
+// AddCreateAt adds u to the "create_at" field.
+func (aetu *AppEmailTemplateUpdate) AddCreateAt(u int32) *AppEmailTemplateUpdate {
+	aetu.mutation.AddCreateAt(u)
+	return aetu
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (aetu *AppEmailTemplateUpdate) SetUpdateAt(u uint32) *AppEmailTemplateUpdate {
+	aetu.mutation.ResetUpdateAt()
+	aetu.mutation.SetUpdateAt(u)
+	return aetu
+}
+
+// AddUpdateAt adds u to the "update_at" field.
+func (aetu *AppEmailTemplateUpdate) AddUpdateAt(u int32) *AppEmailTemplateUpdate {
+	aetu.mutation.AddUpdateAt(u)
+	return aetu
+}
+
 // Mutation returns the AppEmailTemplateMutation object of the builder.
 func (aetu *AppEmailTemplateUpdate) Mutation() *AppEmailTemplateMutation {
 	return aetu.mutation
@@ -38,6 +103,7 @@ func (aetu *AppEmailTemplateUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
+	aetu.defaults()
 	if len(aetu.hooks) == 0 {
 		affected, err = aetu.sqlSave(ctx)
 	} else {
@@ -86,13 +152,21 @@ func (aetu *AppEmailTemplateUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (aetu *AppEmailTemplateUpdate) defaults() {
+	if _, ok := aetu.mutation.UpdateAt(); !ok {
+		v := appemailtemplate.UpdateDefaultUpdateAt()
+		aetu.mutation.SetUpdateAt(v)
+	}
+}
+
 func (aetu *AppEmailTemplateUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   appemailtemplate.Table,
 			Columns: appemailtemplate.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: appemailtemplate.FieldID,
 			},
 		},
@@ -103,6 +177,69 @@ func (aetu *AppEmailTemplateUpdate) sqlSave(ctx context.Context) (n int, err err
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := aetu.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appemailtemplate.FieldAppID,
+		})
+	}
+	if value, ok := aetu.mutation.LangID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appemailtemplate.FieldLangID,
+		})
+	}
+	if value, ok := aetu.mutation.Subject(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldSubject,
+		})
+	}
+	if value, ok := aetu.mutation.Body(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldBody,
+		})
+	}
+	if value, ok := aetu.mutation.Sender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldSender,
+		})
+	}
+	if value, ok := aetu.mutation.CreateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appemailtemplate.FieldCreateAt,
+		})
+	}
+	if value, ok := aetu.mutation.AddedCreateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appemailtemplate.FieldCreateAt,
+		})
+	}
+	if value, ok := aetu.mutation.UpdateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appemailtemplate.FieldUpdateAt,
+		})
+	}
+	if value, ok := aetu.mutation.AddedUpdateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appemailtemplate.FieldUpdateAt,
+		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, aetu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -123,6 +260,70 @@ type AppEmailTemplateUpdateOne struct {
 	mutation *AppEmailTemplateMutation
 }
 
+// SetAppID sets the "app_id" field.
+func (aetuo *AppEmailTemplateUpdateOne) SetAppID(u uuid.UUID) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.SetAppID(u)
+	return aetuo
+}
+
+// SetLangID sets the "lang_id" field.
+func (aetuo *AppEmailTemplateUpdateOne) SetLangID(u uuid.UUID) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.SetLangID(u)
+	return aetuo
+}
+
+// SetSubject sets the "subject" field.
+func (aetuo *AppEmailTemplateUpdateOne) SetSubject(s string) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.SetSubject(s)
+	return aetuo
+}
+
+// SetBody sets the "body" field.
+func (aetuo *AppEmailTemplateUpdateOne) SetBody(s string) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.SetBody(s)
+	return aetuo
+}
+
+// SetSender sets the "sender" field.
+func (aetuo *AppEmailTemplateUpdateOne) SetSender(s string) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.SetSender(s)
+	return aetuo
+}
+
+// SetCreateAt sets the "create_at" field.
+func (aetuo *AppEmailTemplateUpdateOne) SetCreateAt(u uint32) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.ResetCreateAt()
+	aetuo.mutation.SetCreateAt(u)
+	return aetuo
+}
+
+// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
+func (aetuo *AppEmailTemplateUpdateOne) SetNillableCreateAt(u *uint32) *AppEmailTemplateUpdateOne {
+	if u != nil {
+		aetuo.SetCreateAt(*u)
+	}
+	return aetuo
+}
+
+// AddCreateAt adds u to the "create_at" field.
+func (aetuo *AppEmailTemplateUpdateOne) AddCreateAt(u int32) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.AddCreateAt(u)
+	return aetuo
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (aetuo *AppEmailTemplateUpdateOne) SetUpdateAt(u uint32) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.ResetUpdateAt()
+	aetuo.mutation.SetUpdateAt(u)
+	return aetuo
+}
+
+// AddUpdateAt adds u to the "update_at" field.
+func (aetuo *AppEmailTemplateUpdateOne) AddUpdateAt(u int32) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.AddUpdateAt(u)
+	return aetuo
+}
+
 // Mutation returns the AppEmailTemplateMutation object of the builder.
 func (aetuo *AppEmailTemplateUpdateOne) Mutation() *AppEmailTemplateMutation {
 	return aetuo.mutation
@@ -141,6 +342,7 @@ func (aetuo *AppEmailTemplateUpdateOne) Save(ctx context.Context) (*AppEmailTemp
 		err  error
 		node *AppEmailTemplate
 	)
+	aetuo.defaults()
 	if len(aetuo.hooks) == 0 {
 		node, err = aetuo.sqlSave(ctx)
 	} else {
@@ -189,13 +391,21 @@ func (aetuo *AppEmailTemplateUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (aetuo *AppEmailTemplateUpdateOne) defaults() {
+	if _, ok := aetuo.mutation.UpdateAt(); !ok {
+		v := appemailtemplate.UpdateDefaultUpdateAt()
+		aetuo.mutation.SetUpdateAt(v)
+	}
+}
+
 func (aetuo *AppEmailTemplateUpdateOne) sqlSave(ctx context.Context) (_node *AppEmailTemplate, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   appemailtemplate.Table,
 			Columns: appemailtemplate.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: appemailtemplate.FieldID,
 			},
 		},
@@ -223,6 +433,69 @@ func (aetuo *AppEmailTemplateUpdateOne) sqlSave(ctx context.Context) (_node *App
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := aetuo.mutation.AppID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appemailtemplate.FieldAppID,
+		})
+	}
+	if value, ok := aetuo.mutation.LangID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appemailtemplate.FieldLangID,
+		})
+	}
+	if value, ok := aetuo.mutation.Subject(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldSubject,
+		})
+	}
+	if value, ok := aetuo.mutation.Body(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldBody,
+		})
+	}
+	if value, ok := aetuo.mutation.Sender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldSender,
+		})
+	}
+	if value, ok := aetuo.mutation.CreateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appemailtemplate.FieldCreateAt,
+		})
+	}
+	if value, ok := aetuo.mutation.AddedCreateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appemailtemplate.FieldCreateAt,
+		})
+	}
+	if value, ok := aetuo.mutation.UpdateAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appemailtemplate.FieldUpdateAt,
+		})
+	}
+	if value, ok := aetuo.mutation.AddedUpdateAt(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appemailtemplate.FieldUpdateAt,
+		})
 	}
 	_node = &AppEmailTemplate{config: aetuo.config}
 	_spec.Assign = _node.assignValues

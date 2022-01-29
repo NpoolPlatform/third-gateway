@@ -2,8 +2,47 @@
 
 package ent
 
+import (
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appuseremailtemplate"
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/schema"
+	"github.com/google/uuid"
+)
+
 // The init function reads all schema descriptors with runtime code
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	appemailtemplateFields := schema.AppEmailTemplate{}.Fields()
+	_ = appemailtemplateFields
+	// appemailtemplateDescCreateAt is the schema descriptor for create_at field.
+	appemailtemplateDescCreateAt := appemailtemplateFields[6].Descriptor()
+	// appemailtemplate.DefaultCreateAt holds the default value on creation for the create_at field.
+	appemailtemplate.DefaultCreateAt = appemailtemplateDescCreateAt.Default.(func() uint32)
+	// appemailtemplateDescUpdateAt is the schema descriptor for update_at field.
+	appemailtemplateDescUpdateAt := appemailtemplateFields[7].Descriptor()
+	// appemailtemplate.DefaultUpdateAt holds the default value on creation for the update_at field.
+	appemailtemplate.DefaultUpdateAt = appemailtemplateDescUpdateAt.Default.(func() uint32)
+	// appemailtemplate.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	appemailtemplate.UpdateDefaultUpdateAt = appemailtemplateDescUpdateAt.UpdateDefault.(func() uint32)
+	// appemailtemplateDescID is the schema descriptor for id field.
+	appemailtemplateDescID := appemailtemplateFields[0].Descriptor()
+	// appemailtemplate.DefaultID holds the default value on creation for the id field.
+	appemailtemplate.DefaultID = appemailtemplateDescID.Default.(func() uuid.UUID)
+	appuseremailtemplateFields := schema.AppUserEmailTemplate{}.Fields()
+	_ = appuseremailtemplateFields
+	// appuseremailtemplateDescCreateAt is the schema descriptor for create_at field.
+	appuseremailtemplateDescCreateAt := appuseremailtemplateFields[7].Descriptor()
+	// appuseremailtemplate.DefaultCreateAt holds the default value on creation for the create_at field.
+	appuseremailtemplate.DefaultCreateAt = appuseremailtemplateDescCreateAt.Default.(func() uint32)
+	// appuseremailtemplateDescUpdateAt is the schema descriptor for update_at field.
+	appuseremailtemplateDescUpdateAt := appuseremailtemplateFields[8].Descriptor()
+	// appuseremailtemplate.DefaultUpdateAt holds the default value on creation for the update_at field.
+	appuseremailtemplate.DefaultUpdateAt = appuseremailtemplateDescUpdateAt.Default.(func() uint32)
+	// appuseremailtemplate.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	appuseremailtemplate.UpdateDefaultUpdateAt = appuseremailtemplateDescUpdateAt.UpdateDefault.(func() uint32)
+	// appuseremailtemplateDescID is the schema descriptor for id field.
+	appuseremailtemplateDescID := appuseremailtemplateFields[0].Descriptor()
+	// appuseremailtemplate.DefaultID holds the default value on creation for the id field.
+	appuseremailtemplate.DefaultID = appuseremailtemplateDescID.Default.(func() uuid.UUID)
 }

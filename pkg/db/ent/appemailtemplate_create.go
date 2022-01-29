@@ -7,10 +7,12 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
+	"github.com/google/uuid"
 )
 
 // AppEmailTemplateCreate is the builder for creating a AppEmailTemplate entity.
@@ -19,6 +21,78 @@ type AppEmailTemplateCreate struct {
 	mutation *AppEmailTemplateMutation
 	hooks    []Hook
 	conflict []sql.ConflictOption
+}
+
+// SetAppID sets the "app_id" field.
+func (aetc *AppEmailTemplateCreate) SetAppID(u uuid.UUID) *AppEmailTemplateCreate {
+	aetc.mutation.SetAppID(u)
+	return aetc
+}
+
+// SetLangID sets the "lang_id" field.
+func (aetc *AppEmailTemplateCreate) SetLangID(u uuid.UUID) *AppEmailTemplateCreate {
+	aetc.mutation.SetLangID(u)
+	return aetc
+}
+
+// SetSubject sets the "subject" field.
+func (aetc *AppEmailTemplateCreate) SetSubject(s string) *AppEmailTemplateCreate {
+	aetc.mutation.SetSubject(s)
+	return aetc
+}
+
+// SetBody sets the "body" field.
+func (aetc *AppEmailTemplateCreate) SetBody(s string) *AppEmailTemplateCreate {
+	aetc.mutation.SetBody(s)
+	return aetc
+}
+
+// SetSender sets the "sender" field.
+func (aetc *AppEmailTemplateCreate) SetSender(s string) *AppEmailTemplateCreate {
+	aetc.mutation.SetSender(s)
+	return aetc
+}
+
+// SetCreateAt sets the "create_at" field.
+func (aetc *AppEmailTemplateCreate) SetCreateAt(u uint32) *AppEmailTemplateCreate {
+	aetc.mutation.SetCreateAt(u)
+	return aetc
+}
+
+// SetNillableCreateAt sets the "create_at" field if the given value is not nil.
+func (aetc *AppEmailTemplateCreate) SetNillableCreateAt(u *uint32) *AppEmailTemplateCreate {
+	if u != nil {
+		aetc.SetCreateAt(*u)
+	}
+	return aetc
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (aetc *AppEmailTemplateCreate) SetUpdateAt(u uint32) *AppEmailTemplateCreate {
+	aetc.mutation.SetUpdateAt(u)
+	return aetc
+}
+
+// SetNillableUpdateAt sets the "update_at" field if the given value is not nil.
+func (aetc *AppEmailTemplateCreate) SetNillableUpdateAt(u *uint32) *AppEmailTemplateCreate {
+	if u != nil {
+		aetc.SetUpdateAt(*u)
+	}
+	return aetc
+}
+
+// SetID sets the "id" field.
+func (aetc *AppEmailTemplateCreate) SetID(u uuid.UUID) *AppEmailTemplateCreate {
+	aetc.mutation.SetID(u)
+	return aetc
+}
+
+// SetNillableID sets the "id" field if the given value is not nil.
+func (aetc *AppEmailTemplateCreate) SetNillableID(u *uuid.UUID) *AppEmailTemplateCreate {
+	if u != nil {
+		aetc.SetID(*u)
+	}
+	return aetc
 }
 
 // Mutation returns the AppEmailTemplateMutation object of the builder.
@@ -32,6 +106,7 @@ func (aetc *AppEmailTemplateCreate) Save(ctx context.Context) (*AppEmailTemplate
 		err  error
 		node *AppEmailTemplate
 	)
+	aetc.defaults()
 	if len(aetc.hooks) == 0 {
 		if err = aetc.check(); err != nil {
 			return nil, err
@@ -89,8 +164,45 @@ func (aetc *AppEmailTemplateCreate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (aetc *AppEmailTemplateCreate) defaults() {
+	if _, ok := aetc.mutation.CreateAt(); !ok {
+		v := appemailtemplate.DefaultCreateAt()
+		aetc.mutation.SetCreateAt(v)
+	}
+	if _, ok := aetc.mutation.UpdateAt(); !ok {
+		v := appemailtemplate.DefaultUpdateAt()
+		aetc.mutation.SetUpdateAt(v)
+	}
+	if _, ok := aetc.mutation.ID(); !ok {
+		v := appemailtemplate.DefaultID()
+		aetc.mutation.SetID(v)
+	}
+}
+
 // check runs all checks and user-defined validators on the builder.
 func (aetc *AppEmailTemplateCreate) check() error {
+	if _, ok := aetc.mutation.AppID(); !ok {
+		return &ValidationError{Name: "app_id", err: errors.New(`ent: missing required field "AppEmailTemplate.app_id"`)}
+	}
+	if _, ok := aetc.mutation.LangID(); !ok {
+		return &ValidationError{Name: "lang_id", err: errors.New(`ent: missing required field "AppEmailTemplate.lang_id"`)}
+	}
+	if _, ok := aetc.mutation.Subject(); !ok {
+		return &ValidationError{Name: "subject", err: errors.New(`ent: missing required field "AppEmailTemplate.subject"`)}
+	}
+	if _, ok := aetc.mutation.Body(); !ok {
+		return &ValidationError{Name: "body", err: errors.New(`ent: missing required field "AppEmailTemplate.body"`)}
+	}
+	if _, ok := aetc.mutation.Sender(); !ok {
+		return &ValidationError{Name: "sender", err: errors.New(`ent: missing required field "AppEmailTemplate.sender"`)}
+	}
+	if _, ok := aetc.mutation.CreateAt(); !ok {
+		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppEmailTemplate.create_at"`)}
+	}
+	if _, ok := aetc.mutation.UpdateAt(); !ok {
+		return &ValidationError{Name: "update_at", err: errors.New(`ent: missing required field "AppEmailTemplate.update_at"`)}
+	}
 	return nil
 }
 
@@ -102,8 +214,13 @@ func (aetc *AppEmailTemplateCreate) sqlSave(ctx context.Context) (*AppEmailTempl
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != nil {
+		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
+		}
+	}
 	return _node, nil
 }
 
@@ -113,12 +230,72 @@ func (aetc *AppEmailTemplateCreate) createSpec() (*AppEmailTemplate, *sqlgraph.C
 		_spec = &sqlgraph.CreateSpec{
 			Table: appemailtemplate.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: appemailtemplate.FieldID,
 			},
 		}
 	)
 	_spec.OnConflict = aetc.conflict
+	if id, ok := aetc.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = &id
+	}
+	if value, ok := aetc.mutation.AppID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appemailtemplate.FieldAppID,
+		})
+		_node.AppID = value
+	}
+	if value, ok := aetc.mutation.LangID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUUID,
+			Value:  value,
+			Column: appemailtemplate.FieldLangID,
+		})
+		_node.LangID = value
+	}
+	if value, ok := aetc.mutation.Subject(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldSubject,
+		})
+		_node.Subject = value
+	}
+	if value, ok := aetc.mutation.Body(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldBody,
+		})
+		_node.Body = value
+	}
+	if value, ok := aetc.mutation.Sender(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldSender,
+		})
+		_node.Sender = value
+	}
+	if value, ok := aetc.mutation.CreateAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appemailtemplate.FieldCreateAt,
+		})
+		_node.CreateAt = value
+	}
+	if value, ok := aetc.mutation.UpdateAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
+			Value:  value,
+			Column: appemailtemplate.FieldUpdateAt,
+		})
+		_node.UpdateAt = value
+	}
 	return _node, _spec
 }
 
@@ -126,11 +303,17 @@ func (aetc *AppEmailTemplateCreate) createSpec() (*AppEmailTemplate, *sqlgraph.C
 // of the `INSERT` statement. For example:
 //
 //	client.AppEmailTemplate.Create().
+//		SetAppID(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
 //			sql.ResolveWithNewValues(),
 //		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.AppEmailTemplateUpsert) {
+//			SetAppID(v+v).
+//		}).
 //		Exec(ctx)
 //
 func (aetc *AppEmailTemplateCreate) OnConflict(opts ...sql.ConflictOption) *AppEmailTemplateUpsertOne {
@@ -167,17 +350,121 @@ type (
 	}
 )
 
-// UpdateNewValues updates the mutable fields using the new values that were set on create.
+// SetAppID sets the "app_id" field.
+func (u *AppEmailTemplateUpsert) SetAppID(v uuid.UUID) *AppEmailTemplateUpsert {
+	u.Set(appemailtemplate.FieldAppID, v)
+	return u
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsert) UpdateAppID() *AppEmailTemplateUpsert {
+	u.SetExcluded(appemailtemplate.FieldAppID)
+	return u
+}
+
+// SetLangID sets the "lang_id" field.
+func (u *AppEmailTemplateUpsert) SetLangID(v uuid.UUID) *AppEmailTemplateUpsert {
+	u.Set(appemailtemplate.FieldLangID, v)
+	return u
+}
+
+// UpdateLangID sets the "lang_id" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsert) UpdateLangID() *AppEmailTemplateUpsert {
+	u.SetExcluded(appemailtemplate.FieldLangID)
+	return u
+}
+
+// SetSubject sets the "subject" field.
+func (u *AppEmailTemplateUpsert) SetSubject(v string) *AppEmailTemplateUpsert {
+	u.Set(appemailtemplate.FieldSubject, v)
+	return u
+}
+
+// UpdateSubject sets the "subject" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsert) UpdateSubject() *AppEmailTemplateUpsert {
+	u.SetExcluded(appemailtemplate.FieldSubject)
+	return u
+}
+
+// SetBody sets the "body" field.
+func (u *AppEmailTemplateUpsert) SetBody(v string) *AppEmailTemplateUpsert {
+	u.Set(appemailtemplate.FieldBody, v)
+	return u
+}
+
+// UpdateBody sets the "body" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsert) UpdateBody() *AppEmailTemplateUpsert {
+	u.SetExcluded(appemailtemplate.FieldBody)
+	return u
+}
+
+// SetSender sets the "sender" field.
+func (u *AppEmailTemplateUpsert) SetSender(v string) *AppEmailTemplateUpsert {
+	u.Set(appemailtemplate.FieldSender, v)
+	return u
+}
+
+// UpdateSender sets the "sender" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsert) UpdateSender() *AppEmailTemplateUpsert {
+	u.SetExcluded(appemailtemplate.FieldSender)
+	return u
+}
+
+// SetCreateAt sets the "create_at" field.
+func (u *AppEmailTemplateUpsert) SetCreateAt(v uint32) *AppEmailTemplateUpsert {
+	u.Set(appemailtemplate.FieldCreateAt, v)
+	return u
+}
+
+// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsert) UpdateCreateAt() *AppEmailTemplateUpsert {
+	u.SetExcluded(appemailtemplate.FieldCreateAt)
+	return u
+}
+
+// AddCreateAt adds v to the "create_at" field.
+func (u *AppEmailTemplateUpsert) AddCreateAt(v uint32) *AppEmailTemplateUpsert {
+	u.Add(appemailtemplate.FieldCreateAt, v)
+	return u
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (u *AppEmailTemplateUpsert) SetUpdateAt(v uint32) *AppEmailTemplateUpsert {
+	u.Set(appemailtemplate.FieldUpdateAt, v)
+	return u
+}
+
+// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsert) UpdateUpdateAt() *AppEmailTemplateUpsert {
+	u.SetExcluded(appemailtemplate.FieldUpdateAt)
+	return u
+}
+
+// AddUpdateAt adds v to the "update_at" field.
+func (u *AppEmailTemplateUpsert) AddUpdateAt(v uint32) *AppEmailTemplateUpsert {
+	u.Add(appemailtemplate.FieldUpdateAt, v)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
 //	client.AppEmailTemplate.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(appemailtemplate.FieldID)
+//			}),
 //		).
 //		Exec(ctx)
 //
 func (u *AppEmailTemplateUpsertOne) UpdateNewValues() *AppEmailTemplateUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(appemailtemplate.FieldID)
+		}
+	}))
 	return u
 }
 
@@ -209,6 +496,118 @@ func (u *AppEmailTemplateUpsertOne) Update(set func(*AppEmailTemplateUpsert)) *A
 	return u
 }
 
+// SetAppID sets the "app_id" field.
+func (u *AppEmailTemplateUpsertOne) SetAppID(v uuid.UUID) *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertOne) UpdateAppID() *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateAppID()
+	})
+}
+
+// SetLangID sets the "lang_id" field.
+func (u *AppEmailTemplateUpsertOne) SetLangID(v uuid.UUID) *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetLangID(v)
+	})
+}
+
+// UpdateLangID sets the "lang_id" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertOne) UpdateLangID() *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateLangID()
+	})
+}
+
+// SetSubject sets the "subject" field.
+func (u *AppEmailTemplateUpsertOne) SetSubject(v string) *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetSubject(v)
+	})
+}
+
+// UpdateSubject sets the "subject" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertOne) UpdateSubject() *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateSubject()
+	})
+}
+
+// SetBody sets the "body" field.
+func (u *AppEmailTemplateUpsertOne) SetBody(v string) *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetBody(v)
+	})
+}
+
+// UpdateBody sets the "body" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertOne) UpdateBody() *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateBody()
+	})
+}
+
+// SetSender sets the "sender" field.
+func (u *AppEmailTemplateUpsertOne) SetSender(v string) *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetSender(v)
+	})
+}
+
+// UpdateSender sets the "sender" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertOne) UpdateSender() *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateSender()
+	})
+}
+
+// SetCreateAt sets the "create_at" field.
+func (u *AppEmailTemplateUpsertOne) SetCreateAt(v uint32) *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetCreateAt(v)
+	})
+}
+
+// AddCreateAt adds v to the "create_at" field.
+func (u *AppEmailTemplateUpsertOne) AddCreateAt(v uint32) *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.AddCreateAt(v)
+	})
+}
+
+// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertOne) UpdateCreateAt() *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateCreateAt()
+	})
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (u *AppEmailTemplateUpsertOne) SetUpdateAt(v uint32) *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetUpdateAt(v)
+	})
+}
+
+// AddUpdateAt adds v to the "update_at" field.
+func (u *AppEmailTemplateUpsertOne) AddUpdateAt(v uint32) *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
+// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertOne) UpdateUpdateAt() *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateUpdateAt()
+	})
+}
+
 // Exec executes the query.
 func (u *AppEmailTemplateUpsertOne) Exec(ctx context.Context) error {
 	if len(u.create.conflict) == 0 {
@@ -225,7 +624,12 @@ func (u *AppEmailTemplateUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *AppEmailTemplateUpsertOne) ID(ctx context.Context) (id int, err error) {
+func (u *AppEmailTemplateUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: AppEmailTemplateUpsertOne.ID is not supported by MySQL driver. Use AppEmailTemplateUpsertOne.Exec instead")
+	}
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -234,7 +638,7 @@ func (u *AppEmailTemplateUpsertOne) ID(ctx context.Context) (id int, err error) 
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *AppEmailTemplateUpsertOne) IDX(ctx context.Context) int {
+func (u *AppEmailTemplateUpsertOne) IDX(ctx context.Context) uuid.UUID {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -257,6 +661,7 @@ func (aetcb *AppEmailTemplateCreateBulk) Save(ctx context.Context) ([]*AppEmailT
 	for i := range aetcb.builders {
 		func(i int, root context.Context) {
 			builder := aetcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*AppEmailTemplateMutation)
 				if !ok {
@@ -285,10 +690,6 @@ func (aetcb *AppEmailTemplateCreateBulk) Save(ctx context.Context) ([]*AppEmailT
 				}
 				mutation.id = &nodes[i].ID
 				mutation.done = true
-				if specs[i].ID.Value != nil {
-					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
-				}
 				return nodes[i], nil
 			})
 			for i := len(builder.hooks) - 1; i >= 0; i-- {
@@ -336,6 +737,11 @@ func (aetcb *AppEmailTemplateCreateBulk) ExecX(ctx context.Context) {
 //			// the was proposed for insertion.
 //			sql.ResolveWithNewValues(),
 //		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.AppEmailTemplateUpsert) {
+//			SetAppID(v+v).
+//		}).
 //		Exec(ctx)
 //
 func (aetcb *AppEmailTemplateCreateBulk) OnConflict(opts ...sql.ConflictOption) *AppEmailTemplateUpsertBulk {
@@ -371,11 +777,22 @@ type AppEmailTemplateUpsertBulk struct {
 //	client.AppEmailTemplate.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(appemailtemplate.FieldID)
+//			}),
 //		).
 //		Exec(ctx)
 //
 func (u *AppEmailTemplateUpsertBulk) UpdateNewValues() *AppEmailTemplateUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(appemailtemplate.FieldID)
+				return
+			}
+		}
+	}))
 	return u
 }
 
@@ -405,6 +822,118 @@ func (u *AppEmailTemplateUpsertBulk) Update(set func(*AppEmailTemplateUpsert)) *
 		set(&AppEmailTemplateUpsert{UpdateSet: update})
 	}))
 	return u
+}
+
+// SetAppID sets the "app_id" field.
+func (u *AppEmailTemplateUpsertBulk) SetAppID(v uuid.UUID) *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetAppID(v)
+	})
+}
+
+// UpdateAppID sets the "app_id" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertBulk) UpdateAppID() *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateAppID()
+	})
+}
+
+// SetLangID sets the "lang_id" field.
+func (u *AppEmailTemplateUpsertBulk) SetLangID(v uuid.UUID) *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetLangID(v)
+	})
+}
+
+// UpdateLangID sets the "lang_id" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertBulk) UpdateLangID() *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateLangID()
+	})
+}
+
+// SetSubject sets the "subject" field.
+func (u *AppEmailTemplateUpsertBulk) SetSubject(v string) *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetSubject(v)
+	})
+}
+
+// UpdateSubject sets the "subject" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertBulk) UpdateSubject() *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateSubject()
+	})
+}
+
+// SetBody sets the "body" field.
+func (u *AppEmailTemplateUpsertBulk) SetBody(v string) *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetBody(v)
+	})
+}
+
+// UpdateBody sets the "body" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertBulk) UpdateBody() *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateBody()
+	})
+}
+
+// SetSender sets the "sender" field.
+func (u *AppEmailTemplateUpsertBulk) SetSender(v string) *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetSender(v)
+	})
+}
+
+// UpdateSender sets the "sender" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertBulk) UpdateSender() *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateSender()
+	})
+}
+
+// SetCreateAt sets the "create_at" field.
+func (u *AppEmailTemplateUpsertBulk) SetCreateAt(v uint32) *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetCreateAt(v)
+	})
+}
+
+// AddCreateAt adds v to the "create_at" field.
+func (u *AppEmailTemplateUpsertBulk) AddCreateAt(v uint32) *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.AddCreateAt(v)
+	})
+}
+
+// UpdateCreateAt sets the "create_at" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertBulk) UpdateCreateAt() *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateCreateAt()
+	})
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (u *AppEmailTemplateUpsertBulk) SetUpdateAt(v uint32) *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetUpdateAt(v)
+	})
+}
+
+// AddUpdateAt adds v to the "update_at" field.
+func (u *AppEmailTemplateUpsertBulk) AddUpdateAt(v uint32) *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.AddUpdateAt(v)
+	})
+}
+
+// UpdateUpdateAt sets the "update_at" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertBulk) UpdateUpdateAt() *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateUpdateAt()
+	})
 }
 
 // Exec executes the query.

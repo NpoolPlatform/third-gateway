@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appuseremailtemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // AppUserEmailTemplateQuery is the builder for querying AppUserEmailTemplate entities.
@@ -84,8 +85,8 @@ func (auetq *AppUserEmailTemplateQuery) FirstX(ctx context.Context) *AppUserEmai
 
 // FirstID returns the first AppUserEmailTemplate ID from the query.
 // Returns a *NotFoundError when no AppUserEmailTemplate ID was found.
-func (auetq *AppUserEmailTemplateQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (auetq *AppUserEmailTemplateQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
+	var ids []uuid.UUID
 	if ids, err = auetq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -97,7 +98,7 @@ func (auetq *AppUserEmailTemplateQuery) FirstID(ctx context.Context) (id int, er
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (auetq *AppUserEmailTemplateQuery) FirstIDX(ctx context.Context) int {
+func (auetq *AppUserEmailTemplateQuery) FirstIDX(ctx context.Context) uuid.UUID {
 	id, err := auetq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -135,8 +136,8 @@ func (auetq *AppUserEmailTemplateQuery) OnlyX(ctx context.Context) *AppUserEmail
 // OnlyID is like Only, but returns the only AppUserEmailTemplate ID in the query.
 // Returns a *NotSingularError when exactly one AppUserEmailTemplate ID is not found.
 // Returns a *NotFoundError when no entities are found.
-func (auetq *AppUserEmailTemplateQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (auetq *AppUserEmailTemplateQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
+	var ids []uuid.UUID
 	if ids, err = auetq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -152,7 +153,7 @@ func (auetq *AppUserEmailTemplateQuery) OnlyID(ctx context.Context) (id int, err
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (auetq *AppUserEmailTemplateQuery) OnlyIDX(ctx context.Context) int {
+func (auetq *AppUserEmailTemplateQuery) OnlyIDX(ctx context.Context) uuid.UUID {
 	id, err := auetq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -178,8 +179,8 @@ func (auetq *AppUserEmailTemplateQuery) AllX(ctx context.Context) []*AppUserEmai
 }
 
 // IDs executes the query and returns a list of AppUserEmailTemplate IDs.
-func (auetq *AppUserEmailTemplateQuery) IDs(ctx context.Context) ([]int, error) {
-	var ids []int
+func (auetq *AppUserEmailTemplateQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	var ids []uuid.UUID
 	if err := auetq.Select(appuseremailtemplate.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -187,7 +188,7 @@ func (auetq *AppUserEmailTemplateQuery) IDs(ctx context.Context) ([]int, error) 
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (auetq *AppUserEmailTemplateQuery) IDsX(ctx context.Context) []int {
+func (auetq *AppUserEmailTemplateQuery) IDsX(ctx context.Context) []uuid.UUID {
 	ids, err := auetq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -249,6 +250,19 @@ func (auetq *AppUserEmailTemplateQuery) Clone() *AppUserEmailTemplateQuery {
 
 // GroupBy is used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		AppID uuid.UUID `json:"app_id,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.AppUserEmailTemplate.Query().
+//		GroupBy(appuseremailtemplate.FieldAppID).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
+//
 func (auetq *AppUserEmailTemplateQuery) GroupBy(field string, fields ...string) *AppUserEmailTemplateGroupBy {
 	group := &AppUserEmailTemplateGroupBy{config: auetq.config}
 	group.fields = append([]string{field}, fields...)
@@ -263,6 +277,17 @@ func (auetq *AppUserEmailTemplateQuery) GroupBy(field string, fields ...string) 
 
 // Select allows the selection one or more fields/columns for the given query,
 // instead of selecting all fields in the entity.
+//
+// Example:
+//
+//	var v []struct {
+//		AppID uuid.UUID `json:"app_id,omitempty"`
+//	}
+//
+//	client.AppUserEmailTemplate.Query().
+//		Select(appuseremailtemplate.FieldAppID).
+//		Scan(ctx, &v)
+//
 func (auetq *AppUserEmailTemplateQuery) Select(fields ...string) *AppUserEmailTemplateSelect {
 	auetq.fields = append(auetq.fields, fields...)
 	return &AppUserEmailTemplateSelect{AppUserEmailTemplateQuery: auetq}
@@ -333,7 +358,7 @@ func (auetq *AppUserEmailTemplateQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   appuseremailtemplate.Table,
 			Columns: appuseremailtemplate.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: appuseremailtemplate.FieldID,
 			},
 		},
