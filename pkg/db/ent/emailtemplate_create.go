@@ -10,57 +10,57 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/NpoolPlatform/go-service-app-template/pkg/db/ent/empty"
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/emailtemplate"
 )
 
-// EmptyCreate is the builder for creating a Empty entity.
-type EmptyCreate struct {
+// EmailTemplateCreate is the builder for creating a EmailTemplate entity.
+type EmailTemplateCreate struct {
 	config
-	mutation *EmptyMutation
+	mutation *EmailTemplateMutation
 	hooks    []Hook
 	conflict []sql.ConflictOption
 }
 
-// Mutation returns the EmptyMutation object of the builder.
-func (ec *EmptyCreate) Mutation() *EmptyMutation {
-	return ec.mutation
+// Mutation returns the EmailTemplateMutation object of the builder.
+func (etc *EmailTemplateCreate) Mutation() *EmailTemplateMutation {
+	return etc.mutation
 }
 
-// Save creates the Empty in the database.
-func (ec *EmptyCreate) Save(ctx context.Context) (*Empty, error) {
+// Save creates the EmailTemplate in the database.
+func (etc *EmailTemplateCreate) Save(ctx context.Context) (*EmailTemplate, error) {
 	var (
 		err  error
-		node *Empty
+		node *EmailTemplate
 	)
-	if len(ec.hooks) == 0 {
-		if err = ec.check(); err != nil {
+	if len(etc.hooks) == 0 {
+		if err = etc.check(); err != nil {
 			return nil, err
 		}
-		node, err = ec.sqlSave(ctx)
+		node, err = etc.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*EmptyMutation)
+			mutation, ok := m.(*EmailTemplateMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			if err = ec.check(); err != nil {
+			if err = etc.check(); err != nil {
 				return nil, err
 			}
-			ec.mutation = mutation
-			if node, err = ec.sqlSave(ctx); err != nil {
+			etc.mutation = mutation
+			if node, err = etc.sqlSave(ctx); err != nil {
 				return nil, err
 			}
 			mutation.id = &node.ID
 			mutation.done = true
 			return node, err
 		})
-		for i := len(ec.hooks) - 1; i >= 0; i-- {
-			if ec.hooks[i] == nil {
+		for i := len(etc.hooks) - 1; i >= 0; i-- {
+			if etc.hooks[i] == nil {
 				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
 			}
-			mut = ec.hooks[i](mut)
+			mut = etc.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, ec.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, etc.mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -68,8 +68,8 @@ func (ec *EmptyCreate) Save(ctx context.Context) (*Empty, error) {
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (ec *EmptyCreate) SaveX(ctx context.Context) *Empty {
-	v, err := ec.Save(ctx)
+func (etc *EmailTemplateCreate) SaveX(ctx context.Context) *EmailTemplate {
+	v, err := etc.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -77,26 +77,26 @@ func (ec *EmptyCreate) SaveX(ctx context.Context) *Empty {
 }
 
 // Exec executes the query.
-func (ec *EmptyCreate) Exec(ctx context.Context) error {
-	_, err := ec.Save(ctx)
+func (etc *EmailTemplateCreate) Exec(ctx context.Context) error {
+	_, err := etc.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ec *EmptyCreate) ExecX(ctx context.Context) {
-	if err := ec.Exec(ctx); err != nil {
+func (etc *EmailTemplateCreate) ExecX(ctx context.Context) {
+	if err := etc.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (ec *EmptyCreate) check() error {
+func (etc *EmailTemplateCreate) check() error {
 	return nil
 }
 
-func (ec *EmptyCreate) sqlSave(ctx context.Context) (*Empty, error) {
-	_node, _spec := ec.createSpec()
-	if err := sqlgraph.CreateNode(ctx, ec.driver, _spec); err != nil {
+func (etc *EmailTemplateCreate) sqlSave(ctx context.Context) (*EmailTemplate, error) {
+	_node, _spec := etc.createSpec()
+	if err := sqlgraph.CreateNode(ctx, etc.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{err.Error(), err}
 		}
@@ -107,25 +107,25 @@ func (ec *EmptyCreate) sqlSave(ctx context.Context) (*Empty, error) {
 	return _node, nil
 }
 
-func (ec *EmptyCreate) createSpec() (*Empty, *sqlgraph.CreateSpec) {
+func (etc *EmailTemplateCreate) createSpec() (*EmailTemplate, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Empty{config: ec.config}
+		_node = &EmailTemplate{config: etc.config}
 		_spec = &sqlgraph.CreateSpec{
-			Table: empty.Table,
+			Table: emailtemplate.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: empty.FieldID,
+				Column: emailtemplate.FieldID,
 			},
 		}
 	)
-	_spec.OnConflict = ec.conflict
+	_spec.OnConflict = etc.conflict
 	return _node, _spec
 }
 
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.Empty.Create().
+//	client.EmailTemplate.Create().
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -133,36 +133,36 @@ func (ec *EmptyCreate) createSpec() (*Empty, *sqlgraph.CreateSpec) {
 //		).
 //		Exec(ctx)
 //
-func (ec *EmptyCreate) OnConflict(opts ...sql.ConflictOption) *EmptyUpsertOne {
-	ec.conflict = opts
-	return &EmptyUpsertOne{
-		create: ec,
+func (etc *EmailTemplateCreate) OnConflict(opts ...sql.ConflictOption) *EmailTemplateUpsertOne {
+	etc.conflict = opts
+	return &EmailTemplateUpsertOne{
+		create: etc,
 	}
 }
 
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.Empty.Create().
+//	client.EmailTemplate.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
 //
-func (ec *EmptyCreate) OnConflictColumns(columns ...string) *EmptyUpsertOne {
-	ec.conflict = append(ec.conflict, sql.ConflictColumns(columns...))
-	return &EmptyUpsertOne{
-		create: ec,
+func (etc *EmailTemplateCreate) OnConflictColumns(columns ...string) *EmailTemplateUpsertOne {
+	etc.conflict = append(etc.conflict, sql.ConflictColumns(columns...))
+	return &EmailTemplateUpsertOne{
+		create: etc,
 	}
 }
 
 type (
-	// EmptyUpsertOne is the builder for "upsert"-ing
-	//  one Empty node.
-	EmptyUpsertOne struct {
-		create *EmptyCreate
+	// EmailTemplateUpsertOne is the builder for "upsert"-ing
+	//  one EmailTemplate node.
+	EmailTemplateUpsertOne struct {
+		create *EmailTemplateCreate
 	}
 
-	// EmptyUpsert is the "OnConflict" setter.
-	EmptyUpsert struct {
+	// EmailTemplateUpsert is the "OnConflict" setter.
+	EmailTemplateUpsert struct {
 		*sql.UpdateSet
 	}
 )
@@ -170,13 +170,13 @@ type (
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
-//	client.Empty.Create().
+//	client.EmailTemplate.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
 //
-func (u *EmptyUpsertOne) UpdateNewValues() *EmptyUpsertOne {
+func (u *EmailTemplateUpsertOne) UpdateNewValues() *EmailTemplateUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
 }
@@ -184,48 +184,48 @@ func (u *EmptyUpsertOne) UpdateNewValues() *EmptyUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.Empty.Create().
+//  client.EmailTemplate.Create().
 //      OnConflict(sql.ResolveWithIgnore()).
 //      Exec(ctx)
 //
-func (u *EmptyUpsertOne) Ignore() *EmptyUpsertOne {
+func (u *EmailTemplateUpsertOne) Ignore() *EmailTemplateUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *EmptyUpsertOne) DoNothing() *EmptyUpsertOne {
+func (u *EmailTemplateUpsertOne) DoNothing() *EmailTemplateUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the EmptyCreate.OnConflict
+// Update allows overriding fields `UPDATE` values. See the EmailTemplateCreate.OnConflict
 // documentation for more info.
-func (u *EmptyUpsertOne) Update(set func(*EmptyUpsert)) *EmptyUpsertOne {
+func (u *EmailTemplateUpsertOne) Update(set func(*EmailTemplateUpsert)) *EmailTemplateUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&EmptyUpsert{UpdateSet: update})
+		set(&EmailTemplateUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
 // Exec executes the query.
-func (u *EmptyUpsertOne) Exec(ctx context.Context) error {
+func (u *EmailTemplateUpsertOne) Exec(ctx context.Context) error {
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for EmptyCreate.OnConflict")
+		return errors.New("ent: missing options for EmailTemplateCreate.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *EmptyUpsertOne) ExecX(ctx context.Context) {
+func (u *EmailTemplateUpsertOne) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *EmptyUpsertOne) ID(ctx context.Context) (id int, err error) {
+func (u *EmailTemplateUpsertOne) ID(ctx context.Context) (id int, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -234,7 +234,7 @@ func (u *EmptyUpsertOne) ID(ctx context.Context) (id int, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *EmptyUpsertOne) IDX(ctx context.Context) int {
+func (u *EmailTemplateUpsertOne) IDX(ctx context.Context) int {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -242,23 +242,23 @@ func (u *EmptyUpsertOne) IDX(ctx context.Context) int {
 	return id
 }
 
-// EmptyCreateBulk is the builder for creating many Empty entities in bulk.
-type EmptyCreateBulk struct {
+// EmailTemplateCreateBulk is the builder for creating many EmailTemplate entities in bulk.
+type EmailTemplateCreateBulk struct {
 	config
-	builders []*EmptyCreate
+	builders []*EmailTemplateCreate
 	conflict []sql.ConflictOption
 }
 
-// Save creates the Empty entities in the database.
-func (ecb *EmptyCreateBulk) Save(ctx context.Context) ([]*Empty, error) {
-	specs := make([]*sqlgraph.CreateSpec, len(ecb.builders))
-	nodes := make([]*Empty, len(ecb.builders))
-	mutators := make([]Mutator, len(ecb.builders))
-	for i := range ecb.builders {
+// Save creates the EmailTemplate entities in the database.
+func (etcb *EmailTemplateCreateBulk) Save(ctx context.Context) ([]*EmailTemplate, error) {
+	specs := make([]*sqlgraph.CreateSpec, len(etcb.builders))
+	nodes := make([]*EmailTemplate, len(etcb.builders))
+	mutators := make([]Mutator, len(etcb.builders))
+	for i := range etcb.builders {
 		func(i int, root context.Context) {
-			builder := ecb.builders[i]
+			builder := etcb.builders[i]
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-				mutation, ok := m.(*EmptyMutation)
+				mutation, ok := m.(*EmailTemplateMutation)
 				if !ok {
 					return nil, fmt.Errorf("unexpected mutation type %T", m)
 				}
@@ -269,12 +269,12 @@ func (ecb *EmptyCreateBulk) Save(ctx context.Context) ([]*Empty, error) {
 				nodes[i], specs[i] = builder.createSpec()
 				var err error
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, ecb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, etcb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
-					spec.OnConflict = ecb.conflict
+					spec.OnConflict = etcb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, ecb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, etcb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{err.Error(), err}
 						}
@@ -298,7 +298,7 @@ func (ecb *EmptyCreateBulk) Save(ctx context.Context) ([]*Empty, error) {
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, ecb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, etcb.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -306,8 +306,8 @@ func (ecb *EmptyCreateBulk) Save(ctx context.Context) ([]*Empty, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (ecb *EmptyCreateBulk) SaveX(ctx context.Context) []*Empty {
-	v, err := ecb.Save(ctx)
+func (etcb *EmailTemplateCreateBulk) SaveX(ctx context.Context) []*EmailTemplate {
+	v, err := etcb.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -315,14 +315,14 @@ func (ecb *EmptyCreateBulk) SaveX(ctx context.Context) []*Empty {
 }
 
 // Exec executes the query.
-func (ecb *EmptyCreateBulk) Exec(ctx context.Context) error {
-	_, err := ecb.Save(ctx)
+func (etcb *EmailTemplateCreateBulk) Exec(ctx context.Context) error {
+	_, err := etcb.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ecb *EmptyCreateBulk) ExecX(ctx context.Context) {
-	if err := ecb.Exec(ctx); err != nil {
+func (etcb *EmailTemplateCreateBulk) ExecX(ctx context.Context) {
+	if err := etcb.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
@@ -330,7 +330,7 @@ func (ecb *EmptyCreateBulk) ExecX(ctx context.Context) {
 // OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
 // of the `INSERT` statement. For example:
 //
-//	client.Empty.CreateBulk(builders...).
+//	client.EmailTemplate.CreateBulk(builders...).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -338,43 +338,43 @@ func (ecb *EmptyCreateBulk) ExecX(ctx context.Context) {
 //		).
 //		Exec(ctx)
 //
-func (ecb *EmptyCreateBulk) OnConflict(opts ...sql.ConflictOption) *EmptyUpsertBulk {
-	ecb.conflict = opts
-	return &EmptyUpsertBulk{
-		create: ecb,
+func (etcb *EmailTemplateCreateBulk) OnConflict(opts ...sql.ConflictOption) *EmailTemplateUpsertBulk {
+	etcb.conflict = opts
+	return &EmailTemplateUpsertBulk{
+		create: etcb,
 	}
 }
 
 // OnConflictColumns calls `OnConflict` and configures the columns
 // as conflict target. Using this option is equivalent to using:
 //
-//	client.Empty.Create().
+//	client.EmailTemplate.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
 //
-func (ecb *EmptyCreateBulk) OnConflictColumns(columns ...string) *EmptyUpsertBulk {
-	ecb.conflict = append(ecb.conflict, sql.ConflictColumns(columns...))
-	return &EmptyUpsertBulk{
-		create: ecb,
+func (etcb *EmailTemplateCreateBulk) OnConflictColumns(columns ...string) *EmailTemplateUpsertBulk {
+	etcb.conflict = append(etcb.conflict, sql.ConflictColumns(columns...))
+	return &EmailTemplateUpsertBulk{
+		create: etcb,
 	}
 }
 
-// EmptyUpsertBulk is the builder for "upsert"-ing
-// a bulk of Empty nodes.
-type EmptyUpsertBulk struct {
-	create *EmptyCreateBulk
+// EmailTemplateUpsertBulk is the builder for "upsert"-ing
+// a bulk of EmailTemplate nodes.
+type EmailTemplateUpsertBulk struct {
+	create *EmailTemplateCreateBulk
 }
 
 // UpdateNewValues updates the mutable fields using the new values that
 // were set on create. Using this option is equivalent to using:
 //
-//	client.Empty.Create().
+//	client.EmailTemplate.Create().
 //		OnConflict(
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
 //
-func (u *EmptyUpsertBulk) UpdateNewValues() *EmptyUpsertBulk {
+func (u *EmailTemplateUpsertBulk) UpdateNewValues() *EmailTemplateUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
 }
@@ -382,46 +382,46 @@ func (u *EmptyUpsertBulk) UpdateNewValues() *EmptyUpsertBulk {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//	client.Empty.Create().
+//	client.EmailTemplate.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
 //
-func (u *EmptyUpsertBulk) Ignore() *EmptyUpsertBulk {
+func (u *EmailTemplateUpsertBulk) Ignore() *EmailTemplateUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
 }
 
 // DoNothing configures the conflict_action to `DO NOTHING`.
 // Supported only by SQLite and PostgreSQL.
-func (u *EmptyUpsertBulk) DoNothing() *EmptyUpsertBulk {
+func (u *EmailTemplateUpsertBulk) DoNothing() *EmailTemplateUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.DoNothing())
 	return u
 }
 
-// Update allows overriding fields `UPDATE` values. See the EmptyCreateBulk.OnConflict
+// Update allows overriding fields `UPDATE` values. See the EmailTemplateCreateBulk.OnConflict
 // documentation for more info.
-func (u *EmptyUpsertBulk) Update(set func(*EmptyUpsert)) *EmptyUpsertBulk {
+func (u *EmailTemplateUpsertBulk) Update(set func(*EmailTemplateUpsert)) *EmailTemplateUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
-		set(&EmptyUpsert{UpdateSet: update})
+		set(&EmailTemplateUpsert{UpdateSet: update})
 	}))
 	return u
 }
 
 // Exec executes the query.
-func (u *EmptyUpsertBulk) Exec(ctx context.Context) error {
+func (u *EmailTemplateUpsertBulk) Exec(ctx context.Context) error {
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
-			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the EmptyCreateBulk instead", i)
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the EmailTemplateCreateBulk instead", i)
 		}
 	}
 	if len(u.create.conflict) == 0 {
-		return errors.New("ent: missing options for EmptyCreateBulk.OnConflict")
+		return errors.New("ent: missing options for EmailTemplateCreateBulk.OnConflict")
 	}
 	return u.create.Exec(ctx)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (u *EmptyUpsertBulk) ExecX(ctx context.Context) {
+func (u *EmailTemplateUpsertBulk) ExecX(ctx context.Context) {
 	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}

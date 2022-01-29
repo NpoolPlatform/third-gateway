@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: service-sample
+  name: third-gateway
   namespace: kube-system
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: service-sample
+      app: third-gateway
   template:
     metadata:
       labels:
-        app: service-sample
+        app: third-gateway
     spec:
       containers:
-      - name: service-sample
-        image: uhub.service.ucloud.cn/entropypool/service-sample:latest
+      - name: third-gateway
+        image: uhub.service.ucloud.cn/entropypool/third-gateway:latest
         imagePullPolicy: Always
         env:
         - name: ENV_ENVIRONMENT_TARGET
@@ -42,12 +42,18 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: service-sample
+  name: third-gateway
   namespace: kube-system
 spec:
   ports:
-  - name: api
-    port: 32759
-    targetPort: 32759
+  - name: http
+    port: 50260
+    targetPort: 50260
+  - name: grpc
+    port: 50261
+    targetPort: 50261
+  - name: prometheus
+    port: 50262
+    targetPort: 50262
   selector:
-    app: service-sample
+    app: third-gateway

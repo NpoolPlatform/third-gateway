@@ -1,14 +1,14 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: service-sample-traefik-app-ingress
+  name: third-gateway-traefik-vpn-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: service-sample-traefik-app
-    k8s.kuboard.cn/workload: service-sample-traefik-app
-    kubernetes.io/ingress.class: "traefik-internet-app"
+    k8s.kuboard.cn/displayName: third-gateway-traefik-vpn
+    k8s.kuboard.cn/workload: third-gateway-traefik-vpn
+    kubernetes.io/ingress.class: "traefik-internet-vpn"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-sample-prefix@kubernetescrd,
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-third-gateway-prefix@kubernetescrd,
                                                       kube-system-common-headers@kubernetescrd,
                                                       kube-system-headers-appid-to-body@kubernetescrd,
                                                       kube-system-headers-userid-to-body@kubernetescrd,
@@ -20,10 +20,10 @@ spec:
     - host: api.npool.top
       http: &http_rules
         paths:
-          - path: /api/service-sample
+          - path: /api/third-gateway
             backend:
-              serviceName: service-sample
-              servicePort: 32759
+              serviceName: third-gateway
+              servicePort: 50260
     - host: api.procyon.vip
       http: *http_rules
     - host: api.xpool.top
