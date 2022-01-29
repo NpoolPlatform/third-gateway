@@ -9,7 +9,8 @@ import (
 
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/migrate"
 
-	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/emailtemplate"
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appuseremailtemplate"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -20,8 +21,10 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
-	// EmailTemplate is the client for interacting with the EmailTemplate builders.
-	EmailTemplate *EmailTemplateClient
+	// AppEmailTemplate is the client for interacting with the AppEmailTemplate builders.
+	AppEmailTemplate *AppEmailTemplateClient
+	// AppUserEmailTemplate is the client for interacting with the AppUserEmailTemplate builders.
+	AppUserEmailTemplate *AppUserEmailTemplateClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -35,7 +38,8 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
-	c.EmailTemplate = NewEmailTemplateClient(c.config)
+	c.AppEmailTemplate = NewAppEmailTemplateClient(c.config)
+	c.AppUserEmailTemplate = NewAppUserEmailTemplateClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -67,9 +71,10 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:           ctx,
-		config:        cfg,
-		EmailTemplate: NewEmailTemplateClient(cfg),
+		ctx:                  ctx,
+		config:               cfg,
+		AppEmailTemplate:     NewAppEmailTemplateClient(cfg),
+		AppUserEmailTemplate: NewAppUserEmailTemplateClient(cfg),
 	}, nil
 }
 
@@ -87,16 +92,17 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:           ctx,
-		config:        cfg,
-		EmailTemplate: NewEmailTemplateClient(cfg),
+		ctx:                  ctx,
+		config:               cfg,
+		AppEmailTemplate:     NewAppEmailTemplateClient(cfg),
+		AppUserEmailTemplate: NewAppUserEmailTemplateClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		EmailTemplate.
+//		AppEmailTemplate.
 //		Query().
 //		Count(ctx)
 //
@@ -119,87 +125,88 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.EmailTemplate.Use(hooks...)
+	c.AppEmailTemplate.Use(hooks...)
+	c.AppUserEmailTemplate.Use(hooks...)
 }
 
-// EmailTemplateClient is a client for the EmailTemplate schema.
-type EmailTemplateClient struct {
+// AppEmailTemplateClient is a client for the AppEmailTemplate schema.
+type AppEmailTemplateClient struct {
 	config
 }
 
-// NewEmailTemplateClient returns a client for the EmailTemplate from the given config.
-func NewEmailTemplateClient(c config) *EmailTemplateClient {
-	return &EmailTemplateClient{config: c}
+// NewAppEmailTemplateClient returns a client for the AppEmailTemplate from the given config.
+func NewAppEmailTemplateClient(c config) *AppEmailTemplateClient {
+	return &AppEmailTemplateClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `emailtemplate.Hooks(f(g(h())))`.
-func (c *EmailTemplateClient) Use(hooks ...Hook) {
-	c.hooks.EmailTemplate = append(c.hooks.EmailTemplate, hooks...)
+// A call to `Use(f, g, h)` equals to `appemailtemplate.Hooks(f(g(h())))`.
+func (c *AppEmailTemplateClient) Use(hooks ...Hook) {
+	c.hooks.AppEmailTemplate = append(c.hooks.AppEmailTemplate, hooks...)
 }
 
-// Create returns a create builder for EmailTemplate.
-func (c *EmailTemplateClient) Create() *EmailTemplateCreate {
-	mutation := newEmailTemplateMutation(c.config, OpCreate)
-	return &EmailTemplateCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for AppEmailTemplate.
+func (c *AppEmailTemplateClient) Create() *AppEmailTemplateCreate {
+	mutation := newAppEmailTemplateMutation(c.config, OpCreate)
+	return &AppEmailTemplateCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of EmailTemplate entities.
-func (c *EmailTemplateClient) CreateBulk(builders ...*EmailTemplateCreate) *EmailTemplateCreateBulk {
-	return &EmailTemplateCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of AppEmailTemplate entities.
+func (c *AppEmailTemplateClient) CreateBulk(builders ...*AppEmailTemplateCreate) *AppEmailTemplateCreateBulk {
+	return &AppEmailTemplateCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for EmailTemplate.
-func (c *EmailTemplateClient) Update() *EmailTemplateUpdate {
-	mutation := newEmailTemplateMutation(c.config, OpUpdate)
-	return &EmailTemplateUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for AppEmailTemplate.
+func (c *AppEmailTemplateClient) Update() *AppEmailTemplateUpdate {
+	mutation := newAppEmailTemplateMutation(c.config, OpUpdate)
+	return &AppEmailTemplateUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *EmailTemplateClient) UpdateOne(et *EmailTemplate) *EmailTemplateUpdateOne {
-	mutation := newEmailTemplateMutation(c.config, OpUpdateOne, withEmailTemplate(et))
-	return &EmailTemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *AppEmailTemplateClient) UpdateOne(aet *AppEmailTemplate) *AppEmailTemplateUpdateOne {
+	mutation := newAppEmailTemplateMutation(c.config, OpUpdateOne, withAppEmailTemplate(aet))
+	return &AppEmailTemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *EmailTemplateClient) UpdateOneID(id int) *EmailTemplateUpdateOne {
-	mutation := newEmailTemplateMutation(c.config, OpUpdateOne, withEmailTemplateID(id))
-	return &EmailTemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *AppEmailTemplateClient) UpdateOneID(id int) *AppEmailTemplateUpdateOne {
+	mutation := newAppEmailTemplateMutation(c.config, OpUpdateOne, withAppEmailTemplateID(id))
+	return &AppEmailTemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for EmailTemplate.
-func (c *EmailTemplateClient) Delete() *EmailTemplateDelete {
-	mutation := newEmailTemplateMutation(c.config, OpDelete)
-	return &EmailTemplateDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for AppEmailTemplate.
+func (c *AppEmailTemplateClient) Delete() *AppEmailTemplateDelete {
+	mutation := newAppEmailTemplateMutation(c.config, OpDelete)
+	return &AppEmailTemplateDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *EmailTemplateClient) DeleteOne(et *EmailTemplate) *EmailTemplateDeleteOne {
-	return c.DeleteOneID(et.ID)
+func (c *AppEmailTemplateClient) DeleteOne(aet *AppEmailTemplate) *AppEmailTemplateDeleteOne {
+	return c.DeleteOneID(aet.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *EmailTemplateClient) DeleteOneID(id int) *EmailTemplateDeleteOne {
-	builder := c.Delete().Where(emailtemplate.ID(id))
+func (c *AppEmailTemplateClient) DeleteOneID(id int) *AppEmailTemplateDeleteOne {
+	builder := c.Delete().Where(appemailtemplate.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &EmailTemplateDeleteOne{builder}
+	return &AppEmailTemplateDeleteOne{builder}
 }
 
-// Query returns a query builder for EmailTemplate.
-func (c *EmailTemplateClient) Query() *EmailTemplateQuery {
-	return &EmailTemplateQuery{
+// Query returns a query builder for AppEmailTemplate.
+func (c *AppEmailTemplateClient) Query() *AppEmailTemplateQuery {
+	return &AppEmailTemplateQuery{
 		config: c.config,
 	}
 }
 
-// Get returns a EmailTemplate entity by its id.
-func (c *EmailTemplateClient) Get(ctx context.Context, id int) (*EmailTemplate, error) {
-	return c.Query().Where(emailtemplate.ID(id)).Only(ctx)
+// Get returns a AppEmailTemplate entity by its id.
+func (c *AppEmailTemplateClient) Get(ctx context.Context, id int) (*AppEmailTemplate, error) {
+	return c.Query().Where(appemailtemplate.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *EmailTemplateClient) GetX(ctx context.Context, id int) *EmailTemplate {
+func (c *AppEmailTemplateClient) GetX(ctx context.Context, id int) *AppEmailTemplate {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -208,6 +215,96 @@ func (c *EmailTemplateClient) GetX(ctx context.Context, id int) *EmailTemplate {
 }
 
 // Hooks returns the client hooks.
-func (c *EmailTemplateClient) Hooks() []Hook {
-	return c.hooks.EmailTemplate
+func (c *AppEmailTemplateClient) Hooks() []Hook {
+	return c.hooks.AppEmailTemplate
+}
+
+// AppUserEmailTemplateClient is a client for the AppUserEmailTemplate schema.
+type AppUserEmailTemplateClient struct {
+	config
+}
+
+// NewAppUserEmailTemplateClient returns a client for the AppUserEmailTemplate from the given config.
+func NewAppUserEmailTemplateClient(c config) *AppUserEmailTemplateClient {
+	return &AppUserEmailTemplateClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appuseremailtemplate.Hooks(f(g(h())))`.
+func (c *AppUserEmailTemplateClient) Use(hooks ...Hook) {
+	c.hooks.AppUserEmailTemplate = append(c.hooks.AppUserEmailTemplate, hooks...)
+}
+
+// Create returns a create builder for AppUserEmailTemplate.
+func (c *AppUserEmailTemplateClient) Create() *AppUserEmailTemplateCreate {
+	mutation := newAppUserEmailTemplateMutation(c.config, OpCreate)
+	return &AppUserEmailTemplateCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppUserEmailTemplate entities.
+func (c *AppUserEmailTemplateClient) CreateBulk(builders ...*AppUserEmailTemplateCreate) *AppUserEmailTemplateCreateBulk {
+	return &AppUserEmailTemplateCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppUserEmailTemplate.
+func (c *AppUserEmailTemplateClient) Update() *AppUserEmailTemplateUpdate {
+	mutation := newAppUserEmailTemplateMutation(c.config, OpUpdate)
+	return &AppUserEmailTemplateUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppUserEmailTemplateClient) UpdateOne(auet *AppUserEmailTemplate) *AppUserEmailTemplateUpdateOne {
+	mutation := newAppUserEmailTemplateMutation(c.config, OpUpdateOne, withAppUserEmailTemplate(auet))
+	return &AppUserEmailTemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppUserEmailTemplateClient) UpdateOneID(id int) *AppUserEmailTemplateUpdateOne {
+	mutation := newAppUserEmailTemplateMutation(c.config, OpUpdateOne, withAppUserEmailTemplateID(id))
+	return &AppUserEmailTemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppUserEmailTemplate.
+func (c *AppUserEmailTemplateClient) Delete() *AppUserEmailTemplateDelete {
+	mutation := newAppUserEmailTemplateMutation(c.config, OpDelete)
+	return &AppUserEmailTemplateDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *AppUserEmailTemplateClient) DeleteOne(auet *AppUserEmailTemplate) *AppUserEmailTemplateDeleteOne {
+	return c.DeleteOneID(auet.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *AppUserEmailTemplateClient) DeleteOneID(id int) *AppUserEmailTemplateDeleteOne {
+	builder := c.Delete().Where(appuseremailtemplate.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppUserEmailTemplateDeleteOne{builder}
+}
+
+// Query returns a query builder for AppUserEmailTemplate.
+func (c *AppUserEmailTemplateClient) Query() *AppUserEmailTemplateQuery {
+	return &AppUserEmailTemplateQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppUserEmailTemplate entity by its id.
+func (c *AppUserEmailTemplateClient) Get(ctx context.Context, id int) (*AppUserEmailTemplate, error) {
+	return c.Query().Where(appuseremailtemplate.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppUserEmailTemplateClient) GetX(ctx context.Context, id int) *AppUserEmailTemplate {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppUserEmailTemplateClient) Hooks() []Hook {
+	return c.hooks.AppUserEmailTemplate
 }

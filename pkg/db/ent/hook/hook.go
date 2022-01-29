@@ -9,15 +9,28 @@ import (
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent"
 )
 
-// The EmailTemplateFunc type is an adapter to allow the use of ordinary
-// function as EmailTemplate mutator.
-type EmailTemplateFunc func(context.Context, *ent.EmailTemplateMutation) (ent.Value, error)
+// The AppEmailTemplateFunc type is an adapter to allow the use of ordinary
+// function as AppEmailTemplate mutator.
+type AppEmailTemplateFunc func(context.Context, *ent.AppEmailTemplateMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f EmailTemplateFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.EmailTemplateMutation)
+func (f AppEmailTemplateFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppEmailTemplateMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EmailTemplateMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppEmailTemplateMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The AppUserEmailTemplateFunc type is an adapter to allow the use of ordinary
+// function as AppUserEmailTemplate mutator.
+type AppUserEmailTemplateFunc func(context.Context, *ent.AppUserEmailTemplateMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppUserEmailTemplateFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppUserEmailTemplateMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppUserEmailTemplateMutation", m)
 	}
 	return f(ctx, mv)
 }

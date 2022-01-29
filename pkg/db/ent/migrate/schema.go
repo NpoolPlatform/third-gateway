@@ -8,19 +8,30 @@ import (
 )
 
 var (
-	// EmailTemplatesColumns holds the columns for the "email_templates" table.
-	EmailTemplatesColumns = []*schema.Column{
+	// AppEmailTemplatesColumns holds the columns for the "app_email_templates" table.
+	AppEmailTemplatesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 	}
-	// EmailTemplatesTable holds the schema information for the "email_templates" table.
-	EmailTemplatesTable = &schema.Table{
-		Name:       "email_templates",
-		Columns:    EmailTemplatesColumns,
-		PrimaryKey: []*schema.Column{EmailTemplatesColumns[0]},
+	// AppEmailTemplatesTable holds the schema information for the "app_email_templates" table.
+	AppEmailTemplatesTable = &schema.Table{
+		Name:       "app_email_templates",
+		Columns:    AppEmailTemplatesColumns,
+		PrimaryKey: []*schema.Column{AppEmailTemplatesColumns[0]},
+	}
+	// AppUserEmailTemplatesColumns holds the columns for the "app_user_email_templates" table.
+	AppUserEmailTemplatesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+	}
+	// AppUserEmailTemplatesTable holds the schema information for the "app_user_email_templates" table.
+	AppUserEmailTemplatesTable = &schema.Table{
+		Name:       "app_user_email_templates",
+		Columns:    AppUserEmailTemplatesColumns,
+		PrimaryKey: []*schema.Column{AppUserEmailTemplatesColumns[0]},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		EmailTemplatesTable,
+		AppEmailTemplatesTable,
+		AppUserEmailTemplatesTable,
 	}
 )
 
