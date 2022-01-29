@@ -15,12 +15,16 @@ const (
 	FieldAppID = "app_id"
 	// FieldLangID holds the string denoting the lang_id field in the database.
 	FieldLangID = "lang_id"
+	// FieldSender holds the string denoting the sender field in the database.
+	FieldSender = "sender"
+	// FieldReplyTo holds the string denoting the reply_to field in the database.
+	FieldReplyTo = "reply_to"
+	// FieldCcTo holds the string denoting the cc_to field in the database.
+	FieldCcTo = "cc_to"
 	// FieldSubject holds the string denoting the subject field in the database.
 	FieldSubject = "subject"
 	// FieldBody holds the string denoting the body field in the database.
 	FieldBody = "body"
-	// FieldSender holds the string denoting the sender field in the database.
-	FieldSender = "sender"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
@@ -34,9 +38,11 @@ var Columns = []string{
 	FieldID,
 	FieldAppID,
 	FieldLangID,
+	FieldSender,
+	FieldReplyTo,
+	FieldCcTo,
 	FieldSubject,
 	FieldBody,
-	FieldSender,
 	FieldCreateAt,
 	FieldUpdateAt,
 }

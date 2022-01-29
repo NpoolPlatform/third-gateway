@@ -9,7 +9,6 @@ import (
 	"sync"
 
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
-	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appuseremailtemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/predicate"
 	"github.com/google/uuid"
 
@@ -25,8 +24,7 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeAppEmailTemplate     = "AppEmailTemplate"
-	TypeAppUserEmailTemplate = "AppUserEmailTemplate"
+	TypeAppEmailTemplate = "AppEmailTemplate"
 )
 
 // AppEmailTemplateMutation represents an operation that mutates the AppEmailTemplate nodes in the graph.
@@ -37,9 +35,11 @@ type AppEmailTemplateMutation struct {
 	id            *uuid.UUID
 	app_id        *uuid.UUID
 	lang_id       *uuid.UUID
+	sender        *string
+	reply_to      *string
+	cc_to         *string
 	subject       *string
 	body          *string
-	sender        *string
 	create_at     *uint32
 	addcreate_at  *int32
 	update_at     *uint32
@@ -226,6 +226,114 @@ func (m *AppEmailTemplateMutation) ResetLangID() {
 	m.lang_id = nil
 }
 
+// SetSender sets the "sender" field.
+func (m *AppEmailTemplateMutation) SetSender(s string) {
+	m.sender = &s
+}
+
+// Sender returns the value of the "sender" field in the mutation.
+func (m *AppEmailTemplateMutation) Sender() (r string, exists bool) {
+	v := m.sender
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSender returns the old "sender" field's value of the AppEmailTemplate entity.
+// If the AppEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppEmailTemplateMutation) OldSender(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSender is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSender requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSender: %w", err)
+	}
+	return oldValue.Sender, nil
+}
+
+// ResetSender resets all changes to the "sender" field.
+func (m *AppEmailTemplateMutation) ResetSender() {
+	m.sender = nil
+}
+
+// SetReplyTo sets the "reply_to" field.
+func (m *AppEmailTemplateMutation) SetReplyTo(s string) {
+	m.reply_to = &s
+}
+
+// ReplyTo returns the value of the "reply_to" field in the mutation.
+func (m *AppEmailTemplateMutation) ReplyTo() (r string, exists bool) {
+	v := m.reply_to
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReplyTo returns the old "reply_to" field's value of the AppEmailTemplate entity.
+// If the AppEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppEmailTemplateMutation) OldReplyTo(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldReplyTo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldReplyTo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReplyTo: %w", err)
+	}
+	return oldValue.ReplyTo, nil
+}
+
+// ResetReplyTo resets all changes to the "reply_to" field.
+func (m *AppEmailTemplateMutation) ResetReplyTo() {
+	m.reply_to = nil
+}
+
+// SetCcTo sets the "cc_to" field.
+func (m *AppEmailTemplateMutation) SetCcTo(s string) {
+	m.cc_to = &s
+}
+
+// CcTo returns the value of the "cc_to" field in the mutation.
+func (m *AppEmailTemplateMutation) CcTo() (r string, exists bool) {
+	v := m.cc_to
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCcTo returns the old "cc_to" field's value of the AppEmailTemplate entity.
+// If the AppEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppEmailTemplateMutation) OldCcTo(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCcTo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCcTo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCcTo: %w", err)
+	}
+	return oldValue.CcTo, nil
+}
+
+// ResetCcTo resets all changes to the "cc_to" field.
+func (m *AppEmailTemplateMutation) ResetCcTo() {
+	m.cc_to = nil
+}
+
 // SetSubject sets the "subject" field.
 func (m *AppEmailTemplateMutation) SetSubject(s string) {
 	m.subject = &s
@@ -296,42 +404,6 @@ func (m *AppEmailTemplateMutation) OldBody(ctx context.Context) (v string, err e
 // ResetBody resets all changes to the "body" field.
 func (m *AppEmailTemplateMutation) ResetBody() {
 	m.body = nil
-}
-
-// SetSender sets the "sender" field.
-func (m *AppEmailTemplateMutation) SetSender(s string) {
-	m.sender = &s
-}
-
-// Sender returns the value of the "sender" field in the mutation.
-func (m *AppEmailTemplateMutation) Sender() (r string, exists bool) {
-	v := m.sender
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldSender returns the old "sender" field's value of the AppEmailTemplate entity.
-// If the AppEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppEmailTemplateMutation) OldSender(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSender is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSender requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSender: %w", err)
-	}
-	return oldValue.Sender, nil
-}
-
-// ResetSender resets all changes to the "sender" field.
-func (m *AppEmailTemplateMutation) ResetSender() {
-	m.sender = nil
 }
 
 // SetCreateAt sets the "create_at" field.
@@ -465,21 +537,27 @@ func (m *AppEmailTemplateMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppEmailTemplateMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 9)
 	if m.app_id != nil {
 		fields = append(fields, appemailtemplate.FieldAppID)
 	}
 	if m.lang_id != nil {
 		fields = append(fields, appemailtemplate.FieldLangID)
 	}
+	if m.sender != nil {
+		fields = append(fields, appemailtemplate.FieldSender)
+	}
+	if m.reply_to != nil {
+		fields = append(fields, appemailtemplate.FieldReplyTo)
+	}
+	if m.cc_to != nil {
+		fields = append(fields, appemailtemplate.FieldCcTo)
+	}
 	if m.subject != nil {
 		fields = append(fields, appemailtemplate.FieldSubject)
 	}
 	if m.body != nil {
 		fields = append(fields, appemailtemplate.FieldBody)
-	}
-	if m.sender != nil {
-		fields = append(fields, appemailtemplate.FieldSender)
 	}
 	if m.create_at != nil {
 		fields = append(fields, appemailtemplate.FieldCreateAt)
@@ -499,12 +577,16 @@ func (m *AppEmailTemplateMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case appemailtemplate.FieldLangID:
 		return m.LangID()
+	case appemailtemplate.FieldSender:
+		return m.Sender()
+	case appemailtemplate.FieldReplyTo:
+		return m.ReplyTo()
+	case appemailtemplate.FieldCcTo:
+		return m.CcTo()
 	case appemailtemplate.FieldSubject:
 		return m.Subject()
 	case appemailtemplate.FieldBody:
 		return m.Body()
-	case appemailtemplate.FieldSender:
-		return m.Sender()
 	case appemailtemplate.FieldCreateAt:
 		return m.CreateAt()
 	case appemailtemplate.FieldUpdateAt:
@@ -522,12 +604,16 @@ func (m *AppEmailTemplateMutation) OldField(ctx context.Context, name string) (e
 		return m.OldAppID(ctx)
 	case appemailtemplate.FieldLangID:
 		return m.OldLangID(ctx)
+	case appemailtemplate.FieldSender:
+		return m.OldSender(ctx)
+	case appemailtemplate.FieldReplyTo:
+		return m.OldReplyTo(ctx)
+	case appemailtemplate.FieldCcTo:
+		return m.OldCcTo(ctx)
 	case appemailtemplate.FieldSubject:
 		return m.OldSubject(ctx)
 	case appemailtemplate.FieldBody:
 		return m.OldBody(ctx)
-	case appemailtemplate.FieldSender:
-		return m.OldSender(ctx)
 	case appemailtemplate.FieldCreateAt:
 		return m.OldCreateAt(ctx)
 	case appemailtemplate.FieldUpdateAt:
@@ -555,6 +641,27 @@ func (m *AppEmailTemplateMutation) SetField(name string, value ent.Value) error 
 		}
 		m.SetLangID(v)
 		return nil
+	case appemailtemplate.FieldSender:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSender(v)
+		return nil
+	case appemailtemplate.FieldReplyTo:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReplyTo(v)
+		return nil
+	case appemailtemplate.FieldCcTo:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCcTo(v)
+		return nil
 	case appemailtemplate.FieldSubject:
 		v, ok := value.(string)
 		if !ok {
@@ -568,13 +675,6 @@ func (m *AppEmailTemplateMutation) SetField(name string, value ent.Value) error 
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetBody(v)
-		return nil
-	case appemailtemplate.FieldSender:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetSender(v)
 		return nil
 	case appemailtemplate.FieldCreateAt:
 		v, ok := value.(uint32)
@@ -672,14 +772,20 @@ func (m *AppEmailTemplateMutation) ResetField(name string) error {
 	case appemailtemplate.FieldLangID:
 		m.ResetLangID()
 		return nil
+	case appemailtemplate.FieldSender:
+		m.ResetSender()
+		return nil
+	case appemailtemplate.FieldReplyTo:
+		m.ResetReplyTo()
+		return nil
+	case appemailtemplate.FieldCcTo:
+		m.ResetCcTo()
+		return nil
 	case appemailtemplate.FieldSubject:
 		m.ResetSubject()
 		return nil
 	case appemailtemplate.FieldBody:
 		m.ResetBody()
-		return nil
-	case appemailtemplate.FieldSender:
-		m.ResetSender()
 		return nil
 	case appemailtemplate.FieldCreateAt:
 		m.ResetCreateAt()
@@ -737,768 +843,4 @@ func (m *AppEmailTemplateMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *AppEmailTemplateMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown AppEmailTemplate edge %s", name)
-}
-
-// AppUserEmailTemplateMutation represents an operation that mutates the AppUserEmailTemplate nodes in the graph.
-type AppUserEmailTemplateMutation struct {
-	config
-	op            Op
-	typ           string
-	id            *uuid.UUID
-	app_id        *uuid.UUID
-	user_id       *uuid.UUID
-	lang_id       *uuid.UUID
-	subject       *string
-	body          *string
-	sender        *string
-	create_at     *uint32
-	addcreate_at  *int32
-	update_at     *uint32
-	addupdate_at  *int32
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*AppUserEmailTemplate, error)
-	predicates    []predicate.AppUserEmailTemplate
-}
-
-var _ ent.Mutation = (*AppUserEmailTemplateMutation)(nil)
-
-// appuseremailtemplateOption allows management of the mutation configuration using functional options.
-type appuseremailtemplateOption func(*AppUserEmailTemplateMutation)
-
-// newAppUserEmailTemplateMutation creates new mutation for the AppUserEmailTemplate entity.
-func newAppUserEmailTemplateMutation(c config, op Op, opts ...appuseremailtemplateOption) *AppUserEmailTemplateMutation {
-	m := &AppUserEmailTemplateMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeAppUserEmailTemplate,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withAppUserEmailTemplateID sets the ID field of the mutation.
-func withAppUserEmailTemplateID(id uuid.UUID) appuseremailtemplateOption {
-	return func(m *AppUserEmailTemplateMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *AppUserEmailTemplate
-		)
-		m.oldValue = func(ctx context.Context) (*AppUserEmailTemplate, error) {
-			once.Do(func() {
-				if m.done {
-					err = errors.New("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().AppUserEmailTemplate.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withAppUserEmailTemplate sets the old AppUserEmailTemplate of the mutation.
-func withAppUserEmailTemplate(node *AppUserEmailTemplate) appuseremailtemplateOption {
-	return func(m *AppUserEmailTemplateMutation) {
-		m.oldValue = func(context.Context) (*AppUserEmailTemplate, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m AppUserEmailTemplateMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m AppUserEmailTemplateMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, errors.New("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of AppUserEmailTemplate entities.
-func (m *AppUserEmailTemplateMutation) SetID(id uuid.UUID) {
-	m.id = &id
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *AppUserEmailTemplateMutation) ID() (id uuid.UUID, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// IDs queries the database and returns the entity ids that match the mutation's predicate.
-// That means, if the mutation is applied within a transaction with an isolation level such
-// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
-// or updated by the mutation.
-func (m *AppUserEmailTemplateMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	switch {
-	case m.op.Is(OpUpdateOne | OpDeleteOne):
-		id, exists := m.ID()
-		if exists {
-			return []uuid.UUID{id}, nil
-		}
-		fallthrough
-	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().AppUserEmailTemplate.Query().Where(m.predicates...).IDs(ctx)
-	default:
-		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
-	}
-}
-
-// SetAppID sets the "app_id" field.
-func (m *AppUserEmailTemplateMutation) SetAppID(u uuid.UUID) {
-	m.app_id = &u
-}
-
-// AppID returns the value of the "app_id" field in the mutation.
-func (m *AppUserEmailTemplateMutation) AppID() (r uuid.UUID, exists bool) {
-	v := m.app_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAppID returns the old "app_id" field's value of the AppUserEmailTemplate entity.
-// If the AppUserEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserEmailTemplateMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAppID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
-	}
-	return oldValue.AppID, nil
-}
-
-// ResetAppID resets all changes to the "app_id" field.
-func (m *AppUserEmailTemplateMutation) ResetAppID() {
-	m.app_id = nil
-}
-
-// SetUserID sets the "user_id" field.
-func (m *AppUserEmailTemplateMutation) SetUserID(u uuid.UUID) {
-	m.user_id = &u
-}
-
-// UserID returns the value of the "user_id" field in the mutation.
-func (m *AppUserEmailTemplateMutation) UserID() (r uuid.UUID, exists bool) {
-	v := m.user_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUserID returns the old "user_id" field's value of the AppUserEmailTemplate entity.
-// If the AppUserEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserEmailTemplateMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUserID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
-	}
-	return oldValue.UserID, nil
-}
-
-// ResetUserID resets all changes to the "user_id" field.
-func (m *AppUserEmailTemplateMutation) ResetUserID() {
-	m.user_id = nil
-}
-
-// SetLangID sets the "lang_id" field.
-func (m *AppUserEmailTemplateMutation) SetLangID(u uuid.UUID) {
-	m.lang_id = &u
-}
-
-// LangID returns the value of the "lang_id" field in the mutation.
-func (m *AppUserEmailTemplateMutation) LangID() (r uuid.UUID, exists bool) {
-	v := m.lang_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldLangID returns the old "lang_id" field's value of the AppUserEmailTemplate entity.
-// If the AppUserEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserEmailTemplateMutation) OldLangID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLangID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLangID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLangID: %w", err)
-	}
-	return oldValue.LangID, nil
-}
-
-// ResetLangID resets all changes to the "lang_id" field.
-func (m *AppUserEmailTemplateMutation) ResetLangID() {
-	m.lang_id = nil
-}
-
-// SetSubject sets the "subject" field.
-func (m *AppUserEmailTemplateMutation) SetSubject(s string) {
-	m.subject = &s
-}
-
-// Subject returns the value of the "subject" field in the mutation.
-func (m *AppUserEmailTemplateMutation) Subject() (r string, exists bool) {
-	v := m.subject
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldSubject returns the old "subject" field's value of the AppUserEmailTemplate entity.
-// If the AppUserEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserEmailTemplateMutation) OldSubject(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSubject is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSubject requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSubject: %w", err)
-	}
-	return oldValue.Subject, nil
-}
-
-// ResetSubject resets all changes to the "subject" field.
-func (m *AppUserEmailTemplateMutation) ResetSubject() {
-	m.subject = nil
-}
-
-// SetBody sets the "body" field.
-func (m *AppUserEmailTemplateMutation) SetBody(s string) {
-	m.body = &s
-}
-
-// Body returns the value of the "body" field in the mutation.
-func (m *AppUserEmailTemplateMutation) Body() (r string, exists bool) {
-	v := m.body
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldBody returns the old "body" field's value of the AppUserEmailTemplate entity.
-// If the AppUserEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserEmailTemplateMutation) OldBody(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldBody is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldBody requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldBody: %w", err)
-	}
-	return oldValue.Body, nil
-}
-
-// ResetBody resets all changes to the "body" field.
-func (m *AppUserEmailTemplateMutation) ResetBody() {
-	m.body = nil
-}
-
-// SetSender sets the "sender" field.
-func (m *AppUserEmailTemplateMutation) SetSender(s string) {
-	m.sender = &s
-}
-
-// Sender returns the value of the "sender" field in the mutation.
-func (m *AppUserEmailTemplateMutation) Sender() (r string, exists bool) {
-	v := m.sender
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldSender returns the old "sender" field's value of the AppUserEmailTemplate entity.
-// If the AppUserEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserEmailTemplateMutation) OldSender(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSender is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSender requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSender: %w", err)
-	}
-	return oldValue.Sender, nil
-}
-
-// ResetSender resets all changes to the "sender" field.
-func (m *AppUserEmailTemplateMutation) ResetSender() {
-	m.sender = nil
-}
-
-// SetCreateAt sets the "create_at" field.
-func (m *AppUserEmailTemplateMutation) SetCreateAt(u uint32) {
-	m.create_at = &u
-	m.addcreate_at = nil
-}
-
-// CreateAt returns the value of the "create_at" field in the mutation.
-func (m *AppUserEmailTemplateMutation) CreateAt() (r uint32, exists bool) {
-	v := m.create_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreateAt returns the old "create_at" field's value of the AppUserEmailTemplate entity.
-// If the AppUserEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserEmailTemplateMutation) OldCreateAt(ctx context.Context) (v uint32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreateAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreateAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreateAt: %w", err)
-	}
-	return oldValue.CreateAt, nil
-}
-
-// AddCreateAt adds u to the "create_at" field.
-func (m *AppUserEmailTemplateMutation) AddCreateAt(u int32) {
-	if m.addcreate_at != nil {
-		*m.addcreate_at += u
-	} else {
-		m.addcreate_at = &u
-	}
-}
-
-// AddedCreateAt returns the value that was added to the "create_at" field in this mutation.
-func (m *AppUserEmailTemplateMutation) AddedCreateAt() (r int32, exists bool) {
-	v := m.addcreate_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetCreateAt resets all changes to the "create_at" field.
-func (m *AppUserEmailTemplateMutation) ResetCreateAt() {
-	m.create_at = nil
-	m.addcreate_at = nil
-}
-
-// SetUpdateAt sets the "update_at" field.
-func (m *AppUserEmailTemplateMutation) SetUpdateAt(u uint32) {
-	m.update_at = &u
-	m.addupdate_at = nil
-}
-
-// UpdateAt returns the value of the "update_at" field in the mutation.
-func (m *AppUserEmailTemplateMutation) UpdateAt() (r uint32, exists bool) {
-	v := m.update_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUpdateAt returns the old "update_at" field's value of the AppUserEmailTemplate entity.
-// If the AppUserEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppUserEmailTemplateMutation) OldUpdateAt(ctx context.Context) (v uint32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUpdateAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUpdateAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUpdateAt: %w", err)
-	}
-	return oldValue.UpdateAt, nil
-}
-
-// AddUpdateAt adds u to the "update_at" field.
-func (m *AppUserEmailTemplateMutation) AddUpdateAt(u int32) {
-	if m.addupdate_at != nil {
-		*m.addupdate_at += u
-	} else {
-		m.addupdate_at = &u
-	}
-}
-
-// AddedUpdateAt returns the value that was added to the "update_at" field in this mutation.
-func (m *AppUserEmailTemplateMutation) AddedUpdateAt() (r int32, exists bool) {
-	v := m.addupdate_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetUpdateAt resets all changes to the "update_at" field.
-func (m *AppUserEmailTemplateMutation) ResetUpdateAt() {
-	m.update_at = nil
-	m.addupdate_at = nil
-}
-
-// Where appends a list predicates to the AppUserEmailTemplateMutation builder.
-func (m *AppUserEmailTemplateMutation) Where(ps ...predicate.AppUserEmailTemplate) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// Op returns the operation name.
-func (m *AppUserEmailTemplateMutation) Op() Op {
-	return m.op
-}
-
-// Type returns the node type of this mutation (AppUserEmailTemplate).
-func (m *AppUserEmailTemplateMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *AppUserEmailTemplateMutation) Fields() []string {
-	fields := make([]string, 0, 8)
-	if m.app_id != nil {
-		fields = append(fields, appuseremailtemplate.FieldAppID)
-	}
-	if m.user_id != nil {
-		fields = append(fields, appuseremailtemplate.FieldUserID)
-	}
-	if m.lang_id != nil {
-		fields = append(fields, appuseremailtemplate.FieldLangID)
-	}
-	if m.subject != nil {
-		fields = append(fields, appuseremailtemplate.FieldSubject)
-	}
-	if m.body != nil {
-		fields = append(fields, appuseremailtemplate.FieldBody)
-	}
-	if m.sender != nil {
-		fields = append(fields, appuseremailtemplate.FieldSender)
-	}
-	if m.create_at != nil {
-		fields = append(fields, appuseremailtemplate.FieldCreateAt)
-	}
-	if m.update_at != nil {
-		fields = append(fields, appuseremailtemplate.FieldUpdateAt)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *AppUserEmailTemplateMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case appuseremailtemplate.FieldAppID:
-		return m.AppID()
-	case appuseremailtemplate.FieldUserID:
-		return m.UserID()
-	case appuseremailtemplate.FieldLangID:
-		return m.LangID()
-	case appuseremailtemplate.FieldSubject:
-		return m.Subject()
-	case appuseremailtemplate.FieldBody:
-		return m.Body()
-	case appuseremailtemplate.FieldSender:
-		return m.Sender()
-	case appuseremailtemplate.FieldCreateAt:
-		return m.CreateAt()
-	case appuseremailtemplate.FieldUpdateAt:
-		return m.UpdateAt()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *AppUserEmailTemplateMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case appuseremailtemplate.FieldAppID:
-		return m.OldAppID(ctx)
-	case appuseremailtemplate.FieldUserID:
-		return m.OldUserID(ctx)
-	case appuseremailtemplate.FieldLangID:
-		return m.OldLangID(ctx)
-	case appuseremailtemplate.FieldSubject:
-		return m.OldSubject(ctx)
-	case appuseremailtemplate.FieldBody:
-		return m.OldBody(ctx)
-	case appuseremailtemplate.FieldSender:
-		return m.OldSender(ctx)
-	case appuseremailtemplate.FieldCreateAt:
-		return m.OldCreateAt(ctx)
-	case appuseremailtemplate.FieldUpdateAt:
-		return m.OldUpdateAt(ctx)
-	}
-	return nil, fmt.Errorf("unknown AppUserEmailTemplate field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *AppUserEmailTemplateMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case appuseremailtemplate.FieldAppID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAppID(v)
-		return nil
-	case appuseremailtemplate.FieldUserID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUserID(v)
-		return nil
-	case appuseremailtemplate.FieldLangID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetLangID(v)
-		return nil
-	case appuseremailtemplate.FieldSubject:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetSubject(v)
-		return nil
-	case appuseremailtemplate.FieldBody:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetBody(v)
-		return nil
-	case appuseremailtemplate.FieldSender:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetSender(v)
-		return nil
-	case appuseremailtemplate.FieldCreateAt:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreateAt(v)
-		return nil
-	case appuseremailtemplate.FieldUpdateAt:
-		v, ok := value.(uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUpdateAt(v)
-		return nil
-	}
-	return fmt.Errorf("unknown AppUserEmailTemplate field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *AppUserEmailTemplateMutation) AddedFields() []string {
-	var fields []string
-	if m.addcreate_at != nil {
-		fields = append(fields, appuseremailtemplate.FieldCreateAt)
-	}
-	if m.addupdate_at != nil {
-		fields = append(fields, appuseremailtemplate.FieldUpdateAt)
-	}
-	return fields
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *AppUserEmailTemplateMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case appuseremailtemplate.FieldCreateAt:
-		return m.AddedCreateAt()
-	case appuseremailtemplate.FieldUpdateAt:
-		return m.AddedUpdateAt()
-	}
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *AppUserEmailTemplateMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	case appuseremailtemplate.FieldCreateAt:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddCreateAt(v)
-		return nil
-	case appuseremailtemplate.FieldUpdateAt:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddUpdateAt(v)
-		return nil
-	}
-	return fmt.Errorf("unknown AppUserEmailTemplate numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *AppUserEmailTemplateMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *AppUserEmailTemplateMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *AppUserEmailTemplateMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown AppUserEmailTemplate nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *AppUserEmailTemplateMutation) ResetField(name string) error {
-	switch name {
-	case appuseremailtemplate.FieldAppID:
-		m.ResetAppID()
-		return nil
-	case appuseremailtemplate.FieldUserID:
-		m.ResetUserID()
-		return nil
-	case appuseremailtemplate.FieldLangID:
-		m.ResetLangID()
-		return nil
-	case appuseremailtemplate.FieldSubject:
-		m.ResetSubject()
-		return nil
-	case appuseremailtemplate.FieldBody:
-		m.ResetBody()
-		return nil
-	case appuseremailtemplate.FieldSender:
-		m.ResetSender()
-		return nil
-	case appuseremailtemplate.FieldCreateAt:
-		m.ResetCreateAt()
-		return nil
-	case appuseremailtemplate.FieldUpdateAt:
-		m.ResetUpdateAt()
-		return nil
-	}
-	return fmt.Errorf("unknown AppUserEmailTemplate field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *AppUserEmailTemplateMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *AppUserEmailTemplateMutation) AddedIDs(name string) []ent.Value {
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *AppUserEmailTemplateMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *AppUserEmailTemplateMutation) RemovedIDs(name string) []ent.Value {
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *AppUserEmailTemplateMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *AppUserEmailTemplateMutation) EdgeCleared(name string) bool {
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *AppUserEmailTemplateMutation) ClearEdge(name string) error {
-	return fmt.Errorf("unknown AppUserEmailTemplate unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *AppUserEmailTemplateMutation) ResetEdge(name string) error {
-	return fmt.Errorf("unknown AppUserEmailTemplate edge %s", name)
 }

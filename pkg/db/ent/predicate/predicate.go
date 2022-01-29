@@ -8,6 +8,3 @@ import (
 
 // AppEmailTemplate is the predicate function for appemailtemplate builders.
 type AppEmailTemplate func(*sql.Selector)
-
-// AppUserEmailTemplate is the predicate function for appuseremailtemplate builders.
-type AppUserEmailTemplate func(*sql.Selector)

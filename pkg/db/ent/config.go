@@ -24,8 +24,7 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
-	AppEmailTemplate     []ent.Hook
-	AppUserEmailTemplate []ent.Hook
+	AppEmailTemplate []ent.Hook
 }
 
 // Options applies the options on the config object.

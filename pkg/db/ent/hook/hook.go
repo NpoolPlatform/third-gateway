@@ -22,19 +22,6 @@ func (f AppEmailTemplateFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.V
 	return f(ctx, mv)
 }
 
-// The AppUserEmailTemplateFunc type is an adapter to allow the use of ordinary
-// function as AppUserEmailTemplate mutator.
-type AppUserEmailTemplateFunc func(context.Context, *ent.AppUserEmailTemplateMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f AppUserEmailTemplateFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.AppUserEmailTemplateMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppUserEmailTemplateMutation", m)
-	}
-	return f(ctx, mv)
-}
-
 // Condition is a hook condition function.
 type Condition func(context.Context, ent.Mutation) bool
 

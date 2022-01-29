@@ -20,12 +20,16 @@ type AppEmailTemplate struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// LangID holds the value of the "lang_id" field.
 	LangID uuid.UUID `json:"lang_id,omitempty"`
+	// Sender holds the value of the "sender" field.
+	Sender string `json:"sender,omitempty"`
+	// ReplyTo holds the value of the "reply_to" field.
+	ReplyTo string `json:"reply_to,omitempty"`
+	// CcTo holds the value of the "cc_to" field.
+	CcTo string `json:"cc_to,omitempty"`
 	// Subject holds the value of the "subject" field.
 	Subject string `json:"subject,omitempty"`
 	// Body holds the value of the "body" field.
 	Body string `json:"body,omitempty"`
-	// Sender holds the value of the "sender" field.
-	Sender string `json:"sender,omitempty"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt uint32 `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
@@ -39,7 +43,7 @@ func (*AppEmailTemplate) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appemailtemplate.FieldCreateAt, appemailtemplate.FieldUpdateAt:
 			values[i] = new(sql.NullInt64)
-		case appemailtemplate.FieldSubject, appemailtemplate.FieldBody, appemailtemplate.FieldSender:
+		case appemailtemplate.FieldSender, appemailtemplate.FieldReplyTo, appemailtemplate.FieldCcTo, appemailtemplate.FieldSubject, appemailtemplate.FieldBody:
 			values[i] = new(sql.NullString)
 		case appemailtemplate.FieldID, appemailtemplate.FieldAppID, appemailtemplate.FieldLangID:
 			values[i] = new(uuid.UUID)
@@ -76,6 +80,24 @@ func (aet *AppEmailTemplate) assignValues(columns []string, values []interface{}
 			} else if value != nil {
 				aet.LangID = *value
 			}
+		case appemailtemplate.FieldSender:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field sender", values[i])
+			} else if value.Valid {
+				aet.Sender = value.String
+			}
+		case appemailtemplate.FieldReplyTo:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field reply_to", values[i])
+			} else if value.Valid {
+				aet.ReplyTo = value.String
+			}
+		case appemailtemplate.FieldCcTo:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field cc_to", values[i])
+			} else if value.Valid {
+				aet.CcTo = value.String
+			}
 		case appemailtemplate.FieldSubject:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field subject", values[i])
@@ -87,12 +109,6 @@ func (aet *AppEmailTemplate) assignValues(columns []string, values []interface{}
 				return fmt.Errorf("unexpected type %T for field body", values[i])
 			} else if value.Valid {
 				aet.Body = value.String
-			}
-		case appemailtemplate.FieldSender:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field sender", values[i])
-			} else if value.Valid {
-				aet.Sender = value.String
 			}
 		case appemailtemplate.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -138,12 +154,16 @@ func (aet *AppEmailTemplate) String() string {
 	builder.WriteString(fmt.Sprintf("%v", aet.AppID))
 	builder.WriteString(", lang_id=")
 	builder.WriteString(fmt.Sprintf("%v", aet.LangID))
+	builder.WriteString(", sender=")
+	builder.WriteString(aet.Sender)
+	builder.WriteString(", reply_to=")
+	builder.WriteString(aet.ReplyTo)
+	builder.WriteString(", cc_to=")
+	builder.WriteString(aet.CcTo)
 	builder.WriteString(", subject=")
 	builder.WriteString(aet.Subject)
 	builder.WriteString(", body=")
 	builder.WriteString(aet.Body)
-	builder.WriteString(", sender=")
-	builder.WriteString(aet.Sender)
 	builder.WriteString(", create_at=")
 	builder.WriteString(fmt.Sprintf("%v", aet.CreateAt))
 	builder.WriteString(", update_at=")

@@ -13,9 +13,11 @@ var (
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "lang_id", Type: field.TypeUUID},
+		{Name: "sender", Type: field.TypeString},
+		{Name: "reply_to", Type: field.TypeString},
+		{Name: "cc_to", Type: field.TypeString},
 		{Name: "subject", Type: field.TypeString},
 		{Name: "body", Type: field.TypeString},
-		{Name: "sender", Type: field.TypeString},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 	}
@@ -25,28 +27,9 @@ var (
 		Columns:    AppEmailTemplatesColumns,
 		PrimaryKey: []*schema.Column{AppEmailTemplatesColumns[0]},
 	}
-	// AppUserEmailTemplatesColumns holds the columns for the "app_user_email_templates" table.
-	AppUserEmailTemplatesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "app_id", Type: field.TypeUUID},
-		{Name: "user_id", Type: field.TypeUUID},
-		{Name: "lang_id", Type: field.TypeUUID},
-		{Name: "subject", Type: field.TypeString},
-		{Name: "body", Type: field.TypeString},
-		{Name: "sender", Type: field.TypeString},
-		{Name: "create_at", Type: field.TypeUint32},
-		{Name: "update_at", Type: field.TypeUint32},
-	}
-	// AppUserEmailTemplatesTable holds the schema information for the "app_user_email_templates" table.
-	AppUserEmailTemplatesTable = &schema.Table{
-		Name:       "app_user_email_templates",
-		Columns:    AppUserEmailTemplatesColumns,
-		PrimaryKey: []*schema.Column{AppUserEmailTemplatesColumns[0]},
-	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppEmailTemplatesTable,
-		AppUserEmailTemplatesTable,
 	}
 )
 
