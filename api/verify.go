@@ -3,7 +3,13 @@ package api
 import (
 	"context"
 
+	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
+	emailmw "github.com/NpoolPlatform/third-gateway/pkg/middleware/email"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (s *Server) SendSMSCode(ctx context.Context, in *npool.SendSMSCodeRequest) (*npool.SendSMSCodeResponse, error) {
@@ -15,9 +21,19 @@ func (s *Server) VerifySMSCode(ctx context.Context, in *npool.VerifySMSCodeReque
 }
 
 func (s *Server) SendEmailCode(ctx context.Context, in *npool.SendEmailCodeRequest) (*npool.SendEmailCodeResponse, error) {
-	return nil, nil
+	resp, err := emailmw.SendCode(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail send email code: %f", err)
+		return &npool.SendEmailCodeResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) VerifyEmailCode(ctx context.Context, in *npool.VerifyEmailCodeRequest) (*npool.VerifyEmailCodeResponse, error) {
-	return nil, nil
+	resp, err := emailmw.VerifyCode(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail verify email code: %f", err)
+		return &npool.VerifyEmailCodeResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
