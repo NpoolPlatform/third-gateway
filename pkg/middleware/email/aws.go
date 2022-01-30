@@ -17,7 +17,7 @@ const (
 	CharSet   = "UTF-8"
 )
 
-func sendEmailByAWS(subject, content, from, to string, replyTo ...string) error {
+func sendEmailByAWS(subject, content, from, to string, replyTo ...string) error { //nolint
 	myServiceName := config.GetStringValueWithNameSpace("", config.KeyHostname)
 	region := config.GetStringValueWithNameSpace(myServiceName, Region)
 	accessKey := config.GetStringValueWithNameSpace(myServiceName, AccessKey)

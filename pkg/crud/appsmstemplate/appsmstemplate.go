@@ -182,5 +182,4 @@ func GetByAppLangUsedFor(ctx context.Context, in *npool.GetAppSMSTemplateByAppLa
 	return &npool.GetAppSMSTemplateByAppLangUsedForResponse{
 		Info: template,
 	}, nil
-
 }

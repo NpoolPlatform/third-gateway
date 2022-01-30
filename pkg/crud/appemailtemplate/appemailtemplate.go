@@ -191,5 +191,4 @@ func GetByAppLangUsedFor(ctx context.Context, in *npool.GetAppEmailTemplateByApp
 	return &npool.GetAppEmailTemplateByAppLangUsedForResponse{
 		Info: template,
 	}, nil
-
 }
