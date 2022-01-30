@@ -6,7 +6,7 @@ metadata:
   annotations:
     k8s.kuboard.cn/displayName: third-gateway-traefik-app
     k8s.kuboard.cn/workload: third-gateway-traefik-app
-    kubernetes.io/ingress.class: "traefik-internet-app"
+    kubernetes.io/ingress.class: "traefik-internet"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-third-gateway-prefix@kubernetescrd,
                                                       kube-system-common-headers@kubernetescrd,
