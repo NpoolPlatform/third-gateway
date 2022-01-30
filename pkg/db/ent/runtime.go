@@ -16,11 +16,11 @@ func init() {
 	appemailtemplateFields := schema.AppEmailTemplate{}.Fields()
 	_ = appemailtemplateFields
 	// appemailtemplateDescCreateAt is the schema descriptor for create_at field.
-	appemailtemplateDescCreateAt := appemailtemplateFields[8].Descriptor()
+	appemailtemplateDescCreateAt := appemailtemplateFields[9].Descriptor()
 	// appemailtemplate.DefaultCreateAt holds the default value on creation for the create_at field.
 	appemailtemplate.DefaultCreateAt = appemailtemplateDescCreateAt.Default.(func() uint32)
 	// appemailtemplateDescUpdateAt is the schema descriptor for update_at field.
-	appemailtemplateDescUpdateAt := appemailtemplateFields[9].Descriptor()
+	appemailtemplateDescUpdateAt := appemailtemplateFields[10].Descriptor()
 	// appemailtemplate.DefaultUpdateAt holds the default value on creation for the update_at field.
 	appemailtemplate.DefaultUpdateAt = appemailtemplateDescUpdateAt.Default.(func() uint32)
 	// appemailtemplate.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
@@ -32,11 +32,11 @@ func init() {
 	appsmstemplateFields := schema.AppSMSTemplate{}.Fields()
 	_ = appsmstemplateFields
 	// appsmstemplateDescCreateAt is the schema descriptor for create_at field.
-	appsmstemplateDescCreateAt := appsmstemplateFields[5].Descriptor()
+	appsmstemplateDescCreateAt := appsmstemplateFields[6].Descriptor()
 	// appsmstemplate.DefaultCreateAt holds the default value on creation for the create_at field.
 	appsmstemplate.DefaultCreateAt = appsmstemplateDescCreateAt.Default.(func() uint32)
 	// appsmstemplateDescUpdateAt is the schema descriptor for update_at field.
-	appsmstemplateDescUpdateAt := appsmstemplateFields[6].Descriptor()
+	appsmstemplateDescUpdateAt := appsmstemplateFields[7].Descriptor()
 	// appsmstemplate.DefaultUpdateAt holds the default value on creation for the update_at field.
 	appsmstemplate.DefaultUpdateAt = appsmstemplateDescUpdateAt.Default.(func() uint32)
 	// appsmstemplate.UpdateDefaultUpdateAt holds the default value on update for the update_at field.

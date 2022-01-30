@@ -35,21 +35,27 @@ func (aetc *AppEmailTemplateCreate) SetLangID(u uuid.UUID) *AppEmailTemplateCrea
 	return aetc
 }
 
+// SetUsedFor sets the "used_for" field.
+func (aetc *AppEmailTemplateCreate) SetUsedFor(s string) *AppEmailTemplateCreate {
+	aetc.mutation.SetUsedFor(s)
+	return aetc
+}
+
 // SetSender sets the "sender" field.
 func (aetc *AppEmailTemplateCreate) SetSender(s string) *AppEmailTemplateCreate {
 	aetc.mutation.SetSender(s)
 	return aetc
 }
 
-// SetReplyTo sets the "reply_to" field.
-func (aetc *AppEmailTemplateCreate) SetReplyTo(s string) *AppEmailTemplateCreate {
-	aetc.mutation.SetReplyTo(s)
+// SetReplyTos sets the "reply_tos" field.
+func (aetc *AppEmailTemplateCreate) SetReplyTos(s []string) *AppEmailTemplateCreate {
+	aetc.mutation.SetReplyTos(s)
 	return aetc
 }
 
-// SetCcTo sets the "cc_to" field.
-func (aetc *AppEmailTemplateCreate) SetCcTo(s string) *AppEmailTemplateCreate {
-	aetc.mutation.SetCcTo(s)
+// SetCcTos sets the "cc_tos" field.
+func (aetc *AppEmailTemplateCreate) SetCcTos(s []string) *AppEmailTemplateCreate {
+	aetc.mutation.SetCcTos(s)
 	return aetc
 }
 
@@ -200,14 +206,17 @@ func (aetc *AppEmailTemplateCreate) check() error {
 	if _, ok := aetc.mutation.LangID(); !ok {
 		return &ValidationError{Name: "lang_id", err: errors.New(`ent: missing required field "AppEmailTemplate.lang_id"`)}
 	}
+	if _, ok := aetc.mutation.UsedFor(); !ok {
+		return &ValidationError{Name: "used_for", err: errors.New(`ent: missing required field "AppEmailTemplate.used_for"`)}
+	}
 	if _, ok := aetc.mutation.Sender(); !ok {
 		return &ValidationError{Name: "sender", err: errors.New(`ent: missing required field "AppEmailTemplate.sender"`)}
 	}
-	if _, ok := aetc.mutation.ReplyTo(); !ok {
-		return &ValidationError{Name: "reply_to", err: errors.New(`ent: missing required field "AppEmailTemplate.reply_to"`)}
+	if _, ok := aetc.mutation.ReplyTos(); !ok {
+		return &ValidationError{Name: "reply_tos", err: errors.New(`ent: missing required field "AppEmailTemplate.reply_tos"`)}
 	}
-	if _, ok := aetc.mutation.CcTo(); !ok {
-		return &ValidationError{Name: "cc_to", err: errors.New(`ent: missing required field "AppEmailTemplate.cc_to"`)}
+	if _, ok := aetc.mutation.CcTos(); !ok {
+		return &ValidationError{Name: "cc_tos", err: errors.New(`ent: missing required field "AppEmailTemplate.cc_tos"`)}
 	}
 	if _, ok := aetc.mutation.Subject(); !ok {
 		return &ValidationError{Name: "subject", err: errors.New(`ent: missing required field "AppEmailTemplate.subject"`)}
@@ -274,6 +283,14 @@ func (aetc *AppEmailTemplateCreate) createSpec() (*AppEmailTemplate, *sqlgraph.C
 		})
 		_node.LangID = value
 	}
+	if value, ok := aetc.mutation.UsedFor(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldUsedFor,
+		})
+		_node.UsedFor = value
+	}
 	if value, ok := aetc.mutation.Sender(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -282,21 +299,21 @@ func (aetc *AppEmailTemplateCreate) createSpec() (*AppEmailTemplate, *sqlgraph.C
 		})
 		_node.Sender = value
 	}
-	if value, ok := aetc.mutation.ReplyTo(); ok {
+	if value, ok := aetc.mutation.ReplyTos(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeJSON,
 			Value:  value,
-			Column: appemailtemplate.FieldReplyTo,
+			Column: appemailtemplate.FieldReplyTos,
 		})
-		_node.ReplyTo = value
+		_node.ReplyTos = value
 	}
-	if value, ok := aetc.mutation.CcTo(); ok {
+	if value, ok := aetc.mutation.CcTos(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeJSON,
 			Value:  value,
-			Column: appemailtemplate.FieldCcTo,
+			Column: appemailtemplate.FieldCcTos,
 		})
-		_node.CcTo = value
+		_node.CcTos = value
 	}
 	if value, ok := aetc.mutation.Subject(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -408,6 +425,18 @@ func (u *AppEmailTemplateUpsert) UpdateLangID() *AppEmailTemplateUpsert {
 	return u
 }
 
+// SetUsedFor sets the "used_for" field.
+func (u *AppEmailTemplateUpsert) SetUsedFor(v string) *AppEmailTemplateUpsert {
+	u.Set(appemailtemplate.FieldUsedFor, v)
+	return u
+}
+
+// UpdateUsedFor sets the "used_for" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsert) UpdateUsedFor() *AppEmailTemplateUpsert {
+	u.SetExcluded(appemailtemplate.FieldUsedFor)
+	return u
+}
+
 // SetSender sets the "sender" field.
 func (u *AppEmailTemplateUpsert) SetSender(v string) *AppEmailTemplateUpsert {
 	u.Set(appemailtemplate.FieldSender, v)
@@ -420,27 +449,27 @@ func (u *AppEmailTemplateUpsert) UpdateSender() *AppEmailTemplateUpsert {
 	return u
 }
 
-// SetReplyTo sets the "reply_to" field.
-func (u *AppEmailTemplateUpsert) SetReplyTo(v string) *AppEmailTemplateUpsert {
-	u.Set(appemailtemplate.FieldReplyTo, v)
+// SetReplyTos sets the "reply_tos" field.
+func (u *AppEmailTemplateUpsert) SetReplyTos(v []string) *AppEmailTemplateUpsert {
+	u.Set(appemailtemplate.FieldReplyTos, v)
 	return u
 }
 
-// UpdateReplyTo sets the "reply_to" field to the value that was provided on create.
-func (u *AppEmailTemplateUpsert) UpdateReplyTo() *AppEmailTemplateUpsert {
-	u.SetExcluded(appemailtemplate.FieldReplyTo)
+// UpdateReplyTos sets the "reply_tos" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsert) UpdateReplyTos() *AppEmailTemplateUpsert {
+	u.SetExcluded(appemailtemplate.FieldReplyTos)
 	return u
 }
 
-// SetCcTo sets the "cc_to" field.
-func (u *AppEmailTemplateUpsert) SetCcTo(v string) *AppEmailTemplateUpsert {
-	u.Set(appemailtemplate.FieldCcTo, v)
+// SetCcTos sets the "cc_tos" field.
+func (u *AppEmailTemplateUpsert) SetCcTos(v []string) *AppEmailTemplateUpsert {
+	u.Set(appemailtemplate.FieldCcTos, v)
 	return u
 }
 
-// UpdateCcTo sets the "cc_to" field to the value that was provided on create.
-func (u *AppEmailTemplateUpsert) UpdateCcTo() *AppEmailTemplateUpsert {
-	u.SetExcluded(appemailtemplate.FieldCcTo)
+// UpdateCcTos sets the "cc_tos" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsert) UpdateCcTos() *AppEmailTemplateUpsert {
+	u.SetExcluded(appemailtemplate.FieldCcTos)
 	return u
 }
 
@@ -582,6 +611,20 @@ func (u *AppEmailTemplateUpsertOne) UpdateLangID() *AppEmailTemplateUpsertOne {
 	})
 }
 
+// SetUsedFor sets the "used_for" field.
+func (u *AppEmailTemplateUpsertOne) SetUsedFor(v string) *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetUsedFor(v)
+	})
+}
+
+// UpdateUsedFor sets the "used_for" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertOne) UpdateUsedFor() *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateUsedFor()
+	})
+}
+
 // SetSender sets the "sender" field.
 func (u *AppEmailTemplateUpsertOne) SetSender(v string) *AppEmailTemplateUpsertOne {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
@@ -596,31 +639,31 @@ func (u *AppEmailTemplateUpsertOne) UpdateSender() *AppEmailTemplateUpsertOne {
 	})
 }
 
-// SetReplyTo sets the "reply_to" field.
-func (u *AppEmailTemplateUpsertOne) SetReplyTo(v string) *AppEmailTemplateUpsertOne {
+// SetReplyTos sets the "reply_tos" field.
+func (u *AppEmailTemplateUpsertOne) SetReplyTos(v []string) *AppEmailTemplateUpsertOne {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
-		s.SetReplyTo(v)
+		s.SetReplyTos(v)
 	})
 }
 
-// UpdateReplyTo sets the "reply_to" field to the value that was provided on create.
-func (u *AppEmailTemplateUpsertOne) UpdateReplyTo() *AppEmailTemplateUpsertOne {
+// UpdateReplyTos sets the "reply_tos" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertOne) UpdateReplyTos() *AppEmailTemplateUpsertOne {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
-		s.UpdateReplyTo()
+		s.UpdateReplyTos()
 	})
 }
 
-// SetCcTo sets the "cc_to" field.
-func (u *AppEmailTemplateUpsertOne) SetCcTo(v string) *AppEmailTemplateUpsertOne {
+// SetCcTos sets the "cc_tos" field.
+func (u *AppEmailTemplateUpsertOne) SetCcTos(v []string) *AppEmailTemplateUpsertOne {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
-		s.SetCcTo(v)
+		s.SetCcTos(v)
 	})
 }
 
-// UpdateCcTo sets the "cc_to" field to the value that was provided on create.
-func (u *AppEmailTemplateUpsertOne) UpdateCcTo() *AppEmailTemplateUpsertOne {
+// UpdateCcTos sets the "cc_tos" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertOne) UpdateCcTos() *AppEmailTemplateUpsertOne {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
-		s.UpdateCcTo()
+		s.UpdateCcTos()
 	})
 }
 
@@ -938,6 +981,20 @@ func (u *AppEmailTemplateUpsertBulk) UpdateLangID() *AppEmailTemplateUpsertBulk 
 	})
 }
 
+// SetUsedFor sets the "used_for" field.
+func (u *AppEmailTemplateUpsertBulk) SetUsedFor(v string) *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetUsedFor(v)
+	})
+}
+
+// UpdateUsedFor sets the "used_for" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertBulk) UpdateUsedFor() *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateUsedFor()
+	})
+}
+
 // SetSender sets the "sender" field.
 func (u *AppEmailTemplateUpsertBulk) SetSender(v string) *AppEmailTemplateUpsertBulk {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
@@ -952,31 +1009,31 @@ func (u *AppEmailTemplateUpsertBulk) UpdateSender() *AppEmailTemplateUpsertBulk 
 	})
 }
 
-// SetReplyTo sets the "reply_to" field.
-func (u *AppEmailTemplateUpsertBulk) SetReplyTo(v string) *AppEmailTemplateUpsertBulk {
+// SetReplyTos sets the "reply_tos" field.
+func (u *AppEmailTemplateUpsertBulk) SetReplyTos(v []string) *AppEmailTemplateUpsertBulk {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
-		s.SetReplyTo(v)
+		s.SetReplyTos(v)
 	})
 }
 
-// UpdateReplyTo sets the "reply_to" field to the value that was provided on create.
-func (u *AppEmailTemplateUpsertBulk) UpdateReplyTo() *AppEmailTemplateUpsertBulk {
+// UpdateReplyTos sets the "reply_tos" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertBulk) UpdateReplyTos() *AppEmailTemplateUpsertBulk {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
-		s.UpdateReplyTo()
+		s.UpdateReplyTos()
 	})
 }
 
-// SetCcTo sets the "cc_to" field.
-func (u *AppEmailTemplateUpsertBulk) SetCcTo(v string) *AppEmailTemplateUpsertBulk {
+// SetCcTos sets the "cc_tos" field.
+func (u *AppEmailTemplateUpsertBulk) SetCcTos(v []string) *AppEmailTemplateUpsertBulk {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
-		s.SetCcTo(v)
+		s.SetCcTos(v)
 	})
 }
 
-// UpdateCcTo sets the "cc_to" field to the value that was provided on create.
-func (u *AppEmailTemplateUpsertBulk) UpdateCcTo() *AppEmailTemplateUpsertBulk {
+// UpdateCcTos sets the "cc_tos" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertBulk) UpdateCcTos() *AppEmailTemplateUpsertBulk {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
-		s.UpdateCcTo()
+		s.UpdateCcTos()
 	})
 }
 

@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -20,12 +21,14 @@ type AppEmailTemplate struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// LangID holds the value of the "lang_id" field.
 	LangID uuid.UUID `json:"lang_id,omitempty"`
+	// UsedFor holds the value of the "used_for" field.
+	UsedFor string `json:"used_for,omitempty"`
 	// Sender holds the value of the "sender" field.
 	Sender string `json:"sender,omitempty"`
-	// ReplyTo holds the value of the "reply_to" field.
-	ReplyTo string `json:"reply_to,omitempty"`
-	// CcTo holds the value of the "cc_to" field.
-	CcTo string `json:"cc_to,omitempty"`
+	// ReplyTos holds the value of the "reply_tos" field.
+	ReplyTos []string `json:"reply_tos,omitempty"`
+	// CcTos holds the value of the "cc_tos" field.
+	CcTos []string `json:"cc_tos,omitempty"`
 	// Subject holds the value of the "subject" field.
 	Subject string `json:"subject,omitempty"`
 	// Body holds the value of the "body" field.
@@ -41,9 +44,11 @@ func (*AppEmailTemplate) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case appemailtemplate.FieldReplyTos, appemailtemplate.FieldCcTos:
+			values[i] = new([]byte)
 		case appemailtemplate.FieldCreateAt, appemailtemplate.FieldUpdateAt:
 			values[i] = new(sql.NullInt64)
-		case appemailtemplate.FieldSender, appemailtemplate.FieldReplyTo, appemailtemplate.FieldCcTo, appemailtemplate.FieldSubject, appemailtemplate.FieldBody:
+		case appemailtemplate.FieldUsedFor, appemailtemplate.FieldSender, appemailtemplate.FieldSubject, appemailtemplate.FieldBody:
 			values[i] = new(sql.NullString)
 		case appemailtemplate.FieldID, appemailtemplate.FieldAppID, appemailtemplate.FieldLangID:
 			values[i] = new(uuid.UUID)
@@ -80,23 +85,33 @@ func (aet *AppEmailTemplate) assignValues(columns []string, values []interface{}
 			} else if value != nil {
 				aet.LangID = *value
 			}
+		case appemailtemplate.FieldUsedFor:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field used_for", values[i])
+			} else if value.Valid {
+				aet.UsedFor = value.String
+			}
 		case appemailtemplate.FieldSender:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field sender", values[i])
 			} else if value.Valid {
 				aet.Sender = value.String
 			}
-		case appemailtemplate.FieldReplyTo:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field reply_to", values[i])
-			} else if value.Valid {
-				aet.ReplyTo = value.String
+		case appemailtemplate.FieldReplyTos:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field reply_tos", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &aet.ReplyTos); err != nil {
+					return fmt.Errorf("unmarshal field reply_tos: %w", err)
+				}
 			}
-		case appemailtemplate.FieldCcTo:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field cc_to", values[i])
-			} else if value.Valid {
-				aet.CcTo = value.String
+		case appemailtemplate.FieldCcTos:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field cc_tos", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &aet.CcTos); err != nil {
+					return fmt.Errorf("unmarshal field cc_tos: %w", err)
+				}
 			}
 		case appemailtemplate.FieldSubject:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -154,12 +169,14 @@ func (aet *AppEmailTemplate) String() string {
 	builder.WriteString(fmt.Sprintf("%v", aet.AppID))
 	builder.WriteString(", lang_id=")
 	builder.WriteString(fmt.Sprintf("%v", aet.LangID))
+	builder.WriteString(", used_for=")
+	builder.WriteString(aet.UsedFor)
 	builder.WriteString(", sender=")
 	builder.WriteString(aet.Sender)
-	builder.WriteString(", reply_to=")
-	builder.WriteString(aet.ReplyTo)
-	builder.WriteString(", cc_to=")
-	builder.WriteString(aet.CcTo)
+	builder.WriteString(", reply_tos=")
+	builder.WriteString(fmt.Sprintf("%v", aet.ReplyTos))
+	builder.WriteString(", cc_tos=")
+	builder.WriteString(fmt.Sprintf("%v", aet.CcTos))
 	builder.WriteString(", subject=")
 	builder.WriteString(aet.Subject)
 	builder.WriteString(", body=")

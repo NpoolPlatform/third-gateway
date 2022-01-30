@@ -105,24 +105,17 @@ func LangID(v uuid.UUID) predicate.AppEmailTemplate {
 	})
 }
 
+// UsedFor applies equality check predicate on the "used_for" field. It's identical to UsedForEQ.
+func UsedFor(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUsedFor), v))
+	})
+}
+
 // Sender applies equality check predicate on the "sender" field. It's identical to SenderEQ.
 func Sender(v string) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldSender), v))
-	})
-}
-
-// ReplyTo applies equality check predicate on the "reply_to" field. It's identical to ReplyToEQ.
-func ReplyTo(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldReplyTo), v))
-	})
-}
-
-// CcTo applies equality check predicate on the "cc_to" field. It's identical to CcToEQ.
-func CcTo(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCcTo), v))
 	})
 }
 
@@ -306,6 +299,117 @@ func LangIDLTE(v uuid.UUID) predicate.AppEmailTemplate {
 	})
 }
 
+// UsedForEQ applies the EQ predicate on the "used_for" field.
+func UsedForEQ(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForNEQ applies the NEQ predicate on the "used_for" field.
+func UsedForNEQ(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForIn applies the In predicate on the "used_for" field.
+func UsedForIn(vs ...string) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUsedFor), v...))
+	})
+}
+
+// UsedForNotIn applies the NotIn predicate on the "used_for" field.
+func UsedForNotIn(vs ...string) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUsedFor), v...))
+	})
+}
+
+// UsedForGT applies the GT predicate on the "used_for" field.
+func UsedForGT(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForGTE applies the GTE predicate on the "used_for" field.
+func UsedForGTE(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForLT applies the LT predicate on the "used_for" field.
+func UsedForLT(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForLTE applies the LTE predicate on the "used_for" field.
+func UsedForLTE(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForContains applies the Contains predicate on the "used_for" field.
+func UsedForContains(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForHasPrefix applies the HasPrefix predicate on the "used_for" field.
+func UsedForHasPrefix(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForHasSuffix applies the HasSuffix predicate on the "used_for" field.
+func UsedForHasSuffix(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForEqualFold applies the EqualFold predicate on the "used_for" field.
+func UsedForEqualFold(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForContainsFold applies the ContainsFold predicate on the "used_for" field.
+func UsedForContainsFold(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldUsedFor), v))
+	})
+}
+
 // SenderEQ applies the EQ predicate on the "sender" field.
 func SenderEQ(v string) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
@@ -414,228 +518,6 @@ func SenderEqualFold(v string) predicate.AppEmailTemplate {
 func SenderContainsFold(v string) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldSender), v))
-	})
-}
-
-// ReplyToEQ applies the EQ predicate on the "reply_to" field.
-func ReplyToEQ(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldReplyTo), v))
-	})
-}
-
-// ReplyToNEQ applies the NEQ predicate on the "reply_to" field.
-func ReplyToNEQ(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldReplyTo), v))
-	})
-}
-
-// ReplyToIn applies the In predicate on the "reply_to" field.
-func ReplyToIn(vs ...string) predicate.AppEmailTemplate {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldReplyTo), v...))
-	})
-}
-
-// ReplyToNotIn applies the NotIn predicate on the "reply_to" field.
-func ReplyToNotIn(vs ...string) predicate.AppEmailTemplate {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldReplyTo), v...))
-	})
-}
-
-// ReplyToGT applies the GT predicate on the "reply_to" field.
-func ReplyToGT(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldReplyTo), v))
-	})
-}
-
-// ReplyToGTE applies the GTE predicate on the "reply_to" field.
-func ReplyToGTE(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldReplyTo), v))
-	})
-}
-
-// ReplyToLT applies the LT predicate on the "reply_to" field.
-func ReplyToLT(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldReplyTo), v))
-	})
-}
-
-// ReplyToLTE applies the LTE predicate on the "reply_to" field.
-func ReplyToLTE(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldReplyTo), v))
-	})
-}
-
-// ReplyToContains applies the Contains predicate on the "reply_to" field.
-func ReplyToContains(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldReplyTo), v))
-	})
-}
-
-// ReplyToHasPrefix applies the HasPrefix predicate on the "reply_to" field.
-func ReplyToHasPrefix(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldReplyTo), v))
-	})
-}
-
-// ReplyToHasSuffix applies the HasSuffix predicate on the "reply_to" field.
-func ReplyToHasSuffix(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldReplyTo), v))
-	})
-}
-
-// ReplyToEqualFold applies the EqualFold predicate on the "reply_to" field.
-func ReplyToEqualFold(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldReplyTo), v))
-	})
-}
-
-// ReplyToContainsFold applies the ContainsFold predicate on the "reply_to" field.
-func ReplyToContainsFold(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldReplyTo), v))
-	})
-}
-
-// CcToEQ applies the EQ predicate on the "cc_to" field.
-func CcToEQ(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCcTo), v))
-	})
-}
-
-// CcToNEQ applies the NEQ predicate on the "cc_to" field.
-func CcToNEQ(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCcTo), v))
-	})
-}
-
-// CcToIn applies the In predicate on the "cc_to" field.
-func CcToIn(vs ...string) predicate.AppEmailTemplate {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldCcTo), v...))
-	})
-}
-
-// CcToNotIn applies the NotIn predicate on the "cc_to" field.
-func CcToNotIn(vs ...string) predicate.AppEmailTemplate {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldCcTo), v...))
-	})
-}
-
-// CcToGT applies the GT predicate on the "cc_to" field.
-func CcToGT(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldCcTo), v))
-	})
-}
-
-// CcToGTE applies the GTE predicate on the "cc_to" field.
-func CcToGTE(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldCcTo), v))
-	})
-}
-
-// CcToLT applies the LT predicate on the "cc_to" field.
-func CcToLT(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldCcTo), v))
-	})
-}
-
-// CcToLTE applies the LTE predicate on the "cc_to" field.
-func CcToLTE(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldCcTo), v))
-	})
-}
-
-// CcToContains applies the Contains predicate on the "cc_to" field.
-func CcToContains(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldCcTo), v))
-	})
-}
-
-// CcToHasPrefix applies the HasPrefix predicate on the "cc_to" field.
-func CcToHasPrefix(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldCcTo), v))
-	})
-}
-
-// CcToHasSuffix applies the HasSuffix predicate on the "cc_to" field.
-func CcToHasSuffix(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldCcTo), v))
-	})
-}
-
-// CcToEqualFold applies the EqualFold predicate on the "cc_to" field.
-func CcToEqualFold(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldCcTo), v))
-	})
-}
-
-// CcToContainsFold applies the ContainsFold predicate on the "cc_to" field.
-func CcToContainsFold(v string) predicate.AppEmailTemplate {
-	return predicate.AppEmailTemplate(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldCcTo), v))
 	})
 }
 

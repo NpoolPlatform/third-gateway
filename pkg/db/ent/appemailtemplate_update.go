@@ -40,21 +40,27 @@ func (aetu *AppEmailTemplateUpdate) SetLangID(u uuid.UUID) *AppEmailTemplateUpda
 	return aetu
 }
 
+// SetUsedFor sets the "used_for" field.
+func (aetu *AppEmailTemplateUpdate) SetUsedFor(s string) *AppEmailTemplateUpdate {
+	aetu.mutation.SetUsedFor(s)
+	return aetu
+}
+
 // SetSender sets the "sender" field.
 func (aetu *AppEmailTemplateUpdate) SetSender(s string) *AppEmailTemplateUpdate {
 	aetu.mutation.SetSender(s)
 	return aetu
 }
 
-// SetReplyTo sets the "reply_to" field.
-func (aetu *AppEmailTemplateUpdate) SetReplyTo(s string) *AppEmailTemplateUpdate {
-	aetu.mutation.SetReplyTo(s)
+// SetReplyTos sets the "reply_tos" field.
+func (aetu *AppEmailTemplateUpdate) SetReplyTos(s []string) *AppEmailTemplateUpdate {
+	aetu.mutation.SetReplyTos(s)
 	return aetu
 }
 
-// SetCcTo sets the "cc_to" field.
-func (aetu *AppEmailTemplateUpdate) SetCcTo(s string) *AppEmailTemplateUpdate {
-	aetu.mutation.SetCcTo(s)
+// SetCcTos sets the "cc_tos" field.
+func (aetu *AppEmailTemplateUpdate) SetCcTos(s []string) *AppEmailTemplateUpdate {
+	aetu.mutation.SetCcTos(s)
 	return aetu
 }
 
@@ -204,6 +210,13 @@ func (aetu *AppEmailTemplateUpdate) sqlSave(ctx context.Context) (n int, err err
 			Column: appemailtemplate.FieldLangID,
 		})
 	}
+	if value, ok := aetu.mutation.UsedFor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldUsedFor,
+		})
+	}
 	if value, ok := aetu.mutation.Sender(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -211,18 +224,18 @@ func (aetu *AppEmailTemplateUpdate) sqlSave(ctx context.Context) (n int, err err
 			Column: appemailtemplate.FieldSender,
 		})
 	}
-	if value, ok := aetu.mutation.ReplyTo(); ok {
+	if value, ok := aetu.mutation.ReplyTos(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeJSON,
 			Value:  value,
-			Column: appemailtemplate.FieldReplyTo,
+			Column: appemailtemplate.FieldReplyTos,
 		})
 	}
-	if value, ok := aetu.mutation.CcTo(); ok {
+	if value, ok := aetu.mutation.CcTos(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeJSON,
 			Value:  value,
-			Column: appemailtemplate.FieldCcTo,
+			Column: appemailtemplate.FieldCcTos,
 		})
 	}
 	if value, ok := aetu.mutation.Subject(); ok {
@@ -298,21 +311,27 @@ func (aetuo *AppEmailTemplateUpdateOne) SetLangID(u uuid.UUID) *AppEmailTemplate
 	return aetuo
 }
 
+// SetUsedFor sets the "used_for" field.
+func (aetuo *AppEmailTemplateUpdateOne) SetUsedFor(s string) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.SetUsedFor(s)
+	return aetuo
+}
+
 // SetSender sets the "sender" field.
 func (aetuo *AppEmailTemplateUpdateOne) SetSender(s string) *AppEmailTemplateUpdateOne {
 	aetuo.mutation.SetSender(s)
 	return aetuo
 }
 
-// SetReplyTo sets the "reply_to" field.
-func (aetuo *AppEmailTemplateUpdateOne) SetReplyTo(s string) *AppEmailTemplateUpdateOne {
-	aetuo.mutation.SetReplyTo(s)
+// SetReplyTos sets the "reply_tos" field.
+func (aetuo *AppEmailTemplateUpdateOne) SetReplyTos(s []string) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.SetReplyTos(s)
 	return aetuo
 }
 
-// SetCcTo sets the "cc_to" field.
-func (aetuo *AppEmailTemplateUpdateOne) SetCcTo(s string) *AppEmailTemplateUpdateOne {
-	aetuo.mutation.SetCcTo(s)
+// SetCcTos sets the "cc_tos" field.
+func (aetuo *AppEmailTemplateUpdateOne) SetCcTos(s []string) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.SetCcTos(s)
 	return aetuo
 }
 
@@ -486,6 +505,13 @@ func (aetuo *AppEmailTemplateUpdateOne) sqlSave(ctx context.Context) (_node *App
 			Column: appemailtemplate.FieldLangID,
 		})
 	}
+	if value, ok := aetuo.mutation.UsedFor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldUsedFor,
+		})
+	}
 	if value, ok := aetuo.mutation.Sender(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -493,18 +519,18 @@ func (aetuo *AppEmailTemplateUpdateOne) sqlSave(ctx context.Context) (_node *App
 			Column: appemailtemplate.FieldSender,
 		})
 	}
-	if value, ok := aetuo.mutation.ReplyTo(); ok {
+	if value, ok := aetuo.mutation.ReplyTos(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeJSON,
 			Value:  value,
-			Column: appemailtemplate.FieldReplyTo,
+			Column: appemailtemplate.FieldReplyTos,
 		})
 	}
-	if value, ok := aetuo.mutation.CcTo(); ok {
+	if value, ok := aetuo.mutation.CcTos(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeJSON,
 			Value:  value,
-			Column: appemailtemplate.FieldCcTo,
+			Column: appemailtemplate.FieldCcTos,
 		})
 	}
 	if value, ok := aetuo.mutation.Subject(); ok {

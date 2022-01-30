@@ -15,6 +15,8 @@ const (
 	FieldAppID = "app_id"
 	// FieldLangID holds the string denoting the lang_id field in the database.
 	FieldLangID = "lang_id"
+	// FieldUsedFor holds the string denoting the used_for field in the database.
+	FieldUsedFor = "used_for"
 	// FieldSubject holds the string denoting the subject field in the database.
 	FieldSubject = "subject"
 	// FieldMessage holds the string denoting the message field in the database.
@@ -32,6 +34,7 @@ var Columns = []string{
 	FieldID,
 	FieldAppID,
 	FieldLangID,
+	FieldUsedFor,
 	FieldSubject,
 	FieldMessage,
 	FieldCreateAt,

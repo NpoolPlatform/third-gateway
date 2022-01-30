@@ -20,6 +20,8 @@ type AppSMSTemplate struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// LangID holds the value of the "lang_id" field.
 	LangID uuid.UUID `json:"lang_id,omitempty"`
+	// UsedFor holds the value of the "used_for" field.
+	UsedFor string `json:"used_for,omitempty"`
 	// Subject holds the value of the "subject" field.
 	Subject string `json:"subject,omitempty"`
 	// Message holds the value of the "message" field.
@@ -37,7 +39,7 @@ func (*AppSMSTemplate) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appsmstemplate.FieldCreateAt, appsmstemplate.FieldUpdateAt:
 			values[i] = new(sql.NullInt64)
-		case appsmstemplate.FieldSubject, appsmstemplate.FieldMessage:
+		case appsmstemplate.FieldUsedFor, appsmstemplate.FieldSubject, appsmstemplate.FieldMessage:
 			values[i] = new(sql.NullString)
 		case appsmstemplate.FieldID, appsmstemplate.FieldAppID, appsmstemplate.FieldLangID:
 			values[i] = new(uuid.UUID)
@@ -73,6 +75,12 @@ func (ast *AppSMSTemplate) assignValues(columns []string, values []interface{}) 
 				return fmt.Errorf("unexpected type %T for field lang_id", values[i])
 			} else if value != nil {
 				ast.LangID = *value
+			}
+		case appsmstemplate.FieldUsedFor:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field used_for", values[i])
+			} else if value.Valid {
+				ast.UsedFor = value.String
 			}
 		case appsmstemplate.FieldSubject:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -130,6 +138,8 @@ func (ast *AppSMSTemplate) String() string {
 	builder.WriteString(fmt.Sprintf("%v", ast.AppID))
 	builder.WriteString(", lang_id=")
 	builder.WriteString(fmt.Sprintf("%v", ast.LangID))
+	builder.WriteString(", used_for=")
+	builder.WriteString(ast.UsedFor)
 	builder.WriteString(", subject=")
 	builder.WriteString(ast.Subject)
 	builder.WriteString(", message=")

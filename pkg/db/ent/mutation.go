@@ -37,9 +37,10 @@ type AppEmailTemplateMutation struct {
 	id            *uuid.UUID
 	app_id        *uuid.UUID
 	lang_id       *uuid.UUID
+	used_for      *string
 	sender        *string
-	reply_to      *string
-	cc_to         *string
+	reply_tos     *[]string
+	cc_tos        *[]string
 	subject       *string
 	body          *string
 	create_at     *uint32
@@ -228,6 +229,42 @@ func (m *AppEmailTemplateMutation) ResetLangID() {
 	m.lang_id = nil
 }
 
+// SetUsedFor sets the "used_for" field.
+func (m *AppEmailTemplateMutation) SetUsedFor(s string) {
+	m.used_for = &s
+}
+
+// UsedFor returns the value of the "used_for" field in the mutation.
+func (m *AppEmailTemplateMutation) UsedFor() (r string, exists bool) {
+	v := m.used_for
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUsedFor returns the old "used_for" field's value of the AppEmailTemplate entity.
+// If the AppEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppEmailTemplateMutation) OldUsedFor(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUsedFor is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUsedFor requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUsedFor: %w", err)
+	}
+	return oldValue.UsedFor, nil
+}
+
+// ResetUsedFor resets all changes to the "used_for" field.
+func (m *AppEmailTemplateMutation) ResetUsedFor() {
+	m.used_for = nil
+}
+
 // SetSender sets the "sender" field.
 func (m *AppEmailTemplateMutation) SetSender(s string) {
 	m.sender = &s
@@ -264,76 +301,76 @@ func (m *AppEmailTemplateMutation) ResetSender() {
 	m.sender = nil
 }
 
-// SetReplyTo sets the "reply_to" field.
-func (m *AppEmailTemplateMutation) SetReplyTo(s string) {
-	m.reply_to = &s
+// SetReplyTos sets the "reply_tos" field.
+func (m *AppEmailTemplateMutation) SetReplyTos(s []string) {
+	m.reply_tos = &s
 }
 
-// ReplyTo returns the value of the "reply_to" field in the mutation.
-func (m *AppEmailTemplateMutation) ReplyTo() (r string, exists bool) {
-	v := m.reply_to
+// ReplyTos returns the value of the "reply_tos" field in the mutation.
+func (m *AppEmailTemplateMutation) ReplyTos() (r []string, exists bool) {
+	v := m.reply_tos
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldReplyTo returns the old "reply_to" field's value of the AppEmailTemplate entity.
+// OldReplyTos returns the old "reply_tos" field's value of the AppEmailTemplate entity.
 // If the AppEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppEmailTemplateMutation) OldReplyTo(ctx context.Context) (v string, err error) {
+func (m *AppEmailTemplateMutation) OldReplyTos(ctx context.Context) (v []string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldReplyTo is only allowed on UpdateOne operations")
+		return v, errors.New("OldReplyTos is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldReplyTo requires an ID field in the mutation")
+		return v, errors.New("OldReplyTos requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldReplyTo: %w", err)
+		return v, fmt.Errorf("querying old value for OldReplyTos: %w", err)
 	}
-	return oldValue.ReplyTo, nil
+	return oldValue.ReplyTos, nil
 }
 
-// ResetReplyTo resets all changes to the "reply_to" field.
-func (m *AppEmailTemplateMutation) ResetReplyTo() {
-	m.reply_to = nil
+// ResetReplyTos resets all changes to the "reply_tos" field.
+func (m *AppEmailTemplateMutation) ResetReplyTos() {
+	m.reply_tos = nil
 }
 
-// SetCcTo sets the "cc_to" field.
-func (m *AppEmailTemplateMutation) SetCcTo(s string) {
-	m.cc_to = &s
+// SetCcTos sets the "cc_tos" field.
+func (m *AppEmailTemplateMutation) SetCcTos(s []string) {
+	m.cc_tos = &s
 }
 
-// CcTo returns the value of the "cc_to" field in the mutation.
-func (m *AppEmailTemplateMutation) CcTo() (r string, exists bool) {
-	v := m.cc_to
+// CcTos returns the value of the "cc_tos" field in the mutation.
+func (m *AppEmailTemplateMutation) CcTos() (r []string, exists bool) {
+	v := m.cc_tos
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCcTo returns the old "cc_to" field's value of the AppEmailTemplate entity.
+// OldCcTos returns the old "cc_tos" field's value of the AppEmailTemplate entity.
 // If the AppEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppEmailTemplateMutation) OldCcTo(ctx context.Context) (v string, err error) {
+func (m *AppEmailTemplateMutation) OldCcTos(ctx context.Context) (v []string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCcTo is only allowed on UpdateOne operations")
+		return v, errors.New("OldCcTos is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCcTo requires an ID field in the mutation")
+		return v, errors.New("OldCcTos requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCcTo: %w", err)
+		return v, fmt.Errorf("querying old value for OldCcTos: %w", err)
 	}
-	return oldValue.CcTo, nil
+	return oldValue.CcTos, nil
 }
 
-// ResetCcTo resets all changes to the "cc_to" field.
-func (m *AppEmailTemplateMutation) ResetCcTo() {
-	m.cc_to = nil
+// ResetCcTos resets all changes to the "cc_tos" field.
+func (m *AppEmailTemplateMutation) ResetCcTos() {
+	m.cc_tos = nil
 }
 
 // SetSubject sets the "subject" field.
@@ -539,21 +576,24 @@ func (m *AppEmailTemplateMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppEmailTemplateMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.app_id != nil {
 		fields = append(fields, appemailtemplate.FieldAppID)
 	}
 	if m.lang_id != nil {
 		fields = append(fields, appemailtemplate.FieldLangID)
 	}
+	if m.used_for != nil {
+		fields = append(fields, appemailtemplate.FieldUsedFor)
+	}
 	if m.sender != nil {
 		fields = append(fields, appemailtemplate.FieldSender)
 	}
-	if m.reply_to != nil {
-		fields = append(fields, appemailtemplate.FieldReplyTo)
+	if m.reply_tos != nil {
+		fields = append(fields, appemailtemplate.FieldReplyTos)
 	}
-	if m.cc_to != nil {
-		fields = append(fields, appemailtemplate.FieldCcTo)
+	if m.cc_tos != nil {
+		fields = append(fields, appemailtemplate.FieldCcTos)
 	}
 	if m.subject != nil {
 		fields = append(fields, appemailtemplate.FieldSubject)
@@ -579,12 +619,14 @@ func (m *AppEmailTemplateMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case appemailtemplate.FieldLangID:
 		return m.LangID()
+	case appemailtemplate.FieldUsedFor:
+		return m.UsedFor()
 	case appemailtemplate.FieldSender:
 		return m.Sender()
-	case appemailtemplate.FieldReplyTo:
-		return m.ReplyTo()
-	case appemailtemplate.FieldCcTo:
-		return m.CcTo()
+	case appemailtemplate.FieldReplyTos:
+		return m.ReplyTos()
+	case appemailtemplate.FieldCcTos:
+		return m.CcTos()
 	case appemailtemplate.FieldSubject:
 		return m.Subject()
 	case appemailtemplate.FieldBody:
@@ -606,12 +648,14 @@ func (m *AppEmailTemplateMutation) OldField(ctx context.Context, name string) (e
 		return m.OldAppID(ctx)
 	case appemailtemplate.FieldLangID:
 		return m.OldLangID(ctx)
+	case appemailtemplate.FieldUsedFor:
+		return m.OldUsedFor(ctx)
 	case appemailtemplate.FieldSender:
 		return m.OldSender(ctx)
-	case appemailtemplate.FieldReplyTo:
-		return m.OldReplyTo(ctx)
-	case appemailtemplate.FieldCcTo:
-		return m.OldCcTo(ctx)
+	case appemailtemplate.FieldReplyTos:
+		return m.OldReplyTos(ctx)
+	case appemailtemplate.FieldCcTos:
+		return m.OldCcTos(ctx)
 	case appemailtemplate.FieldSubject:
 		return m.OldSubject(ctx)
 	case appemailtemplate.FieldBody:
@@ -643,6 +687,13 @@ func (m *AppEmailTemplateMutation) SetField(name string, value ent.Value) error 
 		}
 		m.SetLangID(v)
 		return nil
+	case appemailtemplate.FieldUsedFor:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUsedFor(v)
+		return nil
 	case appemailtemplate.FieldSender:
 		v, ok := value.(string)
 		if !ok {
@@ -650,19 +701,19 @@ func (m *AppEmailTemplateMutation) SetField(name string, value ent.Value) error 
 		}
 		m.SetSender(v)
 		return nil
-	case appemailtemplate.FieldReplyTo:
-		v, ok := value.(string)
+	case appemailtemplate.FieldReplyTos:
+		v, ok := value.([]string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetReplyTo(v)
+		m.SetReplyTos(v)
 		return nil
-	case appemailtemplate.FieldCcTo:
-		v, ok := value.(string)
+	case appemailtemplate.FieldCcTos:
+		v, ok := value.([]string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetCcTo(v)
+		m.SetCcTos(v)
 		return nil
 	case appemailtemplate.FieldSubject:
 		v, ok := value.(string)
@@ -774,14 +825,17 @@ func (m *AppEmailTemplateMutation) ResetField(name string) error {
 	case appemailtemplate.FieldLangID:
 		m.ResetLangID()
 		return nil
+	case appemailtemplate.FieldUsedFor:
+		m.ResetUsedFor()
+		return nil
 	case appemailtemplate.FieldSender:
 		m.ResetSender()
 		return nil
-	case appemailtemplate.FieldReplyTo:
-		m.ResetReplyTo()
+	case appemailtemplate.FieldReplyTos:
+		m.ResetReplyTos()
 		return nil
-	case appemailtemplate.FieldCcTo:
-		m.ResetCcTo()
+	case appemailtemplate.FieldCcTos:
+		m.ResetCcTos()
 		return nil
 	case appemailtemplate.FieldSubject:
 		m.ResetSubject()
@@ -855,6 +909,7 @@ type AppSMSTemplateMutation struct {
 	id            *uuid.UUID
 	app_id        *uuid.UUID
 	lang_id       *uuid.UUID
+	used_for      *string
 	subject       *string
 	message       *string
 	create_at     *uint32
@@ -1041,6 +1096,42 @@ func (m *AppSMSTemplateMutation) OldLangID(ctx context.Context) (v uuid.UUID, er
 // ResetLangID resets all changes to the "lang_id" field.
 func (m *AppSMSTemplateMutation) ResetLangID() {
 	m.lang_id = nil
+}
+
+// SetUsedFor sets the "used_for" field.
+func (m *AppSMSTemplateMutation) SetUsedFor(s string) {
+	m.used_for = &s
+}
+
+// UsedFor returns the value of the "used_for" field in the mutation.
+func (m *AppSMSTemplateMutation) UsedFor() (r string, exists bool) {
+	v := m.used_for
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUsedFor returns the old "used_for" field's value of the AppSMSTemplate entity.
+// If the AppSMSTemplate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppSMSTemplateMutation) OldUsedFor(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUsedFor is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUsedFor requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUsedFor: %w", err)
+	}
+	return oldValue.UsedFor, nil
+}
+
+// ResetUsedFor resets all changes to the "used_for" field.
+func (m *AppSMSTemplateMutation) ResetUsedFor() {
+	m.used_for = nil
 }
 
 // SetSubject sets the "subject" field.
@@ -1246,12 +1337,15 @@ func (m *AppSMSTemplateMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppSMSTemplateMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.app_id != nil {
 		fields = append(fields, appsmstemplate.FieldAppID)
 	}
 	if m.lang_id != nil {
 		fields = append(fields, appsmstemplate.FieldLangID)
+	}
+	if m.used_for != nil {
+		fields = append(fields, appsmstemplate.FieldUsedFor)
 	}
 	if m.subject != nil {
 		fields = append(fields, appsmstemplate.FieldSubject)
@@ -1277,6 +1371,8 @@ func (m *AppSMSTemplateMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case appsmstemplate.FieldLangID:
 		return m.LangID()
+	case appsmstemplate.FieldUsedFor:
+		return m.UsedFor()
 	case appsmstemplate.FieldSubject:
 		return m.Subject()
 	case appsmstemplate.FieldMessage:
@@ -1298,6 +1394,8 @@ func (m *AppSMSTemplateMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldAppID(ctx)
 	case appsmstemplate.FieldLangID:
 		return m.OldLangID(ctx)
+	case appsmstemplate.FieldUsedFor:
+		return m.OldUsedFor(ctx)
 	case appsmstemplate.FieldSubject:
 		return m.OldSubject(ctx)
 	case appsmstemplate.FieldMessage:
@@ -1328,6 +1426,13 @@ func (m *AppSMSTemplateMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLangID(v)
+		return nil
+	case appsmstemplate.FieldUsedFor:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUsedFor(v)
 		return nil
 	case appsmstemplate.FieldSubject:
 		v, ok := value.(string)
@@ -1438,6 +1543,9 @@ func (m *AppSMSTemplateMutation) ResetField(name string) error {
 		return nil
 	case appsmstemplate.FieldLangID:
 		m.ResetLangID()
+		return nil
+	case appsmstemplate.FieldUsedFor:
+		m.ResetUsedFor()
 		return nil
 	case appsmstemplate.FieldSubject:
 		m.ResetSubject()

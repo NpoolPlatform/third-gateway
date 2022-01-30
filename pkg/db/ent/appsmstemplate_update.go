@@ -40,6 +40,12 @@ func (astu *AppSMSTemplateUpdate) SetLangID(u uuid.UUID) *AppSMSTemplateUpdate {
 	return astu
 }
 
+// SetUsedFor sets the "used_for" field.
+func (astu *AppSMSTemplateUpdate) SetUsedFor(s string) *AppSMSTemplateUpdate {
+	astu.mutation.SetUsedFor(s)
+	return astu
+}
+
 // SetSubject sets the "subject" field.
 func (astu *AppSMSTemplateUpdate) SetSubject(s string) *AppSMSTemplateUpdate {
 	astu.mutation.SetSubject(s)
@@ -186,6 +192,13 @@ func (astu *AppSMSTemplateUpdate) sqlSave(ctx context.Context) (n int, err error
 			Column: appsmstemplate.FieldLangID,
 		})
 	}
+	if value, ok := astu.mutation.UsedFor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appsmstemplate.FieldUsedFor,
+		})
+	}
 	if value, ok := astu.mutation.Subject(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -256,6 +269,12 @@ func (astuo *AppSMSTemplateUpdateOne) SetAppID(u uuid.UUID) *AppSMSTemplateUpdat
 // SetLangID sets the "lang_id" field.
 func (astuo *AppSMSTemplateUpdateOne) SetLangID(u uuid.UUID) *AppSMSTemplateUpdateOne {
 	astuo.mutation.SetLangID(u)
+	return astuo
+}
+
+// SetUsedFor sets the "used_for" field.
+func (astuo *AppSMSTemplateUpdateOne) SetUsedFor(s string) *AppSMSTemplateUpdateOne {
+	astuo.mutation.SetUsedFor(s)
 	return astuo
 }
 
@@ -427,6 +446,13 @@ func (astuo *AppSMSTemplateUpdateOne) sqlSave(ctx context.Context) (_node *AppSM
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: appsmstemplate.FieldLangID,
+		})
+	}
+	if value, ok := astuo.mutation.UsedFor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appsmstemplate.FieldUsedFor,
 		})
 	}
 	if value, ok := astuo.mutation.Subject(); ok {

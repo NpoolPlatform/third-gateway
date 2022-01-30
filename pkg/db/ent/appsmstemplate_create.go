@@ -35,6 +35,12 @@ func (astc *AppSMSTemplateCreate) SetLangID(u uuid.UUID) *AppSMSTemplateCreate {
 	return astc
 }
 
+// SetUsedFor sets the "used_for" field.
+func (astc *AppSMSTemplateCreate) SetUsedFor(s string) *AppSMSTemplateCreate {
+	astc.mutation.SetUsedFor(s)
+	return astc
+}
+
 // SetSubject sets the "subject" field.
 func (astc *AppSMSTemplateCreate) SetSubject(s string) *AppSMSTemplateCreate {
 	astc.mutation.SetSubject(s)
@@ -182,6 +188,9 @@ func (astc *AppSMSTemplateCreate) check() error {
 	if _, ok := astc.mutation.LangID(); !ok {
 		return &ValidationError{Name: "lang_id", err: errors.New(`ent: missing required field "AppSMSTemplate.lang_id"`)}
 	}
+	if _, ok := astc.mutation.UsedFor(); !ok {
+		return &ValidationError{Name: "used_for", err: errors.New(`ent: missing required field "AppSMSTemplate.used_for"`)}
+	}
 	if _, ok := astc.mutation.Subject(); !ok {
 		return &ValidationError{Name: "subject", err: errors.New(`ent: missing required field "AppSMSTemplate.subject"`)}
 	}
@@ -246,6 +255,14 @@ func (astc *AppSMSTemplateCreate) createSpec() (*AppSMSTemplate, *sqlgraph.Creat
 			Column: appsmstemplate.FieldLangID,
 		})
 		_node.LangID = value
+	}
+	if value, ok := astc.mutation.UsedFor(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appsmstemplate.FieldUsedFor,
+		})
+		_node.UsedFor = value
 	}
 	if value, ok := astc.mutation.Subject(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -354,6 +371,18 @@ func (u *AppSMSTemplateUpsert) SetLangID(v uuid.UUID) *AppSMSTemplateUpsert {
 // UpdateLangID sets the "lang_id" field to the value that was provided on create.
 func (u *AppSMSTemplateUpsert) UpdateLangID() *AppSMSTemplateUpsert {
 	u.SetExcluded(appsmstemplate.FieldLangID)
+	return u
+}
+
+// SetUsedFor sets the "used_for" field.
+func (u *AppSMSTemplateUpsert) SetUsedFor(v string) *AppSMSTemplateUpsert {
+	u.Set(appsmstemplate.FieldUsedFor, v)
+	return u
+}
+
+// UpdateUsedFor sets the "used_for" field to the value that was provided on create.
+func (u *AppSMSTemplateUpsert) UpdateUsedFor() *AppSMSTemplateUpsert {
+	u.SetExcluded(appsmstemplate.FieldUsedFor)
 	return u
 }
 
@@ -492,6 +521,20 @@ func (u *AppSMSTemplateUpsertOne) SetLangID(v uuid.UUID) *AppSMSTemplateUpsertOn
 func (u *AppSMSTemplateUpsertOne) UpdateLangID() *AppSMSTemplateUpsertOne {
 	return u.Update(func(s *AppSMSTemplateUpsert) {
 		s.UpdateLangID()
+	})
+}
+
+// SetUsedFor sets the "used_for" field.
+func (u *AppSMSTemplateUpsertOne) SetUsedFor(v string) *AppSMSTemplateUpsertOne {
+	return u.Update(func(s *AppSMSTemplateUpsert) {
+		s.SetUsedFor(v)
+	})
+}
+
+// UpdateUsedFor sets the "used_for" field to the value that was provided on create.
+func (u *AppSMSTemplateUpsertOne) UpdateUsedFor() *AppSMSTemplateUpsertOne {
+	return u.Update(func(s *AppSMSTemplateUpsert) {
+		s.UpdateUsedFor()
 	})
 }
 
@@ -806,6 +849,20 @@ func (u *AppSMSTemplateUpsertBulk) SetLangID(v uuid.UUID) *AppSMSTemplateUpsertB
 func (u *AppSMSTemplateUpsertBulk) UpdateLangID() *AppSMSTemplateUpsertBulk {
 	return u.Update(func(s *AppSMSTemplateUpsert) {
 		s.UpdateLangID()
+	})
+}
+
+// SetUsedFor sets the "used_for" field.
+func (u *AppSMSTemplateUpsertBulk) SetUsedFor(v string) *AppSMSTemplateUpsertBulk {
+	return u.Update(func(s *AppSMSTemplateUpsert) {
+		s.SetUsedFor(v)
+	})
+}
+
+// UpdateUsedFor sets the "used_for" field to the value that was provided on create.
+func (u *AppSMSTemplateUpsertBulk) UpdateUsedFor() *AppSMSTemplateUpsertBulk {
+	return u.Update(func(s *AppSMSTemplateUpsert) {
+		s.UpdateUsedFor()
 	})
 }
 

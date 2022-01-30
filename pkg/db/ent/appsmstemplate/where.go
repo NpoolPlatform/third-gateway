@@ -105,6 +105,13 @@ func LangID(v uuid.UUID) predicate.AppSMSTemplate {
 	})
 }
 
+// UsedFor applies equality check predicate on the "used_for" field. It's identical to UsedForEQ.
+func UsedFor(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUsedFor), v))
+	})
+}
+
 // Subject applies equality check predicate on the "subject" field. It's identical to SubjectEQ.
 func Subject(v string) predicate.AppSMSTemplate {
 	return predicate.AppSMSTemplate(func(s *sql.Selector) {
@@ -282,6 +289,117 @@ func LangIDLT(v uuid.UUID) predicate.AppSMSTemplate {
 func LangIDLTE(v uuid.UUID) predicate.AppSMSTemplate {
 	return predicate.AppSMSTemplate(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldLangID), v))
+	})
+}
+
+// UsedForEQ applies the EQ predicate on the "used_for" field.
+func UsedForEQ(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForNEQ applies the NEQ predicate on the "used_for" field.
+func UsedForNEQ(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForIn applies the In predicate on the "used_for" field.
+func UsedForIn(vs ...string) predicate.AppSMSTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldUsedFor), v...))
+	})
+}
+
+// UsedForNotIn applies the NotIn predicate on the "used_for" field.
+func UsedForNotIn(vs ...string) predicate.AppSMSTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldUsedFor), v...))
+	})
+}
+
+// UsedForGT applies the GT predicate on the "used_for" field.
+func UsedForGT(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForGTE applies the GTE predicate on the "used_for" field.
+func UsedForGTE(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForLT applies the LT predicate on the "used_for" field.
+func UsedForLT(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForLTE applies the LTE predicate on the "used_for" field.
+func UsedForLTE(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForContains applies the Contains predicate on the "used_for" field.
+func UsedForContains(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForHasPrefix applies the HasPrefix predicate on the "used_for" field.
+func UsedForHasPrefix(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForHasSuffix applies the HasSuffix predicate on the "used_for" field.
+func UsedForHasSuffix(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForEqualFold applies the EqualFold predicate on the "used_for" field.
+func UsedForEqualFold(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldUsedFor), v))
+	})
+}
+
+// UsedForContainsFold applies the ContainsFold predicate on the "used_for" field.
+func UsedForContainsFold(v string) predicate.AppSMSTemplate {
+	return predicate.AppSMSTemplate(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldUsedFor), v))
 	})
 }
 
