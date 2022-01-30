@@ -7,25 +7,46 @@ import (
 
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
 	appemailtemplatecrud "github.com/NpoolPlatform/third-gateway/pkg/crud/appemailtemplate"
+	appsmstemplatecrud "github.com/NpoolPlatform/third-gateway/pkg/crud/appsmstemplate"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (s *Server) CreateAppSMSTemplate(ctx context.Context, in *npool.CreateAppSMSTemplateRequest) (*npool.CreateAppSMSTemplateResponse, error) {
-	return nil, nil
+	resp, err := appsmstemplatecrud.Create(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail create app sms template: %v", err)
+		return &npool.CreateAppSMSTemplateResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppSMSTemplate(ctx context.Context, in *npool.GetAppSMSTemplateRequest) (*npool.GetAppSMSTemplateResponse, error) {
-	return nil, nil
+	resp, err := appsmstemplatecrud.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail get app sms template: %v", err)
+		return &npool.GetAppSMSTemplateResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) UpdateAppSMSTemplate(ctx context.Context, in *npool.UpdateAppSMSTemplateRequest) (*npool.UpdateAppSMSTemplateResponse, error) {
-	return nil, nil
+	resp, err := appsmstemplatecrud.Update(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail update app sms template: %v", err)
+		return &npool.UpdateAppSMSTemplateResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppSMSTemplateByAppLangUsedFor(ctx context.Context, in *npool.GetAppSMSTemplateByAppLangUsedForRequest) (*npool.GetAppSMSTemplateByAppLangUsedForResponse, error) {
-	return nil, nil
+	resp, err := appsmstemplatecrud.GetByAppLangUsedFor(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail get app sms template by app lang used for: %v", err)
+		return &npool.GetAppSMSTemplateByAppLangUsedForResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) CreateAppEmailTemplate(ctx context.Context, in *npool.CreateAppEmailTemplateRequest) (*npool.CreateAppEmailTemplateResponse, error) {
