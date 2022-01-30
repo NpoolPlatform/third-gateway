@@ -2,38 +2,34 @@ package email
 
 import (
 	"context"
-	"time"
 
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
-	code "github.com/NpoolPlatform/third-gateway/pkg/middleware/code"
+	templatecrud "github.com/NpoolPlatform/third-gateway/pkg/crud/appemailtemplate"
 
-	"github.com/google/uuid"
 	"golang.org/x/xerrors"
 )
 
 func SendCode(ctx context.Context, in *npool.SendEmailCodeRequest) (*npool.SendEmailCodeResponse, error) {
-	appID, err := uuid.Parse(in.GetAppID())
-	if err != nil {
-		return nil, xerrors.Errorf("invalid app id: %v", err)
-	}
-
-	vCode := code.Generate6NumberCode()
-	err = code.CreateCodeCache(ctx, &code.UserCode{
-		AppID:       appID,
-		Account:     in.GetEmailAddress(),
-		AccountType: "email",
-		UsedFor:     in.GetUsedFor(),
-		Code:        vCode,
-		ExpireAt:    time.Now().Add(10 * time.Minute),
+	template, err := templatecrud.GetByAppLangUsedFor(ctx, &npool.GetAppEmailTemplateByAppLangUsedForRequest{
+		AppID:   in.GetAppID(),
+		LangID:  in.GetLangID(),
+		UsedFor: in.GetUsedFor(),
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("fail create code cache: %v", err)
+		return nil, xerrors.Errorf("fail get app email template: %v", err)
 	}
 
-	// TODO: get email template
-	// TODO: send email
+	body, err := buildBody(ctx, in, template.Info.Body)
+	if err != nil {
+		return nil, xerrors.Errorf("fail build email body: %v", err)
+	}
 
-	return nil, nil
+	err = sendEmailByAWS(template.Info.Subject, body, template.Info.Sender, in.GetEmailAddress())
+	if err != nil {
+		return nil, xerrors.Errorf("fail send email: %v", err)
+	}
+
+	return &npool.SendEmailCodeResponse{}, nil
 }
 
 func VerifyCode(ctx context.Context, in *npool.VerifyEmailCodeRequest) (*npool.VerifyEmailCodeResponse, error) {

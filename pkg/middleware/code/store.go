@@ -24,6 +24,7 @@ type UserCode struct {
 	AccountType string
 	UsedFor     string
 	Code        string
+	NextAt      time.Time
 	ExpireAt    time.Time
 }
 
@@ -84,6 +85,35 @@ func VerifyCodeCache(ctx context.Context, code *UserCode) error {
 	}
 
 	return nil
+}
+
+func Nextable(ctx context.Context, code *UserCode) (bool, error) {
+	cli, err := redis2.GetClient()
+	if err != nil {
+		return false, xerrors.Errorf("fail get redis client: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, redisTimeout)
+	defer cancel()
+
+	val, err := cli.Get(ctx, code.Key()).Result()
+	if err == redis.Nil {
+		return true, nil
+	} else if err != nil {
+		return false, xerrors.Errorf("fail get code: %v", err)
+	}
+
+	user := UserCode{}
+	err = json.Unmarshal([]byte(val), &user)
+	if err != nil {
+		return false, xerrors.Errorf("fail unmarshal val: %v", err)
+	}
+
+	if !time.Now().After(user.NextAt) {
+		return false, nil
+	}
+
+	return true, nil
 }
 
 func DeleteCodeCache(ctx context.Context, code *UserCode) error {
