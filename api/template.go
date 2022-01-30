@@ -38,13 +38,28 @@ func (s *Server) CreateAppEmailTemplate(ctx context.Context, in *npool.CreateApp
 }
 
 func (s *Server) GetAppEmailTemplate(ctx context.Context, in *npool.GetAppEmailTemplateRequest) (*npool.GetAppEmailTemplateResponse, error) {
-	return nil, nil
+	resp, err := appemailtemplatecrud.Get(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail get app email template: %v", err)
+		return &npool.GetAppEmailTemplateResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) UpdateAppEmailTemplate(ctx context.Context, in *npool.UpdateAppEmailTemplateRequest) (*npool.UpdateAppEmailTemplateResponse, error) {
-	return nil, nil
+	resp, err := appemailtemplatecrud.Update(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail update app email template: %v", err)
+		return &npool.UpdateAppEmailTemplateResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) GetAppEmailTemplateByAppLangUsedFor(ctx context.Context, in *npool.GetAppEmailTemplateByAppLangUsedForRequest) (*npool.GetAppEmailTemplateByAppLangUsedForResponse, error) {
-	return nil, nil
+	resp, err := appemailtemplatecrud.GetByAppLangUsedFor(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail get app email template by app lang used for: %v", err)
+		return &npool.GetAppEmailTemplateByAppLangUsedForResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }

@@ -27,6 +27,13 @@ var (
 		Name:       "app_email_templates",
 		Columns:    AppEmailTemplatesColumns,
 		PrimaryKey: []*schema.Column{AppEmailTemplatesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appemailtemplate_app_id_lang_id_used_for",
+				Unique:  true,
+				Columns: []*schema.Column{AppEmailTemplatesColumns[1], AppEmailTemplatesColumns[2], AppEmailTemplatesColumns[3]},
+			},
+		},
 	}
 	// AppSmsTemplatesColumns holds the columns for the "app_sms_templates" table.
 	AppSmsTemplatesColumns = []*schema.Column{

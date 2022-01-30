@@ -56,4 +56,32 @@ func TestCRUD(t *testing.T) {
 		assert.NotEqual(t, resp.Info.ID, uuid.UUID{}.String())
 		assertTemplate(t, resp.Info, &template)
 	}
+
+	resp1, err := Get(context.Background(), &npool.GetAppEmailTemplateRequest{
+		ID: resp.Info.ID,
+	})
+	if assert.Nil(t, err) {
+		assert.Equal(t, resp1.Info.ID, resp.Info.ID)
+		assertTemplate(t, resp1.Info, &template)
+	}
+
+	template.ID = resp.Info.ID
+	resp2, err := Update(context.Background(), &npool.UpdateAppEmailTemplateRequest{
+		Info: &template,
+	})
+	if assert.Nil(t, err) {
+		assert.Equal(t, resp2.Info.ID, resp.Info.ID)
+		assertTemplate(t, resp2.Info, &template)
+	}
+
+	template.ID = resp.Info.ID
+	resp3, err := GetByAppLangUsedFor(context.Background(), &npool.GetAppEmailTemplateByAppLangUsedForRequest{
+		AppID:   template.AppID,
+		LangID:  template.LangID,
+		UsedFor: template.UsedFor,
+	})
+	if assert.Nil(t, err) {
+		assert.Equal(t, resp3.Info.ID, resp.Info.ID)
+		assertTemplate(t, resp3.Info, &template)
+	}
 }
