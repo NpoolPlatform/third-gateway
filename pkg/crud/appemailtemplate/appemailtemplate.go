@@ -33,6 +33,7 @@ func dbRowToTemplate(row *ent.AppEmailTemplate) *npool.AppEmailTemplate {
 		AppID:    row.AppID.String(),
 		LangID:   row.LangID.String(),
 		UsedFor:  row.UsedFor,
+		Sender:   row.Sender,
 		ReplyTos: row.ReplyTos,
 		CCTos:    row.CcTos,
 		Subject:  row.Subject,
@@ -59,6 +60,7 @@ func Create(ctx context.Context, in *npool.CreateAppEmailTemplateRequest) (*npoo
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetLangID(uuid.MustParse(in.GetInfo().GetLangID())).
 		SetUsedFor(in.GetInfo().GetUsedFor()).
+		SetSender(in.GetInfo().GetSender()).
 		SetReplyTos(in.GetInfo().GetReplyTos()).
 		SetCcTos(in.GetInfo().GetCCTos()).
 		SetSubject(in.GetInfo().GetSubject()).

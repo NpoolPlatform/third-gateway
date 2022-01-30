@@ -54,6 +54,6 @@ func TestCRUD(t *testing.T) {
 	})
 	if assert.Nil(t, err) {
 		assert.NotEqual(t, resp.Info.ID, uuid.UUID{}.String())
-		assert.Equal(t, resp.Info, &template)
+		assertTemplate(t, resp.Info, &template)
 	}
 }

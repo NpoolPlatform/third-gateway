@@ -1,3 +1,3 @@
 package servicename
 
-const ServiceName = "Third Gatesway"
+const ServiceName = "Third Gateway"
