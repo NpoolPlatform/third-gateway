@@ -139,7 +139,7 @@ func Update(ctx context.Context, in *npool.UpdateAppSMSTemplateRequest) (*npool.
 	}, nil
 }
 
-func GetByApp(ctx context.Context, in *npool.GetAppSMSTemplateByAppRequest) (*npool.GetAppSMSTemplateByAppResponse, error) {
+func GetByApp(ctx context.Context, in *npool.GetAppSMSTemplatesByAppRequest) (*npool.GetAppSMSTemplatesByAppResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
 		return nil, xerrors.Errorf("invalid app id: %v", err)
@@ -169,7 +169,7 @@ func GetByApp(ctx context.Context, in *npool.GetAppSMSTemplateByAppRequest) (*np
 		templates = append(templates, dbRowToTemplate(info))
 	}
 
-	return &npool.GetAppSMSTemplateByAppResponse{
+	return &npool.GetAppSMSTemplatesByAppResponse{
 		Infos: templates,
 	}, nil
 }

@@ -148,7 +148,7 @@ func Update(ctx context.Context, in *npool.UpdateAppEmailTemplateRequest) (*npoo
 	}, nil
 }
 
-func GetByApp(ctx context.Context, in *npool.GetAppEmailTemplateByAppRequest) (*npool.GetAppEmailTemplateByAppResponse, error) {
+func GetByApp(ctx context.Context, in *npool.GetAppEmailTemplatesByAppRequest) (*npool.GetAppEmailTemplatesByAppResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {
 		return nil, xerrors.Errorf("invalid app id: %v", err)
@@ -178,7 +178,7 @@ func GetByApp(ctx context.Context, in *npool.GetAppEmailTemplateByAppRequest) (*
 		templates = append(templates, dbRowToTemplate(info))
 	}
 
-	return &npool.GetAppEmailTemplateByAppResponse{
+	return &npool.GetAppEmailTemplatesByAppResponse{
 		Infos: templates,
 	}, nil
 }
