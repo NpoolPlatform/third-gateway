@@ -148,6 +148,41 @@ func Update(ctx context.Context, in *npool.UpdateAppEmailTemplateRequest) (*npoo
 	}, nil
 }
 
+func GetByApp(ctx context.Context, in *npool.GetAppEmailTemplateByAppRequest) (*npool.GetAppEmailTemplateByAppResponse, error) {
+	appID, err := uuid.Parse(in.GetAppID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, dbTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
+		AppEmailTemplate.
+		Query().
+		Where(
+			appemailtemplate.AppID(appID),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query app email template: %v", err)
+	}
+
+	templates := []*npool.AppEmailTemplate{}
+	for _, info := range infos {
+		templates = append(templates, dbRowToTemplate(info))
+	}
+
+	return &npool.GetAppEmailTemplateByAppResponse{
+		Infos: templates,
+	}, nil
+}
+
 func GetByAppLangUsedFor(ctx context.Context, in *npool.GetAppEmailTemplateByAppLangUsedForRequest) (*npool.GetAppEmailTemplateByAppLangUsedForResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {

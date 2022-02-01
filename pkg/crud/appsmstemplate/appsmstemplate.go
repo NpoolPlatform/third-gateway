@@ -139,6 +139,41 @@ func Update(ctx context.Context, in *npool.UpdateAppSMSTemplateRequest) (*npool.
 	}, nil
 }
 
+func GetByApp(ctx context.Context, in *npool.GetAppSMSTemplateByAppRequest) (*npool.GetAppSMSTemplateByAppResponse, error) {
+	appID, err := uuid.Parse(in.GetAppID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, dbTimeout)
+	defer cancel()
+
+	cli, err := db.Client()
+	if err != nil {
+		return nil, xerrors.Errorf("fail get db client: %v", err)
+	}
+
+	infos, err := cli.
+		AppSMSTemplate.
+		Query().
+		Where(
+			appsmstemplate.AppID(appID),
+		).
+		All(ctx)
+	if err != nil {
+		return nil, xerrors.Errorf("fail query app sms template: %v", err)
+	}
+
+	templates := []*npool.AppSMSTemplate{}
+	for _, info := range infos {
+		templates = append(templates, dbRowToTemplate(info))
+	}
+
+	return &npool.GetAppSMSTemplateByAppResponse{
+		Infos: templates,
+	}, nil
+}
+
 func GetByAppLangUsedFor(ctx context.Context, in *npool.GetAppSMSTemplateByAppLangUsedForRequest) (*npool.GetAppSMSTemplateByAppLangUsedForResponse, error) {
 	appID, err := uuid.Parse(in.GetAppID())
 	if err != nil {

@@ -40,6 +40,15 @@ func (s *Server) UpdateAppSMSTemplate(ctx context.Context, in *npool.UpdateAppSM
 	return resp, nil
 }
 
+func (s *Server) GetAppSMSTemplateByApp(ctx context.Context, in *npool.GetAppSMSTemplateByAppRequest) (*npool.GetAppSMSTemplateByAppResponse, error) {
+	resp, err := appsmstemplatecrud.GetByApp(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail get app sms template by app: %v", err)
+		return &npool.GetAppSMSTemplateByAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
 func (s *Server) GetAppSMSTemplateByAppLangUsedFor(ctx context.Context, in *npool.GetAppSMSTemplateByAppLangUsedForRequest) (*npool.GetAppSMSTemplateByAppLangUsedForResponse, error) {
 	resp, err := appsmstemplatecrud.GetByAppLangUsedFor(ctx, in)
 	if err != nil {
@@ -72,6 +81,15 @@ func (s *Server) UpdateAppEmailTemplate(ctx context.Context, in *npool.UpdateApp
 	if err != nil {
 		logger.Sugar().Errorf("fail update app email template: %v", err)
 		return &npool.UpdateAppEmailTemplateResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
+
+func (s *Server) GetAppEmailTemplateByApp(ctx context.Context, in *npool.GetAppEmailTemplateByAppRequest) (*npool.GetAppEmailTemplateByAppResponse, error) {
+	resp, err := appemailtemplatecrud.GetByApp(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail get app email template by app: %v", err)
+		return &npool.GetAppEmailTemplateByAppResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }
