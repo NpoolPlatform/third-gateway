@@ -23,7 +23,7 @@ func (s *Server) VerifySMSCode(ctx context.Context, in *npool.VerifySMSCodeReque
 func (s *Server) SendEmailCode(ctx context.Context, in *npool.SendEmailCodeRequest) (*npool.SendEmailCodeResponse, error) {
 	resp, err := emailmw.SendCode(ctx, in)
 	if err != nil {
-		logger.Sugar().Errorf("fail send email code: %f", err)
+		logger.Sugar().Errorf("fail send email code: %v", err)
 		return &npool.SendEmailCodeResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
@@ -32,7 +32,7 @@ func (s *Server) SendEmailCode(ctx context.Context, in *npool.SendEmailCodeReque
 func (s *Server) VerifyEmailCode(ctx context.Context, in *npool.VerifyEmailCodeRequest) (*npool.VerifyEmailCodeResponse, error) {
 	resp, err := emailmw.VerifyCode(ctx, in)
 	if err != nil {
-		logger.Sugar().Errorf("fail verify email code: %f", err)
+		logger.Sugar().Errorf("fail verify email code: %v", err)
 		return &npool.VerifyEmailCodeResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
