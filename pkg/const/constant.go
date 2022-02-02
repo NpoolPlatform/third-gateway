@@ -1,7 +1,7 @@
 package constant
 
 const (
-	UsedForSignup  = "signup"
-	UsedForSignin  = "signin"
-	UsedForContact = "contact"
+	UsedForSignup  = "EMAIL_USED_FOR_SIGNUP"
+	UsedForSignin  = "EMAIL_USED_FOR_SIGNIN"
+	UsedForContact = "EMAIL_USED_FOR_CONTACT"
 )
