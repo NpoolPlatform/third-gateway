@@ -49,6 +49,19 @@ func (s *Server) GetAppSMSTemplatesByApp(ctx context.Context, in *npool.GetAppSM
 	return resp, nil
 }
 
+func (s *Server) GetAppSMSTemplatesByOtherApp(ctx context.Context, in *npool.GetAppSMSTemplatesByOtherAppRequest) (*npool.GetAppSMSTemplatesByOtherAppResponse, error) {
+	resp, err := appsmstemplatecrud.GetByApp(ctx, &npool.GetAppSMSTemplatesByAppRequest{
+		AppID: in.GetTargetAppID(),
+	})
+	if err != nil {
+		logger.Sugar().Errorf("fail get app sms templates by other app: %v", err)
+		return &npool.GetAppSMSTemplatesByOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.GetAppSMSTemplatesByOtherAppResponse{
+		Infos: resp.Infos,
+	}, nil
+}
+
 func (s *Server) GetAppSMSTemplateByAppLangUsedFor(ctx context.Context, in *npool.GetAppSMSTemplateByAppLangUsedForRequest) (*npool.GetAppSMSTemplateByAppLangUsedForResponse, error) {
 	resp, err := appsmstemplatecrud.GetByAppLangUsedFor(ctx, in)
 	if err != nil {
@@ -92,6 +105,19 @@ func (s *Server) GetAppEmailTemplatesByApp(ctx context.Context, in *npool.GetApp
 		return &npool.GetAppEmailTemplatesByAppResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
+}
+
+func (s *Server) GetAppEmailTemplatesByOtherApp(ctx context.Context, in *npool.GetAppEmailTemplatesByOtherAppRequest) (*npool.GetAppEmailTemplatesByOtherAppResponse, error) {
+	resp, err := appemailtemplatecrud.GetByApp(ctx, &npool.GetAppEmailTemplatesByAppRequest{
+		AppID: in.GetTargetAppID(),
+	})
+	if err != nil {
+		logger.Sugar().Errorf("fail get app email templates by other app: %v", err)
+		return &npool.GetAppEmailTemplatesByOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.GetAppEmailTemplatesByOtherAppResponse{
+		Infos: resp.Infos,
+	}, nil
 }
 
 func (s *Server) GetAppEmailTemplateByAppLangUsedFor(ctx context.Context, in *npool.GetAppEmailTemplateByAppLangUsedForRequest) (*npool.GetAppEmailTemplateByAppLangUsedForResponse, error) {

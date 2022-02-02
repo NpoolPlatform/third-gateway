@@ -7,7 +7,7 @@ require (
 	github.com/NpoolPlatform/api-manager v0.0.0-20220121051827-18c807c114dc
 	github.com/NpoolPlatform/appuser-manager v0.0.0-20220129103404-3f7941df7148
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20220127101433-3def4e496433
-	github.com/NpoolPlatform/message v0.0.0-20220201052230-0dc60a577f49
+	github.com/NpoolPlatform/message v0.0.0-20220202102939-f87362743667
 	github.com/aws/aws-sdk-go v1.42.4
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-resty/resty/v2 v2.7.0
