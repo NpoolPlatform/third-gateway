@@ -5,7 +5,9 @@ import (
 
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
 	templatecrud "github.com/NpoolPlatform/third-gateway/pkg/crud/appemailtemplate"
+	code "github.com/NpoolPlatform/third-gateway/pkg/middleware/code"
 
+	"github.com/google/uuid"
 	"golang.org/x/xerrors"
 )
 
@@ -36,5 +38,23 @@ func SendCode(ctx context.Context, in *npool.SendEmailCodeRequest) (*npool.SendE
 }
 
 func VerifyCode(ctx context.Context, in *npool.VerifyEmailCodeRequest) (*npool.VerifyEmailCodeResponse, error) {
-	return nil, nil
+	appID, err := uuid.Parse(in.GetAppID())
+	if err != nil {
+		return nil, xerrors.Errorf("invalid app id: %v", err)
+	}
+
+	userCode := code.UserCode{
+		AppID:       appID,
+		Account:     in.GetEmailAddress(),
+		AccountType: AccountType,
+		UsedFor:     in.GetUsedFor(),
+		Code:        in.GetCode(),
+	}
+
+	err = code.VerifyCodeCache(ctx, &userCode)
+	if err != nil {
+		return nil, xerrors.Errorf("invalid code: %v", err)
+	}
+
+	return &npool.VerifyEmailCodeResponse{}, nil
 }

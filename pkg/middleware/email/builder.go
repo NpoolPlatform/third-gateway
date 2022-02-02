@@ -27,7 +27,7 @@ func buildWithCode(ctx context.Context, in *npool.SendEmailCodeRequest, template
 	userCode := code.UserCode{
 		AppID:       appID,
 		Account:     in.GetEmailAddress(),
-		AccountType: "email",
+		AccountType: AccountType,
 		UsedFor:     in.GetUsedFor(),
 		Code:        vCode,
 		NextAt:      time.Now().Add(1 * time.Minute),
