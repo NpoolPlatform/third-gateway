@@ -224,6 +224,11 @@ func (aetc *AppEmailTemplateCreate) check() error {
 	if _, ok := aetc.mutation.Body(); !ok {
 		return &ValidationError{Name: "body", err: errors.New(`ent: missing required field "AppEmailTemplate.body"`)}
 	}
+	if v, ok := aetc.mutation.Body(); ok {
+		if err := appemailtemplate.BodyValidator(v); err != nil {
+			return &ValidationError{Name: "body", err: fmt.Errorf(`ent: validator failed for field "AppEmailTemplate.body": %w`, err)}
+		}
+	}
 	if _, ok := aetc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "AppEmailTemplate.create_at"`)}
 	}

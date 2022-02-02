@@ -123,12 +123,18 @@ func (aetu *AppEmailTemplateUpdate) Save(ctx context.Context) (int, error) {
 	)
 	aetu.defaults()
 	if len(aetu.hooks) == 0 {
+		if err = aetu.check(); err != nil {
+			return 0, err
+		}
 		affected, err = aetu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*AppEmailTemplateMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = aetu.check(); err != nil {
+				return 0, err
 			}
 			aetu.mutation = mutation
 			affected, err = aetu.sqlSave(ctx)
@@ -176,6 +182,16 @@ func (aetu *AppEmailTemplateUpdate) defaults() {
 		v := appemailtemplate.UpdateDefaultUpdateAt()
 		aetu.mutation.SetUpdateAt(v)
 	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (aetu *AppEmailTemplateUpdate) check() error {
+	if v, ok := aetu.mutation.Body(); ok {
+		if err := appemailtemplate.BodyValidator(v); err != nil {
+			return &ValidationError{Name: "body", err: fmt.Errorf(`ent: validator failed for field "AppEmailTemplate.body": %w`, err)}
+		}
+	}
+	return nil
 }
 
 func (aetu *AppEmailTemplateUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -401,12 +417,18 @@ func (aetuo *AppEmailTemplateUpdateOne) Save(ctx context.Context) (*AppEmailTemp
 	)
 	aetuo.defaults()
 	if len(aetuo.hooks) == 0 {
+		if err = aetuo.check(); err != nil {
+			return nil, err
+		}
 		node, err = aetuo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*AppEmailTemplateMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = aetuo.check(); err != nil {
+				return nil, err
 			}
 			aetuo.mutation = mutation
 			node, err = aetuo.sqlSave(ctx)
@@ -454,6 +476,16 @@ func (aetuo *AppEmailTemplateUpdateOne) defaults() {
 		v := appemailtemplate.UpdateDefaultUpdateAt()
 		aetuo.mutation.SetUpdateAt(v)
 	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (aetuo *AppEmailTemplateUpdateOne) check() error {
+	if v, ok := aetuo.mutation.Body(); ok {
+		if err := appemailtemplate.BodyValidator(v); err != nil {
+			return &ValidationError{Name: "body", err: fmt.Errorf(`ent: validator failed for field "AppEmailTemplate.body": %w`, err)}
+		}
+	}
+	return nil
 }
 
 func (aetuo *AppEmailTemplateUpdateOne) sqlSave(ctx context.Context) (_node *AppEmailTemplate, err error) {

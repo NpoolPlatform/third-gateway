@@ -28,7 +28,7 @@ func (AppEmailTemplate) Fields() []ent.Field {
 		field.JSON("reply_tos", []string{}),
 		field.JSON("cc_tos", []string{}),
 		field.String("subject"),
-		field.String("body"),
+		field.String("body").MaxLen(8192),
 		field.Uint32("create_at").
 			DefaultFunc(func() uint32 {
 				return uint32(time.Now().Unix())

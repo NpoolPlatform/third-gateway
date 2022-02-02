@@ -15,6 +15,10 @@ import (
 func init() {
 	appemailtemplateFields := schema.AppEmailTemplate{}.Fields()
 	_ = appemailtemplateFields
+	// appemailtemplateDescBody is the schema descriptor for body field.
+	appemailtemplateDescBody := appemailtemplateFields[8].Descriptor()
+	// appemailtemplate.BodyValidator is a validator for the "body" field. It is called by the builders before save.
+	appemailtemplate.BodyValidator = appemailtemplateDescBody.Validators[0].(func(string) error)
 	// appemailtemplateDescCreateAt is the schema descriptor for create_at field.
 	appemailtemplateDescCreateAt := appemailtemplateFields[9].Descriptor()
 	// appemailtemplate.DefaultCreateAt holds the default value on creation for the create_at field.

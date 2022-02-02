@@ -18,7 +18,7 @@ var (
 		{Name: "reply_tos", Type: field.TypeJSON},
 		{Name: "cc_tos", Type: field.TypeJSON},
 		{Name: "subject", Type: field.TypeString},
-		{Name: "body", Type: field.TypeString},
+		{Name: "body", Type: field.TypeString, Size: 8192},
 		{Name: "create_at", Type: field.TypeUint32},
 		{Name: "update_at", Type: field.TypeUint32},
 	}
