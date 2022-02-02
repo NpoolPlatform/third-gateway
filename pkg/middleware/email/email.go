@@ -18,6 +18,9 @@ func SendCode(ctx context.Context, in *npool.SendEmailCodeRequest) (*npool.SendE
 	if err != nil {
 		return nil, xerrors.Errorf("fail get app email template: %v", err)
 	}
+	if template.Info == nil {
+		return nil, xerrors.Errorf("fail get app email template")
+	}
 
 	body, err := buildBody(ctx, in, template.Info.Body)
 	if err != nil {
