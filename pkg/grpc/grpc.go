@@ -93,6 +93,36 @@ func UpdateAppUserSecret(ctx context.Context, in *appusermgrpb.UpdateAppUserSecr
 	return cli.UpdateAppUserSecret(ctx, in)
 }
 
+func CreateAppUserControl(ctx context.Context, in *appusermgrpb.CreateAppUserControlRequest) (*appusermgrpb.CreateAppUserControlResponse, error) {
+	conn, err := grpc2.GetGRPCConn(appusermgrconst.ServiceName, grpc2.GRPCTAG)
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app user connection: %v", err)
+	}
+	defer conn.Close()
+
+	cli := appusermgrpb.NewAppUserManagerClient(conn)
+
+	ctx, cancel := context.WithTimeout(ctx, grpcTimeout)
+	defer cancel()
+
+	return cli.CreateAppUserControl(ctx, in)
+}
+
+func UpdateAppUserControl(ctx context.Context, in *appusermgrpb.UpdateAppUserControlRequest) (*appusermgrpb.UpdateAppUserControlResponse, error) {
+	conn, err := grpc2.GetGRPCConn(appusermgrconst.ServiceName, grpc2.GRPCTAG)
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app user connection: %v", err)
+	}
+	defer conn.Close()
+
+	cli := appusermgrpb.NewAppUserManagerClient(conn)
+
+	ctx, cancel := context.WithTimeout(ctx, grpcTimeout)
+	defer cancel()
+
+	return cli.UpdateAppUserControl(ctx, in)
+}
+
 func GetAppUserInfoByAppUser(ctx context.Context, in *appusermgrpb.GetAppUserInfoByAppUserRequest) (*appusermgrpb.GetAppUserInfoByAppUserResponse, error) {
 	conn, err := grpc2.GetGRPCConn(appusermgrconst.ServiceName, grpc2.GRPCTAG)
 	if err != nil {

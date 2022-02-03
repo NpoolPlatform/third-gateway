@@ -12,7 +12,7 @@ import (
 )
 
 func SetupGoogleAuthentication(ctx context.Context, in *npool.SetupGoogleAuthenticationRequest) (*npool.SetupGoogleAuthenticationResponse, error) {
-	resp, err := grpc2.GetAppUserByAppUser(ctx, &appusermgrpb.GetAppUserByAppUserRequest{
+	resp, err := grpc2.GetAppUserInfoByAppUser(ctx, &appusermgrpb.GetAppUserInfoByAppUserRequest{
 		AppID:  in.GetAppID(),
 		UserID: in.GetUserID(),
 	})
@@ -34,7 +34,15 @@ func SetupGoogleAuthentication(ctx context.Context, in *npool.SetupGoogleAuthent
 		return nil, xerrors.Errorf("invalid app user secret")
 	}
 
+	generateSecret := false
+	if resp.Info.Ctrl == nil || !resp.Info.Ctrl.GoogleAuthenticationVerified {
+		generateSecret = true
+	}
 	if resp1.Info.GoogleSecret == "" {
+		generateSecret = true
+	}
+
+	if generateSecret {
 		secret, err := GenerateSecret()
 		if err != nil {
 			return nil, xerrors.Errorf("fail generate google secret: %v", err)
@@ -48,9 +56,9 @@ func SetupGoogleAuthentication(ctx context.Context, in *npool.SetupGoogleAuthent
 		}
 	}
 
-	account := resp.Info.EmailAddress
+	account := resp.Info.User.EmailAddress
 	if account == "" {
-		account = resp.Info.PhoneNO
+		account = resp.Info.User.PhoneNO
 	}
 	if account == "" {
 		return nil, xerrors.Errorf("invalid user account info")
@@ -88,6 +96,26 @@ func VerifyGoogleAuthentication(ctx context.Context, in *npool.VerifyGoogleAuthe
 	ok, err := VerifyCode(resp1.Info.GoogleSecret, in.GetCode())
 	if err != nil {
 		return nil, xerrors.Errorf("fail verify google code: %v", err)
+	}
+
+	if ok {
+		if resp.Info.Ctrl == nil {
+			_, err = grpc2.CreateAppUserControl(ctx, &appusermgrpb.CreateAppUserControlRequest{
+				Info: &appusermgrpb.AppUserControl{
+					AppID:                        in.GetAppID(),
+					UserID:                       in.GetUserID(),
+					GoogleAuthenticationVerified: true,
+				},
+			})
+		} else {
+			resp.Info.Ctrl.GoogleAuthenticationVerified = true
+			_, err = grpc2.UpdateAppUserControl(ctx, &appusermgrpb.UpdateAppUserControlRequest{
+				Info: resp.Info.Ctrl,
+			})
+		}
+		if err != nil {
+			return nil, xerrors.Errorf("fail set app user control: %v", err)
+		}
 	}
 
 	var code int32
