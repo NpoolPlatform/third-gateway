@@ -47,3 +47,63 @@ func GetAppUser(ctx context.Context, in *appusermgrpb.GetAppUserRequest) (*appus
 
 	return cli.GetAppUser(ctx, in)
 }
+
+func GetAppUserByAppUser(ctx context.Context, in *appusermgrpb.GetAppUserByAppUserRequest) (*appusermgrpb.GetAppUserByAppUserResponse, error) {
+	conn, err := grpc2.GetGRPCConn(appusermgrconst.ServiceName, grpc2.GRPCTAG)
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app user connection: %v", err)
+	}
+	defer conn.Close()
+
+	cli := appusermgrpb.NewAppUserManagerClient(conn)
+
+	ctx, cancel := context.WithTimeout(ctx, grpcTimeout)
+	defer cancel()
+
+	return cli.GetAppUserByAppUser(ctx, in)
+}
+
+func GetAppUserSecretByAppUser(ctx context.Context, in *appusermgrpb.GetAppUserSecretByAppUserRequest) (*appusermgrpb.GetAppUserSecretByAppUserResponse, error) {
+	conn, err := grpc2.GetGRPCConn(appusermgrconst.ServiceName, grpc2.GRPCTAG)
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app user connection: %v", err)
+	}
+	defer conn.Close()
+
+	cli := appusermgrpb.NewAppUserManagerClient(conn)
+
+	ctx, cancel := context.WithTimeout(ctx, grpcTimeout)
+	defer cancel()
+
+	return cli.GetAppUserSecretByAppUser(ctx, in)
+}
+
+func UpdateAppUserSecret(ctx context.Context, in *appusermgrpb.UpdateAppUserSecretRequest) (*appusermgrpb.UpdateAppUserSecretResponse, error) {
+	conn, err := grpc2.GetGRPCConn(appusermgrconst.ServiceName, grpc2.GRPCTAG)
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app user connection: %v", err)
+	}
+	defer conn.Close()
+
+	cli := appusermgrpb.NewAppUserManagerClient(conn)
+
+	ctx, cancel := context.WithTimeout(ctx, grpcTimeout)
+	defer cancel()
+
+	return cli.UpdateAppUserSecret(ctx, in)
+}
+
+func GetAppUserInfoByAppUser(ctx context.Context, in *appusermgrpb.GetAppUserInfoByAppUserRequest) (*appusermgrpb.GetAppUserInfoByAppUserResponse, error) {
+	conn, err := grpc2.GetGRPCConn(appusermgrconst.ServiceName, grpc2.GRPCTAG)
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app user connection: %v", err)
+	}
+	defer conn.Close()
+
+	cli := appusermgrpb.NewAppUserManagerClient(conn)
+
+	ctx, cancel := context.WithTimeout(ctx, grpcTimeout)
+	defer cancel()
+
+	return cli.GetAppUserInfoByAppUser(ctx, in)
+}
