@@ -15,6 +15,7 @@ import (
 
 const (
 	CodeTemplate = "{{ CODE }}"
+	NameTemplate = "{{ NAME }}"
 )
 
 func buildWithCode(ctx context.Context, in *npool.SendEmailCodeRequest, template string) (string, error) {
@@ -42,7 +43,10 @@ func buildWithCode(ctx context.Context, in *npool.SendEmailCodeRequest, template
 		return "", xerrors.Errorf("fail create code cache: %v", err)
 	}
 
-	return strings.ReplaceAll(template, CodeTemplate, vCode), nil
+	str := strings.ReplaceAll(template, CodeTemplate, vCode)
+	str = strings.ReplaceAll(str, NameTemplate, in.GetToUsername())
+
+	return str, nil
 }
 
 func buildBody(ctx context.Context, in *npool.SendEmailCodeRequest, template string) (string, error) {
