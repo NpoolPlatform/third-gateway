@@ -8,17 +8,28 @@ import (
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
 	emailmw "github.com/NpoolPlatform/third-gateway/pkg/middleware/email"
 	googlemw "github.com/NpoolPlatform/third-gateway/pkg/middleware/google"
+	smsmw "github.com/NpoolPlatform/third-gateway/pkg/middleware/sms"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (s *Server) SendSMSCode(ctx context.Context, in *npool.SendSMSCodeRequest) (*npool.SendSMSCodeResponse, error) {
-	return nil, nil
+	resp, err := smsmw.SendCode(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail send sms code: %v", err)
+		return &npool.SendSMSCodeResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) VerifySMSCode(ctx context.Context, in *npool.VerifySMSCodeRequest) (*npool.VerifySMSCodeResponse, error) {
-	return nil, nil
+	resp, err := smsmw.VerifyCode(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail verify sms code: %v", err)
+		return &npool.VerifySMSCodeResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
 }
 
 func (s *Server) SendEmailCode(ctx context.Context, in *npool.SendEmailCodeRequest) (*npool.SendEmailCodeResponse, error) {

@@ -8,12 +8,14 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
 	"golang.org/x/xerrors"
+
+	constant "github.com/NpoolPlatform/third-gateway/pkg/const"
 )
 
 const (
-	Region    = "aws_region"
-	AccessKey = "aws_access_key"
-	SecretKey = "aws_secret_key"
+	Region    = constant.AWSRegion
+	AccessKey = constant.AWSAccessKey
+	SecretKey = constant.AWSSecretKey
 	CharSet   = "UTF-8"
 )
 
