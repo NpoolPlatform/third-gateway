@@ -44,7 +44,10 @@ func buildWithCode(ctx context.Context, in *npool.SendEmailCodeRequest, template
 	}
 
 	str := strings.ReplaceAll(template, CodeTemplate, vCode)
-	str = strings.ReplaceAll(str, NameTemplate, in.GetToUsername())
+
+	if in.GetToUsername() != "" {
+		str = strings.ReplaceAll(str, NameTemplate, in.GetToUsername())
+	}
 
 	return str, nil
 }
