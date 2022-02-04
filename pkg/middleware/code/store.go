@@ -65,7 +65,7 @@ func VerifyCodeCache(ctx context.Context, code *UserCode) error {
 
 	val, err := cli.Get(ctx, code.Key()).Result()
 	if err == redis.Nil {
-		return xerrors.Errorf("code not found in redis")
+		return xerrors.Errorf("code not found %v in redis", code.Key())
 	} else if err != nil {
 		return xerrors.Errorf("fail get code: %v", err)
 	}
