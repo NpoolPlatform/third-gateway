@@ -3,8 +3,10 @@ package email
 import (
 	"context"
 
+	appusermgrpb "github.com/NpoolPlatform/message/npool/appusermgr"
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
 	templatecrud "github.com/NpoolPlatform/third-gateway/pkg/crud/appemailtemplate"
+	grpc2 "github.com/NpoolPlatform/third-gateway/pkg/grpc"
 	code "github.com/NpoolPlatform/third-gateway/pkg/middleware/code"
 
 	"github.com/google/uuid"
@@ -43,9 +45,23 @@ func VerifyCode(ctx context.Context, in *npool.VerifyEmailCodeRequest) (*npool.V
 		return nil, xerrors.Errorf("invalid app id: %v", err)
 	}
 
+	emailAddr := in.GetEmailAddress()
+
+	_, err = uuid.Parse(in.GetUserID())
+	if err == nil {
+		resp, err := grpc2.GetAppUserByAppUser(ctx, &appusermgrpb.GetAppUserByAppUserRequest{
+			AppID:  in.GetAppID(),
+			UserID: in.GetUserID(),
+		})
+		if err != nil {
+			return nil, xerrors.Errorf("invalid app user: %v", err)
+		}
+		emailAddr = resp.Info.EmailAddress
+	}
+
 	userCode := code.UserCode{
 		AppID:       appID,
-		Account:     in.GetEmailAddress(),
+		Account:     emailAddr,
 		AccountType: AccountType,
 		UsedFor:     in.GetUsedFor(),
 		Code:        in.GetCode(),
