@@ -49,6 +49,8 @@ func buildBody(ctx context.Context, in *npool.SendEmailCodeRequest, template str
 	switch in.GetUsedFor() {
 	case constant.UsedForSignup:
 		fallthrough // nolint
+	case constant.UsedForBindPhone:
+		fallthrough // nolint
 	case constant.UsedForSignin:
 		return buildWithCode(ctx, in, template)
 	case constant.UsedForContact:

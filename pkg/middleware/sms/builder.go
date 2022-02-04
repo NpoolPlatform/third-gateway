@@ -48,6 +48,8 @@ func buildWithCode(ctx context.Context, in *npool.SendSMSCodeRequest, template s
 func buildBody(ctx context.Context, in *npool.SendSMSCodeRequest, template string) (string, error) {
 	switch in.GetUsedFor() {
 	case constant.UsedForSignup:
+		fallthrough // nolint
+	case constant.UsedForBindPhone:
 		return buildWithCode(ctx, in, template)
 	case constant.UsedForSignin:
 		fallthrough // nolint
