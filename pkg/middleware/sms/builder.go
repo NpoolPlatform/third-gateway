@@ -49,10 +49,10 @@ func buildBody(ctx context.Context, in *npool.SendSMSCodeRequest, template strin
 	switch in.GetUsedFor() {
 	case constant.UsedForSignup:
 		fallthrough // nolint
-	case constant.UsedForBindPhone:
-		return buildWithCode(ctx, in, template)
 	case constant.UsedForSignin:
 		fallthrough // nolint
+	case constant.UsedForUpdate:
+		return buildWithCode(ctx, in, template)
 	case constant.UsedForContact:
 		return "", xerrors.Errorf("NOT IMPLEMENTED")
 	}
