@@ -105,6 +105,13 @@ func LangID(v uuid.UUID) predicate.AppEmailTemplate {
 	})
 }
 
+// DefaultToUsername applies equality check predicate on the "default_to_username" field. It's identical to DefaultToUsernameEQ.
+func DefaultToUsername(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDefaultToUsername), v))
+	})
+}
+
 // UsedFor applies equality check predicate on the "used_for" field. It's identical to UsedForEQ.
 func UsedFor(v string) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
@@ -296,6 +303,117 @@ func LangIDLT(v uuid.UUID) predicate.AppEmailTemplate {
 func LangIDLTE(v uuid.UUID) predicate.AppEmailTemplate {
 	return predicate.AppEmailTemplate(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldLangID), v))
+	})
+}
+
+// DefaultToUsernameEQ applies the EQ predicate on the "default_to_username" field.
+func DefaultToUsernameEQ(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDefaultToUsername), v))
+	})
+}
+
+// DefaultToUsernameNEQ applies the NEQ predicate on the "default_to_username" field.
+func DefaultToUsernameNEQ(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDefaultToUsername), v))
+	})
+}
+
+// DefaultToUsernameIn applies the In predicate on the "default_to_username" field.
+func DefaultToUsernameIn(vs ...string) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDefaultToUsername), v...))
+	})
+}
+
+// DefaultToUsernameNotIn applies the NotIn predicate on the "default_to_username" field.
+func DefaultToUsernameNotIn(vs ...string) predicate.AppEmailTemplate {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDefaultToUsername), v...))
+	})
+}
+
+// DefaultToUsernameGT applies the GT predicate on the "default_to_username" field.
+func DefaultToUsernameGT(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDefaultToUsername), v))
+	})
+}
+
+// DefaultToUsernameGTE applies the GTE predicate on the "default_to_username" field.
+func DefaultToUsernameGTE(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDefaultToUsername), v))
+	})
+}
+
+// DefaultToUsernameLT applies the LT predicate on the "default_to_username" field.
+func DefaultToUsernameLT(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDefaultToUsername), v))
+	})
+}
+
+// DefaultToUsernameLTE applies the LTE predicate on the "default_to_username" field.
+func DefaultToUsernameLTE(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDefaultToUsername), v))
+	})
+}
+
+// DefaultToUsernameContains applies the Contains predicate on the "default_to_username" field.
+func DefaultToUsernameContains(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDefaultToUsername), v))
+	})
+}
+
+// DefaultToUsernameHasPrefix applies the HasPrefix predicate on the "default_to_username" field.
+func DefaultToUsernameHasPrefix(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDefaultToUsername), v))
+	})
+}
+
+// DefaultToUsernameHasSuffix applies the HasSuffix predicate on the "default_to_username" field.
+func DefaultToUsernameHasSuffix(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDefaultToUsername), v))
+	})
+}
+
+// DefaultToUsernameEqualFold applies the EqualFold predicate on the "default_to_username" field.
+func DefaultToUsernameEqualFold(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDefaultToUsername), v))
+	})
+}
+
+// DefaultToUsernameContainsFold applies the ContainsFold predicate on the "default_to_username" field.
+func DefaultToUsernameContainsFold(v string) predicate.AppEmailTemplate {
+	return predicate.AppEmailTemplate(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDefaultToUsername), v))
 	})
 }
 

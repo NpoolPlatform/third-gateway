@@ -30,15 +30,16 @@ func validateTemplate(info *npool.AppEmailTemplate) error {
 
 func dbRowToTemplate(row *ent.AppEmailTemplate) *npool.AppEmailTemplate {
 	return &npool.AppEmailTemplate{
-		ID:       row.ID.String(),
-		AppID:    row.AppID.String(),
-		LangID:   row.LangID.String(),
-		UsedFor:  row.UsedFor,
-		Sender:   row.Sender,
-		ReplyTos: row.ReplyTos,
-		CCTos:    row.CcTos,
-		Subject:  row.Subject,
-		Body:     row.Body,
+		ID:                row.ID.String(),
+		AppID:             row.AppID.String(),
+		LangID:            row.LangID.String(),
+		DefaultToUsername: row.DefaultToUsername,
+		UsedFor:           row.UsedFor,
+		Sender:            row.Sender,
+		ReplyTos:          row.ReplyTos,
+		CCTos:             row.CcTos,
+		Subject:           row.Subject,
+		Body:              row.Body,
 	}
 }
 
@@ -60,6 +61,7 @@ func Create(ctx context.Context, in *npool.CreateAppEmailTemplateRequest) (*npoo
 		Create().
 		SetAppID(uuid.MustParse(in.GetInfo().GetAppID())).
 		SetLangID(uuid.MustParse(in.GetInfo().GetLangID())).
+		SetDefaultToUsername(in.GetInfo().GetDefaultToUsername()).
 		SetUsedFor(in.GetInfo().GetUsedFor()).
 		SetSender(in.GetInfo().GetSender()).
 		SetReplyTos(in.GetInfo().GetReplyTos()).
@@ -133,6 +135,7 @@ func Update(ctx context.Context, in *npool.UpdateAppEmailTemplateRequest) (*npoo
 	info, err := cli.
 		AppEmailTemplate.
 		UpdateOneID(id).
+		SetDefaultToUsername(in.GetInfo().GetDefaultToUsername()).
 		SetSender(in.GetInfo().GetSender()).
 		SetReplyTos(in.GetInfo().GetReplyTos()).
 		SetCcTos(in.GetInfo().GetCCTos()).

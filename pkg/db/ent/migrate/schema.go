@@ -13,6 +13,7 @@ var (
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "lang_id", Type: field.TypeUUID},
+		{Name: "default_to_username", Type: field.TypeString},
 		{Name: "used_for", Type: field.TypeString},
 		{Name: "sender", Type: field.TypeString},
 		{Name: "reply_tos", Type: field.TypeJSON},
@@ -31,7 +32,7 @@ var (
 			{
 				Name:    "appemailtemplate_app_id_lang_id_used_for",
 				Unique:  true,
-				Columns: []*schema.Column{AppEmailTemplatesColumns[1], AppEmailTemplatesColumns[2], AppEmailTemplatesColumns[3]},
+				Columns: []*schema.Column{AppEmailTemplatesColumns[1], AppEmailTemplatesColumns[2], AppEmailTemplatesColumns[4]},
 			},
 		},
 	}

@@ -32,25 +32,26 @@ const (
 // AppEmailTemplateMutation represents an operation that mutates the AppEmailTemplate nodes in the graph.
 type AppEmailTemplateMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uuid.UUID
-	app_id        *uuid.UUID
-	lang_id       *uuid.UUID
-	used_for      *string
-	sender        *string
-	reply_tos     *[]string
-	cc_tos        *[]string
-	subject       *string
-	body          *string
-	create_at     *uint32
-	addcreate_at  *int32
-	update_at     *uint32
-	addupdate_at  *int32
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*AppEmailTemplate, error)
-	predicates    []predicate.AppEmailTemplate
+	op                  Op
+	typ                 string
+	id                  *uuid.UUID
+	app_id              *uuid.UUID
+	lang_id             *uuid.UUID
+	default_to_username *string
+	used_for            *string
+	sender              *string
+	reply_tos           *[]string
+	cc_tos              *[]string
+	subject             *string
+	body                *string
+	create_at           *uint32
+	addcreate_at        *int32
+	update_at           *uint32
+	addupdate_at        *int32
+	clearedFields       map[string]struct{}
+	done                bool
+	oldValue            func(context.Context) (*AppEmailTemplate, error)
+	predicates          []predicate.AppEmailTemplate
 }
 
 var _ ent.Mutation = (*AppEmailTemplateMutation)(nil)
@@ -227,6 +228,42 @@ func (m *AppEmailTemplateMutation) OldLangID(ctx context.Context) (v uuid.UUID, 
 // ResetLangID resets all changes to the "lang_id" field.
 func (m *AppEmailTemplateMutation) ResetLangID() {
 	m.lang_id = nil
+}
+
+// SetDefaultToUsername sets the "default_to_username" field.
+func (m *AppEmailTemplateMutation) SetDefaultToUsername(s string) {
+	m.default_to_username = &s
+}
+
+// DefaultToUsername returns the value of the "default_to_username" field in the mutation.
+func (m *AppEmailTemplateMutation) DefaultToUsername() (r string, exists bool) {
+	v := m.default_to_username
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDefaultToUsername returns the old "default_to_username" field's value of the AppEmailTemplate entity.
+// If the AppEmailTemplate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppEmailTemplateMutation) OldDefaultToUsername(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDefaultToUsername is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDefaultToUsername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDefaultToUsername: %w", err)
+	}
+	return oldValue.DefaultToUsername, nil
+}
+
+// ResetDefaultToUsername resets all changes to the "default_to_username" field.
+func (m *AppEmailTemplateMutation) ResetDefaultToUsername() {
+	m.default_to_username = nil
 }
 
 // SetUsedFor sets the "used_for" field.
@@ -576,12 +613,15 @@ func (m *AppEmailTemplateMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppEmailTemplateMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.app_id != nil {
 		fields = append(fields, appemailtemplate.FieldAppID)
 	}
 	if m.lang_id != nil {
 		fields = append(fields, appemailtemplate.FieldLangID)
+	}
+	if m.default_to_username != nil {
+		fields = append(fields, appemailtemplate.FieldDefaultToUsername)
 	}
 	if m.used_for != nil {
 		fields = append(fields, appemailtemplate.FieldUsedFor)
@@ -619,6 +659,8 @@ func (m *AppEmailTemplateMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case appemailtemplate.FieldLangID:
 		return m.LangID()
+	case appemailtemplate.FieldDefaultToUsername:
+		return m.DefaultToUsername()
 	case appemailtemplate.FieldUsedFor:
 		return m.UsedFor()
 	case appemailtemplate.FieldSender:
@@ -648,6 +690,8 @@ func (m *AppEmailTemplateMutation) OldField(ctx context.Context, name string) (e
 		return m.OldAppID(ctx)
 	case appemailtemplate.FieldLangID:
 		return m.OldLangID(ctx)
+	case appemailtemplate.FieldDefaultToUsername:
+		return m.OldDefaultToUsername(ctx)
 	case appemailtemplate.FieldUsedFor:
 		return m.OldUsedFor(ctx)
 	case appemailtemplate.FieldSender:
@@ -686,6 +730,13 @@ func (m *AppEmailTemplateMutation) SetField(name string, value ent.Value) error 
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLangID(v)
+		return nil
+	case appemailtemplate.FieldDefaultToUsername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDefaultToUsername(v)
 		return nil
 	case appemailtemplate.FieldUsedFor:
 		v, ok := value.(string)
@@ -824,6 +875,9 @@ func (m *AppEmailTemplateMutation) ResetField(name string) error {
 		return nil
 	case appemailtemplate.FieldLangID:
 		m.ResetLangID()
+		return nil
+	case appemailtemplate.FieldDefaultToUsername:
+		m.ResetDefaultToUsername()
 		return nil
 	case appemailtemplate.FieldUsedFor:
 		m.ResetUsedFor()

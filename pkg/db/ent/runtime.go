@@ -16,15 +16,15 @@ func init() {
 	appemailtemplateFields := schema.AppEmailTemplate{}.Fields()
 	_ = appemailtemplateFields
 	// appemailtemplateDescBody is the schema descriptor for body field.
-	appemailtemplateDescBody := appemailtemplateFields[8].Descriptor()
+	appemailtemplateDescBody := appemailtemplateFields[9].Descriptor()
 	// appemailtemplate.BodyValidator is a validator for the "body" field. It is called by the builders before save.
 	appemailtemplate.BodyValidator = appemailtemplateDescBody.Validators[0].(func(string) error)
 	// appemailtemplateDescCreateAt is the schema descriptor for create_at field.
-	appemailtemplateDescCreateAt := appemailtemplateFields[9].Descriptor()
+	appemailtemplateDescCreateAt := appemailtemplateFields[10].Descriptor()
 	// appemailtemplate.DefaultCreateAt holds the default value on creation for the create_at field.
 	appemailtemplate.DefaultCreateAt = appemailtemplateDescCreateAt.Default.(func() uint32)
 	// appemailtemplateDescUpdateAt is the schema descriptor for update_at field.
-	appemailtemplateDescUpdateAt := appemailtemplateFields[10].Descriptor()
+	appemailtemplateDescUpdateAt := appemailtemplateFields[11].Descriptor()
 	// appemailtemplate.DefaultUpdateAt holds the default value on creation for the update_at field.
 	appemailtemplate.DefaultUpdateAt = appemailtemplateDescUpdateAt.Default.(func() uint32)
 	// appemailtemplate.UpdateDefaultUpdateAt holds the default value on update for the update_at field.

@@ -2,6 +2,7 @@ package email
 
 import (
 	"context"
+	"strings"
 
 	appusermgrpb "github.com/NpoolPlatform/message/npool/appusermgr"
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
@@ -29,6 +30,10 @@ func SendCode(ctx context.Context, in *npool.SendEmailCodeRequest) (*npool.SendE
 	body, err := buildBody(ctx, in, template.Info.Body)
 	if err != nil {
 		return nil, xerrors.Errorf("fail build email body: %v", err)
+	}
+
+	if in.GetToUsername() == "" {
+		body = strings.ReplaceAll(body, NameTemplate, template.Info.DefaultToUsername)
 	}
 
 	err = sendEmailByAWS(template.Info.Subject, body, template.Info.Sender, in.GetEmailAddress())

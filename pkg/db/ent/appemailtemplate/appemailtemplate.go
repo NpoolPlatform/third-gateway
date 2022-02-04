@@ -15,6 +15,8 @@ const (
 	FieldAppID = "app_id"
 	// FieldLangID holds the string denoting the lang_id field in the database.
 	FieldLangID = "lang_id"
+	// FieldDefaultToUsername holds the string denoting the default_to_username field in the database.
+	FieldDefaultToUsername = "default_to_username"
 	// FieldUsedFor holds the string denoting the used_for field in the database.
 	FieldUsedFor = "used_for"
 	// FieldSender holds the string denoting the sender field in the database.
@@ -40,6 +42,7 @@ var Columns = []string{
 	FieldID,
 	FieldAppID,
 	FieldLangID,
+	FieldDefaultToUsername,
 	FieldUsedFor,
 	FieldSender,
 	FieldReplyTos,

@@ -35,6 +35,12 @@ func (aetc *AppEmailTemplateCreate) SetLangID(u uuid.UUID) *AppEmailTemplateCrea
 	return aetc
 }
 
+// SetDefaultToUsername sets the "default_to_username" field.
+func (aetc *AppEmailTemplateCreate) SetDefaultToUsername(s string) *AppEmailTemplateCreate {
+	aetc.mutation.SetDefaultToUsername(s)
+	return aetc
+}
+
 // SetUsedFor sets the "used_for" field.
 func (aetc *AppEmailTemplateCreate) SetUsedFor(s string) *AppEmailTemplateCreate {
 	aetc.mutation.SetUsedFor(s)
@@ -206,6 +212,9 @@ func (aetc *AppEmailTemplateCreate) check() error {
 	if _, ok := aetc.mutation.LangID(); !ok {
 		return &ValidationError{Name: "lang_id", err: errors.New(`ent: missing required field "AppEmailTemplate.lang_id"`)}
 	}
+	if _, ok := aetc.mutation.DefaultToUsername(); !ok {
+		return &ValidationError{Name: "default_to_username", err: errors.New(`ent: missing required field "AppEmailTemplate.default_to_username"`)}
+	}
 	if _, ok := aetc.mutation.UsedFor(); !ok {
 		return &ValidationError{Name: "used_for", err: errors.New(`ent: missing required field "AppEmailTemplate.used_for"`)}
 	}
@@ -287,6 +296,14 @@ func (aetc *AppEmailTemplateCreate) createSpec() (*AppEmailTemplate, *sqlgraph.C
 			Column: appemailtemplate.FieldLangID,
 		})
 		_node.LangID = value
+	}
+	if value, ok := aetc.mutation.DefaultToUsername(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldDefaultToUsername,
+		})
+		_node.DefaultToUsername = value
 	}
 	if value, ok := aetc.mutation.UsedFor(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -427,6 +444,18 @@ func (u *AppEmailTemplateUpsert) SetLangID(v uuid.UUID) *AppEmailTemplateUpsert 
 // UpdateLangID sets the "lang_id" field to the value that was provided on create.
 func (u *AppEmailTemplateUpsert) UpdateLangID() *AppEmailTemplateUpsert {
 	u.SetExcluded(appemailtemplate.FieldLangID)
+	return u
+}
+
+// SetDefaultToUsername sets the "default_to_username" field.
+func (u *AppEmailTemplateUpsert) SetDefaultToUsername(v string) *AppEmailTemplateUpsert {
+	u.Set(appemailtemplate.FieldDefaultToUsername, v)
+	return u
+}
+
+// UpdateDefaultToUsername sets the "default_to_username" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsert) UpdateDefaultToUsername() *AppEmailTemplateUpsert {
+	u.SetExcluded(appemailtemplate.FieldDefaultToUsername)
 	return u
 }
 
@@ -613,6 +642,20 @@ func (u *AppEmailTemplateUpsertOne) SetLangID(v uuid.UUID) *AppEmailTemplateUpse
 func (u *AppEmailTemplateUpsertOne) UpdateLangID() *AppEmailTemplateUpsertOne {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
 		s.UpdateLangID()
+	})
+}
+
+// SetDefaultToUsername sets the "default_to_username" field.
+func (u *AppEmailTemplateUpsertOne) SetDefaultToUsername(v string) *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetDefaultToUsername(v)
+	})
+}
+
+// UpdateDefaultToUsername sets the "default_to_username" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertOne) UpdateDefaultToUsername() *AppEmailTemplateUpsertOne {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateDefaultToUsername()
 	})
 }
 
@@ -983,6 +1026,20 @@ func (u *AppEmailTemplateUpsertBulk) SetLangID(v uuid.UUID) *AppEmailTemplateUps
 func (u *AppEmailTemplateUpsertBulk) UpdateLangID() *AppEmailTemplateUpsertBulk {
 	return u.Update(func(s *AppEmailTemplateUpsert) {
 		s.UpdateLangID()
+	})
+}
+
+// SetDefaultToUsername sets the "default_to_username" field.
+func (u *AppEmailTemplateUpsertBulk) SetDefaultToUsername(v string) *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.SetDefaultToUsername(v)
+	})
+}
+
+// UpdateDefaultToUsername sets the "default_to_username" field to the value that was provided on create.
+func (u *AppEmailTemplateUpsertBulk) UpdateDefaultToUsername() *AppEmailTemplateUpsertBulk {
+	return u.Update(func(s *AppEmailTemplateUpsert) {
+		s.UpdateDefaultToUsername()
 	})
 }
 

@@ -40,6 +40,12 @@ func (aetu *AppEmailTemplateUpdate) SetLangID(u uuid.UUID) *AppEmailTemplateUpda
 	return aetu
 }
 
+// SetDefaultToUsername sets the "default_to_username" field.
+func (aetu *AppEmailTemplateUpdate) SetDefaultToUsername(s string) *AppEmailTemplateUpdate {
+	aetu.mutation.SetDefaultToUsername(s)
+	return aetu
+}
+
 // SetUsedFor sets the "used_for" field.
 func (aetu *AppEmailTemplateUpdate) SetUsedFor(s string) *AppEmailTemplateUpdate {
 	aetu.mutation.SetUsedFor(s)
@@ -226,6 +232,13 @@ func (aetu *AppEmailTemplateUpdate) sqlSave(ctx context.Context) (n int, err err
 			Column: appemailtemplate.FieldLangID,
 		})
 	}
+	if value, ok := aetu.mutation.DefaultToUsername(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldDefaultToUsername,
+		})
+	}
 	if value, ok := aetu.mutation.UsedFor(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -324,6 +337,12 @@ func (aetuo *AppEmailTemplateUpdateOne) SetAppID(u uuid.UUID) *AppEmailTemplateU
 // SetLangID sets the "lang_id" field.
 func (aetuo *AppEmailTemplateUpdateOne) SetLangID(u uuid.UUID) *AppEmailTemplateUpdateOne {
 	aetuo.mutation.SetLangID(u)
+	return aetuo
+}
+
+// SetDefaultToUsername sets the "default_to_username" field.
+func (aetuo *AppEmailTemplateUpdateOne) SetDefaultToUsername(s string) *AppEmailTemplateUpdateOne {
+	aetuo.mutation.SetDefaultToUsername(s)
 	return aetuo
 }
 
@@ -535,6 +554,13 @@ func (aetuo *AppEmailTemplateUpdateOne) sqlSave(ctx context.Context) (_node *App
 			Type:   field.TypeUUID,
 			Value:  value,
 			Column: appemailtemplate.FieldLangID,
+		})
+	}
+	if value, ok := aetuo.mutation.DefaultToUsername(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appemailtemplate.FieldDefaultToUsername,
 		})
 	}
 	if value, ok := aetuo.mutation.UsedFor(); ok {

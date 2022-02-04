@@ -21,6 +21,8 @@ type AppEmailTemplate struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// LangID holds the value of the "lang_id" field.
 	LangID uuid.UUID `json:"lang_id,omitempty"`
+	// DefaultToUsername holds the value of the "default_to_username" field.
+	DefaultToUsername string `json:"default_to_username,omitempty"`
 	// UsedFor holds the value of the "used_for" field.
 	UsedFor string `json:"used_for,omitempty"`
 	// Sender holds the value of the "sender" field.
@@ -48,7 +50,7 @@ func (*AppEmailTemplate) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new([]byte)
 		case appemailtemplate.FieldCreateAt, appemailtemplate.FieldUpdateAt:
 			values[i] = new(sql.NullInt64)
-		case appemailtemplate.FieldUsedFor, appemailtemplate.FieldSender, appemailtemplate.FieldSubject, appemailtemplate.FieldBody:
+		case appemailtemplate.FieldDefaultToUsername, appemailtemplate.FieldUsedFor, appemailtemplate.FieldSender, appemailtemplate.FieldSubject, appemailtemplate.FieldBody:
 			values[i] = new(sql.NullString)
 		case appemailtemplate.FieldID, appemailtemplate.FieldAppID, appemailtemplate.FieldLangID:
 			values[i] = new(uuid.UUID)
@@ -84,6 +86,12 @@ func (aet *AppEmailTemplate) assignValues(columns []string, values []interface{}
 				return fmt.Errorf("unexpected type %T for field lang_id", values[i])
 			} else if value != nil {
 				aet.LangID = *value
+			}
+		case appemailtemplate.FieldDefaultToUsername:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field default_to_username", values[i])
+			} else if value.Valid {
+				aet.DefaultToUsername = value.String
 			}
 		case appemailtemplate.FieldUsedFor:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -169,6 +177,8 @@ func (aet *AppEmailTemplate) String() string {
 	builder.WriteString(fmt.Sprintf("%v", aet.AppID))
 	builder.WriteString(", lang_id=")
 	builder.WriteString(fmt.Sprintf("%v", aet.LangID))
+	builder.WriteString(", default_to_username=")
+	builder.WriteString(aet.DefaultToUsername)
 	builder.WriteString(", used_for=")
 	builder.WriteString(aet.UsedFor)
 	builder.WriteString(", sender=")
