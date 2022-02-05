@@ -67,3 +67,12 @@ func (s *Server) VerifyGoogleAuthentication(ctx context.Context, in *npool.Verif
 	}
 	return resp, nil
 }
+
+func (s *Server) VerifyGoogleRecaptchaV3(ctx context.Context, in *npool.VerifyGoogleRecaptchaV3Request) (*npool.VerifyGoogleRecaptchaV3Response, error) {
+	resp, err := googlemw.VerifyGoogleRecaptchaV3(ctx, in)
+	if err != nil {
+		logger.Sugar().Errorf("fail verify google recaptcha v3: %v", err)
+		return &npool.VerifyGoogleRecaptchaV3Response{}, status.Error(codes.Internal, err.Error())
+	}
+	return resp, nil
+}
