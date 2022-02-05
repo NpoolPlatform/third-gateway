@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appcontact"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appsmstemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/schema"
@@ -13,6 +14,26 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	appcontactFields := schema.AppContact{}.Fields()
+	_ = appcontactFields
+	// appcontactDescUsedFor is the schema descriptor for used_for field.
+	appcontactDescUsedFor := appcontactFields[2].Descriptor()
+	// appcontact.UsedForValidator is a validator for the "used_for" field. It is called by the builders before save.
+	appcontact.UsedForValidator = appcontactDescUsedFor.Validators[0].(func(string) error)
+	// appcontactDescCreateAt is the schema descriptor for create_at field.
+	appcontactDescCreateAt := appcontactFields[5].Descriptor()
+	// appcontact.DefaultCreateAt holds the default value on creation for the create_at field.
+	appcontact.DefaultCreateAt = appcontactDescCreateAt.Default.(func() uint32)
+	// appcontactDescUpdateAt is the schema descriptor for update_at field.
+	appcontactDescUpdateAt := appcontactFields[6].Descriptor()
+	// appcontact.DefaultUpdateAt holds the default value on creation for the update_at field.
+	appcontact.DefaultUpdateAt = appcontactDescUpdateAt.Default.(func() uint32)
+	// appcontact.UpdateDefaultUpdateAt holds the default value on update for the update_at field.
+	appcontact.UpdateDefaultUpdateAt = appcontactDescUpdateAt.UpdateDefault.(func() uint32)
+	// appcontactDescID is the schema descriptor for id field.
+	appcontactDescID := appcontactFields[0].Descriptor()
+	// appcontact.DefaultID holds the default value on creation for the id field.
+	appcontact.DefaultID = appcontactDescID.Default.(func() uuid.UUID)
 	appemailtemplateFields := schema.AppEmailTemplate{}.Fields()
 	_ = appemailtemplateFields
 	// appemailtemplateDescBody is the schema descriptor for body field.

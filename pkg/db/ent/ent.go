@@ -8,6 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appcontact"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appsmstemplate"
 )
@@ -30,6 +31,7 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
+		appcontact.Table:       appcontact.ValidColumn,
 		appemailtemplate.Table: appemailtemplate.ValidColumn,
 		appsmstemplate.Table:   appsmstemplate.ValidColumn,
 	}

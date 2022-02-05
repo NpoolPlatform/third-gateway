@@ -24,6 +24,7 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
+	AppContact       []ent.Hook
 	AppEmailTemplate []ent.Hook
 	AppSMSTemplate   []ent.Hook
 }

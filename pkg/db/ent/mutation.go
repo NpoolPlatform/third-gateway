@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appcontact"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appsmstemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/predicate"
@@ -25,9 +26,666 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
+	TypeAppContact       = "AppContact"
 	TypeAppEmailTemplate = "AppEmailTemplate"
 	TypeAppSMSTemplate   = "AppSMSTemplate"
 )
+
+// AppContactMutation represents an operation that mutates the AppContact nodes in the graph.
+type AppContactMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	app_id        *uuid.UUID
+	used_for      *string
+	account       *string
+	account_type  *string
+	create_at     *uint32
+	addcreate_at  *int32
+	update_at     *uint32
+	addupdate_at  *int32
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*AppContact, error)
+	predicates    []predicate.AppContact
+}
+
+var _ ent.Mutation = (*AppContactMutation)(nil)
+
+// appcontactOption allows management of the mutation configuration using functional options.
+type appcontactOption func(*AppContactMutation)
+
+// newAppContactMutation creates new mutation for the AppContact entity.
+func newAppContactMutation(c config, op Op, opts ...appcontactOption) *AppContactMutation {
+	m := &AppContactMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeAppContact,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withAppContactID sets the ID field of the mutation.
+func withAppContactID(id uuid.UUID) appcontactOption {
+	return func(m *AppContactMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *AppContact
+		)
+		m.oldValue = func(ctx context.Context) (*AppContact, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().AppContact.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withAppContact sets the old AppContact of the mutation.
+func withAppContact(node *AppContact) appcontactOption {
+	return func(m *AppContactMutation) {
+		m.oldValue = func(context.Context) (*AppContact, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m AppContactMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m AppContactMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of AppContact entities.
+func (m *AppContactMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *AppContactMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *AppContactMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().AppContact.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetAppID sets the "app_id" field.
+func (m *AppContactMutation) SetAppID(u uuid.UUID) {
+	m.app_id = &u
+}
+
+// AppID returns the value of the "app_id" field in the mutation.
+func (m *AppContactMutation) AppID() (r uuid.UUID, exists bool) {
+	v := m.app_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAppID returns the old "app_id" field's value of the AppContact entity.
+// If the AppContact object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppContactMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAppID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+	}
+	return oldValue.AppID, nil
+}
+
+// ResetAppID resets all changes to the "app_id" field.
+func (m *AppContactMutation) ResetAppID() {
+	m.app_id = nil
+}
+
+// SetUsedFor sets the "used_for" field.
+func (m *AppContactMutation) SetUsedFor(s string) {
+	m.used_for = &s
+}
+
+// UsedFor returns the value of the "used_for" field in the mutation.
+func (m *AppContactMutation) UsedFor() (r string, exists bool) {
+	v := m.used_for
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUsedFor returns the old "used_for" field's value of the AppContact entity.
+// If the AppContact object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppContactMutation) OldUsedFor(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUsedFor is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUsedFor requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUsedFor: %w", err)
+	}
+	return oldValue.UsedFor, nil
+}
+
+// ResetUsedFor resets all changes to the "used_for" field.
+func (m *AppContactMutation) ResetUsedFor() {
+	m.used_for = nil
+}
+
+// SetAccount sets the "account" field.
+func (m *AppContactMutation) SetAccount(s string) {
+	m.account = &s
+}
+
+// Account returns the value of the "account" field in the mutation.
+func (m *AppContactMutation) Account() (r string, exists bool) {
+	v := m.account
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAccount returns the old "account" field's value of the AppContact entity.
+// If the AppContact object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppContactMutation) OldAccount(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAccount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAccount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAccount: %w", err)
+	}
+	return oldValue.Account, nil
+}
+
+// ResetAccount resets all changes to the "account" field.
+func (m *AppContactMutation) ResetAccount() {
+	m.account = nil
+}
+
+// SetAccountType sets the "account_type" field.
+func (m *AppContactMutation) SetAccountType(s string) {
+	m.account_type = &s
+}
+
+// AccountType returns the value of the "account_type" field in the mutation.
+func (m *AppContactMutation) AccountType() (r string, exists bool) {
+	v := m.account_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAccountType returns the old "account_type" field's value of the AppContact entity.
+// If the AppContact object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppContactMutation) OldAccountType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAccountType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAccountType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAccountType: %w", err)
+	}
+	return oldValue.AccountType, nil
+}
+
+// ResetAccountType resets all changes to the "account_type" field.
+func (m *AppContactMutation) ResetAccountType() {
+	m.account_type = nil
+}
+
+// SetCreateAt sets the "create_at" field.
+func (m *AppContactMutation) SetCreateAt(u uint32) {
+	m.create_at = &u
+	m.addcreate_at = nil
+}
+
+// CreateAt returns the value of the "create_at" field in the mutation.
+func (m *AppContactMutation) CreateAt() (r uint32, exists bool) {
+	v := m.create_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateAt returns the old "create_at" field's value of the AppContact entity.
+// If the AppContact object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppContactMutation) OldCreateAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateAt: %w", err)
+	}
+	return oldValue.CreateAt, nil
+}
+
+// AddCreateAt adds u to the "create_at" field.
+func (m *AppContactMutation) AddCreateAt(u int32) {
+	if m.addcreate_at != nil {
+		*m.addcreate_at += u
+	} else {
+		m.addcreate_at = &u
+	}
+}
+
+// AddedCreateAt returns the value that was added to the "create_at" field in this mutation.
+func (m *AppContactMutation) AddedCreateAt() (r int32, exists bool) {
+	v := m.addcreate_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreateAt resets all changes to the "create_at" field.
+func (m *AppContactMutation) ResetCreateAt() {
+	m.create_at = nil
+	m.addcreate_at = nil
+}
+
+// SetUpdateAt sets the "update_at" field.
+func (m *AppContactMutation) SetUpdateAt(u uint32) {
+	m.update_at = &u
+	m.addupdate_at = nil
+}
+
+// UpdateAt returns the value of the "update_at" field in the mutation.
+func (m *AppContactMutation) UpdateAt() (r uint32, exists bool) {
+	v := m.update_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateAt returns the old "update_at" field's value of the AppContact entity.
+// If the AppContact object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppContactMutation) OldUpdateAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateAt: %w", err)
+	}
+	return oldValue.UpdateAt, nil
+}
+
+// AddUpdateAt adds u to the "update_at" field.
+func (m *AppContactMutation) AddUpdateAt(u int32) {
+	if m.addupdate_at != nil {
+		*m.addupdate_at += u
+	} else {
+		m.addupdate_at = &u
+	}
+}
+
+// AddedUpdateAt returns the value that was added to the "update_at" field in this mutation.
+func (m *AppContactMutation) AddedUpdateAt() (r int32, exists bool) {
+	v := m.addupdate_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdateAt resets all changes to the "update_at" field.
+func (m *AppContactMutation) ResetUpdateAt() {
+	m.update_at = nil
+	m.addupdate_at = nil
+}
+
+// Where appends a list predicates to the AppContactMutation builder.
+func (m *AppContactMutation) Where(ps ...predicate.AppContact) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *AppContactMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (AppContact).
+func (m *AppContactMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *AppContactMutation) Fields() []string {
+	fields := make([]string, 0, 6)
+	if m.app_id != nil {
+		fields = append(fields, appcontact.FieldAppID)
+	}
+	if m.used_for != nil {
+		fields = append(fields, appcontact.FieldUsedFor)
+	}
+	if m.account != nil {
+		fields = append(fields, appcontact.FieldAccount)
+	}
+	if m.account_type != nil {
+		fields = append(fields, appcontact.FieldAccountType)
+	}
+	if m.create_at != nil {
+		fields = append(fields, appcontact.FieldCreateAt)
+	}
+	if m.update_at != nil {
+		fields = append(fields, appcontact.FieldUpdateAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *AppContactMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case appcontact.FieldAppID:
+		return m.AppID()
+	case appcontact.FieldUsedFor:
+		return m.UsedFor()
+	case appcontact.FieldAccount:
+		return m.Account()
+	case appcontact.FieldAccountType:
+		return m.AccountType()
+	case appcontact.FieldCreateAt:
+		return m.CreateAt()
+	case appcontact.FieldUpdateAt:
+		return m.UpdateAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *AppContactMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case appcontact.FieldAppID:
+		return m.OldAppID(ctx)
+	case appcontact.FieldUsedFor:
+		return m.OldUsedFor(ctx)
+	case appcontact.FieldAccount:
+		return m.OldAccount(ctx)
+	case appcontact.FieldAccountType:
+		return m.OldAccountType(ctx)
+	case appcontact.FieldCreateAt:
+		return m.OldCreateAt(ctx)
+	case appcontact.FieldUpdateAt:
+		return m.OldUpdateAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown AppContact field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppContactMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case appcontact.FieldAppID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAppID(v)
+		return nil
+	case appcontact.FieldUsedFor:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUsedFor(v)
+		return nil
+	case appcontact.FieldAccount:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAccount(v)
+		return nil
+	case appcontact.FieldAccountType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAccountType(v)
+		return nil
+	case appcontact.FieldCreateAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateAt(v)
+		return nil
+	case appcontact.FieldUpdateAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppContact field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *AppContactMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreate_at != nil {
+		fields = append(fields, appcontact.FieldCreateAt)
+	}
+	if m.addupdate_at != nil {
+		fields = append(fields, appcontact.FieldUpdateAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *AppContactMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case appcontact.FieldCreateAt:
+		return m.AddedCreateAt()
+	case appcontact.FieldUpdateAt:
+		return m.AddedUpdateAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AppContactMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case appcontact.FieldCreateAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreateAt(v)
+		return nil
+	case appcontact.FieldUpdateAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdateAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown AppContact numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *AppContactMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *AppContactMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *AppContactMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown AppContact nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *AppContactMutation) ResetField(name string) error {
+	switch name {
+	case appcontact.FieldAppID:
+		m.ResetAppID()
+		return nil
+	case appcontact.FieldUsedFor:
+		m.ResetUsedFor()
+		return nil
+	case appcontact.FieldAccount:
+		m.ResetAccount()
+		return nil
+	case appcontact.FieldAccountType:
+		m.ResetAccountType()
+		return nil
+	case appcontact.FieldCreateAt:
+		m.ResetCreateAt()
+		return nil
+	case appcontact.FieldUpdateAt:
+		m.ResetUpdateAt()
+		return nil
+	}
+	return fmt.Errorf("unknown AppContact field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *AppContactMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *AppContactMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *AppContactMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *AppContactMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *AppContactMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *AppContactMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *AppContactMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown AppContact unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *AppContactMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown AppContact edge %s", name)
+}
 
 // AppEmailTemplateMutation represents an operation that mutates the AppEmailTemplate nodes in the graph.
 type AppEmailTemplateMutation struct {

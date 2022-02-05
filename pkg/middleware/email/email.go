@@ -6,6 +6,7 @@ import (
 
 	appusermgrpb "github.com/NpoolPlatform/message/npool/appusermgr"
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
+	contactcrud "github.com/NpoolPlatform/third-gateway/pkg/crud/appcontact"
 	templatecrud "github.com/NpoolPlatform/third-gateway/pkg/crud/appemailtemplate"
 	grpc2 "github.com/NpoolPlatform/third-gateway/pkg/grpc"
 	code "github.com/NpoolPlatform/third-gateway/pkg/middleware/code"
@@ -78,4 +79,22 @@ func VerifyCode(ctx context.Context, in *npool.VerifyEmailCodeRequest) (*npool.V
 	}
 
 	return &npool.VerifyEmailCodeResponse{}, nil
+}
+
+func Contact(ctx context.Context, in *npool.ContactRequest) (*npool.ContactResponse, error) {
+	resp, err := contactcrud.GetByAppUsedForAccountType(ctx, &npool.GetAppContactByAppUsedForAccountTypeRequest{
+		AppID:       in.GetAppID(),
+		UsedFor:     in.GetUsedFor(),
+		AccountType: AccountType,
+	})
+	if err != nil {
+		return nil, xerrors.Errorf("fail get app contact: %v", err)
+	}
+
+	err = sendEmailByAWS(in.GetSubject(), in.GetBody(), in.GetSender(), resp.Info.Account)
+	if err != nil {
+		return nil, xerrors.Errorf("fail send email: %v", err)
+	}
+
+	return &npool.ContactResponse{}, nil
 }

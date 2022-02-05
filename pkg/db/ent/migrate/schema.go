@@ -8,6 +8,29 @@ import (
 )
 
 var (
+	// AppContactsColumns holds the columns for the "app_contacts" table.
+	AppContactsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "app_id", Type: field.TypeUUID},
+		{Name: "used_for", Type: field.TypeString, Size: 32},
+		{Name: "account", Type: field.TypeString},
+		{Name: "account_type", Type: field.TypeString},
+		{Name: "create_at", Type: field.TypeUint32},
+		{Name: "update_at", Type: field.TypeUint32},
+	}
+	// AppContactsTable holds the schema information for the "app_contacts" table.
+	AppContactsTable = &schema.Table{
+		Name:       "app_contacts",
+		Columns:    AppContactsColumns,
+		PrimaryKey: []*schema.Column{AppContactsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appcontact_app_id_account_used_for_account_type",
+				Unique:  true,
+				Columns: []*schema.Column{AppContactsColumns[1], AppContactsColumns[3], AppContactsColumns[2], AppContactsColumns[4]},
+			},
+		},
+	}
 	// AppEmailTemplatesColumns holds the columns for the "app_email_templates" table.
 	AppEmailTemplatesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -55,6 +78,7 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		AppContactsTable,
 		AppEmailTemplatesTable,
 		AppSmsTemplatesTable,
 	}

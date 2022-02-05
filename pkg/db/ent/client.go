@@ -10,6 +10,7 @@ import (
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/migrate"
 	"github.com/google/uuid"
 
+	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appcontact"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appemailtemplate"
 	"github.com/NpoolPlatform/third-gateway/pkg/db/ent/appsmstemplate"
 
@@ -22,6 +23,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// AppContact is the client for interacting with the AppContact builders.
+	AppContact *AppContactClient
 	// AppEmailTemplate is the client for interacting with the AppEmailTemplate builders.
 	AppEmailTemplate *AppEmailTemplateClient
 	// AppSMSTemplate is the client for interacting with the AppSMSTemplate builders.
@@ -39,6 +42,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.AppContact = NewAppContactClient(c.config)
 	c.AppEmailTemplate = NewAppEmailTemplateClient(c.config)
 	c.AppSMSTemplate = NewAppSMSTemplateClient(c.config)
 }
@@ -74,6 +78,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:              ctx,
 		config:           cfg,
+		AppContact:       NewAppContactClient(cfg),
 		AppEmailTemplate: NewAppEmailTemplateClient(cfg),
 		AppSMSTemplate:   NewAppSMSTemplateClient(cfg),
 	}, nil
@@ -95,6 +100,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:              ctx,
 		config:           cfg,
+		AppContact:       NewAppContactClient(cfg),
 		AppEmailTemplate: NewAppEmailTemplateClient(cfg),
 		AppSMSTemplate:   NewAppSMSTemplateClient(cfg),
 	}, nil
@@ -103,7 +109,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		AppEmailTemplate.
+//		AppContact.
 //		Query().
 //		Count(ctx)
 //
@@ -126,8 +132,99 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.AppContact.Use(hooks...)
 	c.AppEmailTemplate.Use(hooks...)
 	c.AppSMSTemplate.Use(hooks...)
+}
+
+// AppContactClient is a client for the AppContact schema.
+type AppContactClient struct {
+	config
+}
+
+// NewAppContactClient returns a client for the AppContact from the given config.
+func NewAppContactClient(c config) *AppContactClient {
+	return &AppContactClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `appcontact.Hooks(f(g(h())))`.
+func (c *AppContactClient) Use(hooks ...Hook) {
+	c.hooks.AppContact = append(c.hooks.AppContact, hooks...)
+}
+
+// Create returns a create builder for AppContact.
+func (c *AppContactClient) Create() *AppContactCreate {
+	mutation := newAppContactMutation(c.config, OpCreate)
+	return &AppContactCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppContact entities.
+func (c *AppContactClient) CreateBulk(builders ...*AppContactCreate) *AppContactCreateBulk {
+	return &AppContactCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppContact.
+func (c *AppContactClient) Update() *AppContactUpdate {
+	mutation := newAppContactMutation(c.config, OpUpdate)
+	return &AppContactUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppContactClient) UpdateOne(ac *AppContact) *AppContactUpdateOne {
+	mutation := newAppContactMutation(c.config, OpUpdateOne, withAppContact(ac))
+	return &AppContactUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppContactClient) UpdateOneID(id uuid.UUID) *AppContactUpdateOne {
+	mutation := newAppContactMutation(c.config, OpUpdateOne, withAppContactID(id))
+	return &AppContactUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppContact.
+func (c *AppContactClient) Delete() *AppContactDelete {
+	mutation := newAppContactMutation(c.config, OpDelete)
+	return &AppContactDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *AppContactClient) DeleteOne(ac *AppContact) *AppContactDeleteOne {
+	return c.DeleteOneID(ac.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *AppContactClient) DeleteOneID(id uuid.UUID) *AppContactDeleteOne {
+	builder := c.Delete().Where(appcontact.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppContactDeleteOne{builder}
+}
+
+// Query returns a query builder for AppContact.
+func (c *AppContactClient) Query() *AppContactQuery {
+	return &AppContactQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppContact entity by its id.
+func (c *AppContactClient) Get(ctx context.Context, id uuid.UUID) (*AppContact, error) {
+	return c.Query().Where(appcontact.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppContactClient) GetX(ctx context.Context, id uuid.UUID) *AppContact {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AppContactClient) Hooks() []Hook {
+	return c.hooks.AppContact
 }
 
 // AppEmailTemplateClient is a client for the AppEmailTemplate schema.
