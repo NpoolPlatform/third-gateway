@@ -2,6 +2,7 @@ package google
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/config"
@@ -31,11 +32,8 @@ func VerifyGoogleRecaptchaV3(ctx context.Context, in *npool.VerifyGoogleRecaptch
 		return nil, xerrors.Errorf("invalid recaptcha parameter")
 	}
 
-	params := map[string]string{}
-	params["secret"] = recaptchaSecret
-	params["response"] = in.GetRecaptchaToken()
-
-	resp, err := resty.New().R().SetResult(&verifyResponse{}).SetBody(params).Post(recaptchaURL)
+	url := fmt.Sprintf("%v?secret=%v&response=%v", recaptchaURL, recaptchaSecret, in.GetRecaptchaToken())
+	resp, err := resty.New().R().SetResult(&verifyResponse{}).Post(url)
 	if err != nil {
 		return nil, xerrors.Errorf("fail verify google recaptcha v3: %v", err)
 	}
