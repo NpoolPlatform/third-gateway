@@ -15,6 +15,8 @@ const (
 	FieldAppID = "app_id"
 	// FieldUsedFor holds the string denoting the used_for field in the database.
 	FieldUsedFor = "used_for"
+	// FieldSender holds the string denoting the sender field in the database.
+	FieldSender = "sender"
 	// FieldAccount holds the string denoting the account field in the database.
 	FieldAccount = "account"
 	// FieldAccountType holds the string denoting the account_type field in the database.
@@ -32,6 +34,7 @@ var Columns = []string{
 	FieldID,
 	FieldAppID,
 	FieldUsedFor,
+	FieldSender,
 	FieldAccount,
 	FieldAccountType,
 	FieldCreateAt,

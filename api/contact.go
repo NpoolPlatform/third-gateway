@@ -13,11 +13,11 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *Server) Contact(ctx context.Context, in *npool.ContactRequest) (*npool.ContactResponse, error) {
+func (s *Server) ContactByEmail(ctx context.Context, in *npool.ContactByEmailRequest) (*npool.ContactByEmailResponse, error) {
 	resp, err := emailmw.Contact(ctx, in)
 	if err != nil {
-		logger.Sugar().Errorf("fail contact: %v", err)
-		return &npool.ContactResponse{}, status.Error(codes.Internal, err.Error())
+		logger.Sugar().Errorf("fail contact by email: %v", err)
+		return &npool.ContactByEmailResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
 }

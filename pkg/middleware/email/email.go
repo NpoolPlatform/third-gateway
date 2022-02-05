@@ -2,6 +2,7 @@ package email
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	appusermgrpb "github.com/NpoolPlatform/message/npool/appusermgr"
@@ -81,7 +82,7 @@ func VerifyCode(ctx context.Context, in *npool.VerifyEmailCodeRequest) (*npool.V
 	return &npool.VerifyEmailCodeResponse{}, nil
 }
 
-func Contact(ctx context.Context, in *npool.ContactRequest) (*npool.ContactResponse, error) {
+func Contact(ctx context.Context, in *npool.ContactByEmailRequest) (*npool.ContactByEmailResponse, error) {
 	resp, err := contactcrud.GetByAppUsedForAccountType(ctx, &npool.GetAppContactByAppUsedForAccountTypeRequest{
 		AppID:       in.GetAppID(),
 		UsedFor:     in.GetUsedFor(),
@@ -91,10 +92,12 @@ func Contact(ctx context.Context, in *npool.ContactRequest) (*npool.ContactRespo
 		return nil, xerrors.Errorf("fail get app contact: %v", err)
 	}
 
-	err = sendEmailByAWS(in.GetSubject(), in.GetBody(), in.GetSender(), resp.Info.Account)
+	body := fmt.Sprintf("From: %v<br>Name: %v<br>%v", in.GetSender(), in.GetSenderName(), in.GetBody())
+
+	err = sendEmailByAWS(in.GetSubject(), body, resp.Info.Sender, resp.Info.Account, in.GetSender())
 	if err != nil {
 		return nil, xerrors.Errorf("fail send email: %v", err)
 	}
 
-	return &npool.ContactResponse{}, nil
+	return &npool.ContactByEmailResponse{}, nil
 }

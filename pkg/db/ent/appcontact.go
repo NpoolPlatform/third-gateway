@@ -20,6 +20,8 @@ type AppContact struct {
 	AppID uuid.UUID `json:"app_id,omitempty"`
 	// UsedFor holds the value of the "used_for" field.
 	UsedFor string `json:"used_for,omitempty"`
+	// Sender holds the value of the "sender" field.
+	Sender string `json:"sender,omitempty"`
 	// Account holds the value of the "account" field.
 	Account string `json:"account,omitempty"`
 	// AccountType holds the value of the "account_type" field.
@@ -37,7 +39,7 @@ func (*AppContact) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case appcontact.FieldCreateAt, appcontact.FieldUpdateAt:
 			values[i] = new(sql.NullInt64)
-		case appcontact.FieldUsedFor, appcontact.FieldAccount, appcontact.FieldAccountType:
+		case appcontact.FieldUsedFor, appcontact.FieldSender, appcontact.FieldAccount, appcontact.FieldAccountType:
 			values[i] = new(sql.NullString)
 		case appcontact.FieldID, appcontact.FieldAppID:
 			values[i] = new(uuid.UUID)
@@ -73,6 +75,12 @@ func (ac *AppContact) assignValues(columns []string, values []interface{}) error
 				return fmt.Errorf("unexpected type %T for field used_for", values[i])
 			} else if value.Valid {
 				ac.UsedFor = value.String
+			}
+		case appcontact.FieldSender:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field sender", values[i])
+			} else if value.Valid {
+				ac.Sender = value.String
 			}
 		case appcontact.FieldAccount:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -130,6 +138,8 @@ func (ac *AppContact) String() string {
 	builder.WriteString(fmt.Sprintf("%v", ac.AppID))
 	builder.WriteString(", used_for=")
 	builder.WriteString(ac.UsedFor)
+	builder.WriteString(", sender=")
+	builder.WriteString(ac.Sender)
 	builder.WriteString(", account=")
 	builder.WriteString(ac.Account)
 	builder.WriteString(", account_type=")

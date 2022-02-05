@@ -13,6 +13,7 @@ var (
 		{Name: "id", Type: field.TypeUUID, Unique: true},
 		{Name: "app_id", Type: field.TypeUUID},
 		{Name: "used_for", Type: field.TypeString, Size: 32},
+		{Name: "sender", Type: field.TypeString},
 		{Name: "account", Type: field.TypeString},
 		{Name: "account_type", Type: field.TypeString},
 		{Name: "create_at", Type: field.TypeUint32},
@@ -27,7 +28,7 @@ var (
 			{
 				Name:    "appcontact_app_id_account_used_for_account_type",
 				Unique:  true,
-				Columns: []*schema.Column{AppContactsColumns[1], AppContactsColumns[3], AppContactsColumns[2], AppContactsColumns[4]},
+				Columns: []*schema.Column{AppContactsColumns[1], AppContactsColumns[4], AppContactsColumns[2], AppContactsColumns[5]},
 			},
 		},
 	}

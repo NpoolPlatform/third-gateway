@@ -35,6 +35,12 @@ func (acc *AppContactCreate) SetUsedFor(s string) *AppContactCreate {
 	return acc
 }
 
+// SetSender sets the "sender" field.
+func (acc *AppContactCreate) SetSender(s string) *AppContactCreate {
+	acc.mutation.SetSender(s)
+	return acc
+}
+
 // SetAccount sets the "account" field.
 func (acc *AppContactCreate) SetAccount(s string) *AppContactCreate {
 	acc.mutation.SetAccount(s)
@@ -187,6 +193,9 @@ func (acc *AppContactCreate) check() error {
 			return &ValidationError{Name: "used_for", err: fmt.Errorf(`ent: validator failed for field "AppContact.used_for": %w`, err)}
 		}
 	}
+	if _, ok := acc.mutation.Sender(); !ok {
+		return &ValidationError{Name: "sender", err: errors.New(`ent: missing required field "AppContact.sender"`)}
+	}
 	if _, ok := acc.mutation.Account(); !ok {
 		return &ValidationError{Name: "account", err: errors.New(`ent: missing required field "AppContact.account"`)}
 	}
@@ -251,6 +260,14 @@ func (acc *AppContactCreate) createSpec() (*AppContact, *sqlgraph.CreateSpec) {
 			Column: appcontact.FieldUsedFor,
 		})
 		_node.UsedFor = value
+	}
+	if value, ok := acc.mutation.Sender(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appcontact.FieldSender,
+		})
+		_node.Sender = value
 	}
 	if value, ok := acc.mutation.Account(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -359,6 +376,18 @@ func (u *AppContactUpsert) SetUsedFor(v string) *AppContactUpsert {
 // UpdateUsedFor sets the "used_for" field to the value that was provided on create.
 func (u *AppContactUpsert) UpdateUsedFor() *AppContactUpsert {
 	u.SetExcluded(appcontact.FieldUsedFor)
+	return u
+}
+
+// SetSender sets the "sender" field.
+func (u *AppContactUpsert) SetSender(v string) *AppContactUpsert {
+	u.Set(appcontact.FieldSender, v)
+	return u
+}
+
+// UpdateSender sets the "sender" field to the value that was provided on create.
+func (u *AppContactUpsert) UpdateSender() *AppContactUpsert {
+	u.SetExcluded(appcontact.FieldSender)
 	return u
 }
 
@@ -497,6 +526,20 @@ func (u *AppContactUpsertOne) SetUsedFor(v string) *AppContactUpsertOne {
 func (u *AppContactUpsertOne) UpdateUsedFor() *AppContactUpsertOne {
 	return u.Update(func(s *AppContactUpsert) {
 		s.UpdateUsedFor()
+	})
+}
+
+// SetSender sets the "sender" field.
+func (u *AppContactUpsertOne) SetSender(v string) *AppContactUpsertOne {
+	return u.Update(func(s *AppContactUpsert) {
+		s.SetSender(v)
+	})
+}
+
+// UpdateSender sets the "sender" field to the value that was provided on create.
+func (u *AppContactUpsertOne) UpdateSender() *AppContactUpsertOne {
+	return u.Update(func(s *AppContactUpsert) {
+		s.UpdateSender()
 	})
 }
 
@@ -811,6 +854,20 @@ func (u *AppContactUpsertBulk) SetUsedFor(v string) *AppContactUpsertBulk {
 func (u *AppContactUpsertBulk) UpdateUsedFor() *AppContactUpsertBulk {
 	return u.Update(func(s *AppContactUpsert) {
 		s.UpdateUsedFor()
+	})
+}
+
+// SetSender sets the "sender" field.
+func (u *AppContactUpsertBulk) SetSender(v string) *AppContactUpsertBulk {
+	return u.Update(func(s *AppContactUpsert) {
+		s.SetSender(v)
+	})
+}
+
+// UpdateSender sets the "sender" field to the value that was provided on create.
+func (u *AppContactUpsertBulk) UpdateSender() *AppContactUpsertBulk {
+	return u.Update(func(s *AppContactUpsert) {
+		s.UpdateSender()
 	})
 }
 

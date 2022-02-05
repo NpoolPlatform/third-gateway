@@ -40,6 +40,12 @@ func (acu *AppContactUpdate) SetUsedFor(s string) *AppContactUpdate {
 	return acu
 }
 
+// SetSender sets the "sender" field.
+func (acu *AppContactUpdate) SetSender(s string) *AppContactUpdate {
+	acu.mutation.SetSender(s)
+	return acu
+}
+
 // SetAccount sets the "account" field.
 func (acu *AppContactUpdate) SetAccount(s string) *AppContactUpdate {
 	acu.mutation.SetAccount(s)
@@ -202,6 +208,13 @@ func (acu *AppContactUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: appcontact.FieldUsedFor,
 		})
 	}
+	if value, ok := acu.mutation.Sender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appcontact.FieldSender,
+		})
+	}
 	if value, ok := acu.mutation.Account(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -272,6 +285,12 @@ func (acuo *AppContactUpdateOne) SetAppID(u uuid.UUID) *AppContactUpdateOne {
 // SetUsedFor sets the "used_for" field.
 func (acuo *AppContactUpdateOne) SetUsedFor(s string) *AppContactUpdateOne {
 	acuo.mutation.SetUsedFor(s)
+	return acuo
+}
+
+// SetSender sets the "sender" field.
+func (acuo *AppContactUpdateOne) SetSender(s string) *AppContactUpdateOne {
+	acuo.mutation.SetSender(s)
 	return acuo
 }
 
@@ -459,6 +478,13 @@ func (acuo *AppContactUpdateOne) sqlSave(ctx context.Context) (_node *AppContact
 			Type:   field.TypeString,
 			Value:  value,
 			Column: appcontact.FieldUsedFor,
+		})
+	}
+	if value, ok := acuo.mutation.Sender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: appcontact.FieldSender,
 		})
 	}
 	if value, ok := acuo.mutation.Account(); ok {

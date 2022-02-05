@@ -21,11 +21,11 @@ func init() {
 	// appcontact.UsedForValidator is a validator for the "used_for" field. It is called by the builders before save.
 	appcontact.UsedForValidator = appcontactDescUsedFor.Validators[0].(func(string) error)
 	// appcontactDescCreateAt is the schema descriptor for create_at field.
-	appcontactDescCreateAt := appcontactFields[5].Descriptor()
+	appcontactDescCreateAt := appcontactFields[6].Descriptor()
 	// appcontact.DefaultCreateAt holds the default value on creation for the create_at field.
 	appcontact.DefaultCreateAt = appcontactDescCreateAt.Default.(func() uint32)
 	// appcontactDescUpdateAt is the schema descriptor for update_at field.
-	appcontactDescUpdateAt := appcontactFields[6].Descriptor()
+	appcontactDescUpdateAt := appcontactFields[7].Descriptor()
 	// appcontact.DefaultUpdateAt holds the default value on creation for the update_at field.
 	appcontact.DefaultUpdateAt = appcontactDescUpdateAt.Default.(func() uint32)
 	// appcontact.UpdateDefaultUpdateAt holds the default value on update for the update_at field.

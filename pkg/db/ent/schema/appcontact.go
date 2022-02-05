@@ -23,6 +23,7 @@ func (AppContact) Fields() []ent.Field {
 			Unique(),
 		field.UUID("app_id", uuid.UUID{}),
 		field.String("used_for").MaxLen(32),
+		field.String("sender"),
 		field.String("account"),
 		field.String("account_type"),
 		field.Uint32("create_at").

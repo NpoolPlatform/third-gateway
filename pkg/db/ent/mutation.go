@@ -39,6 +39,7 @@ type AppContactMutation struct {
 	id            *uuid.UUID
 	app_id        *uuid.UUID
 	used_for      *string
+	sender        *string
 	account       *string
 	account_type  *string
 	create_at     *uint32
@@ -225,6 +226,42 @@ func (m *AppContactMutation) OldUsedFor(ctx context.Context) (v string, err erro
 // ResetUsedFor resets all changes to the "used_for" field.
 func (m *AppContactMutation) ResetUsedFor() {
 	m.used_for = nil
+}
+
+// SetSender sets the "sender" field.
+func (m *AppContactMutation) SetSender(s string) {
+	m.sender = &s
+}
+
+// Sender returns the value of the "sender" field in the mutation.
+func (m *AppContactMutation) Sender() (r string, exists bool) {
+	v := m.sender
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSender returns the old "sender" field's value of the AppContact entity.
+// If the AppContact object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AppContactMutation) OldSender(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSender is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSender requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSender: %w", err)
+	}
+	return oldValue.Sender, nil
+}
+
+// ResetSender resets all changes to the "sender" field.
+func (m *AppContactMutation) ResetSender() {
+	m.sender = nil
 }
 
 // SetAccount sets the "account" field.
@@ -430,12 +467,15 @@ func (m *AppContactMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AppContactMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.app_id != nil {
 		fields = append(fields, appcontact.FieldAppID)
 	}
 	if m.used_for != nil {
 		fields = append(fields, appcontact.FieldUsedFor)
+	}
+	if m.sender != nil {
+		fields = append(fields, appcontact.FieldSender)
 	}
 	if m.account != nil {
 		fields = append(fields, appcontact.FieldAccount)
@@ -461,6 +501,8 @@ func (m *AppContactMutation) Field(name string) (ent.Value, bool) {
 		return m.AppID()
 	case appcontact.FieldUsedFor:
 		return m.UsedFor()
+	case appcontact.FieldSender:
+		return m.Sender()
 	case appcontact.FieldAccount:
 		return m.Account()
 	case appcontact.FieldAccountType:
@@ -482,6 +524,8 @@ func (m *AppContactMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldAppID(ctx)
 	case appcontact.FieldUsedFor:
 		return m.OldUsedFor(ctx)
+	case appcontact.FieldSender:
+		return m.OldSender(ctx)
 	case appcontact.FieldAccount:
 		return m.OldAccount(ctx)
 	case appcontact.FieldAccountType:
@@ -512,6 +556,13 @@ func (m *AppContactMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUsedFor(v)
+		return nil
+	case appcontact.FieldSender:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSender(v)
 		return nil
 	case appcontact.FieldAccount:
 		v, ok := value.(string)
@@ -622,6 +673,9 @@ func (m *AppContactMutation) ResetField(name string) error {
 		return nil
 	case appcontact.FieldUsedFor:
 		m.ResetUsedFor()
+		return nil
+	case appcontact.FieldSender:
+		m.ResetSender()
 		return nil
 	case appcontact.FieldAccount:
 		m.ResetAccount()

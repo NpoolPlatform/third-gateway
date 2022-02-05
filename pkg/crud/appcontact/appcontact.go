@@ -35,6 +35,7 @@ func dbRowToTemplate(row *ent.AppContact) *npool.AppContact {
 		UsedFor:     row.UsedFor,
 		Account:     row.Account,
 		AccountType: row.AccountType,
+		Sender:      row.Sender,
 	}
 }
 
@@ -58,6 +59,7 @@ func Create(ctx context.Context, in *npool.CreateAppContactRequest) (*npool.Crea
 		SetUsedFor(in.GetInfo().GetUsedFor()).
 		SetAccount(in.GetInfo().GetAccount()).
 		SetAccountType(in.GetInfo().GetAccountType()).
+		SetSender(in.GetInfo().GetSender()).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail create app contact: %v", err)
@@ -127,6 +129,7 @@ func Update(ctx context.Context, in *npool.UpdateAppContactRequest) (*npool.Upda
 		UpdateOneID(id).
 		SetAccount(in.GetInfo().GetAccount()).
 		SetAccountType(in.GetInfo().GetAccountType()).
+		SetSender(in.GetInfo().GetSender()).
 		Save(ctx)
 	if err != nil {
 		return nil, xerrors.Errorf("fail update app contact: %v", err)
