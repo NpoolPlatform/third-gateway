@@ -84,6 +84,11 @@ func VerifyCodeCache(ctx context.Context, code *UserCode) error {
 		return xerrors.Errorf("code expired")
 	}
 
+	err = DeleteCodeCache(ctx, code)
+	if err != nil {
+		return xerrors.Errorf("fail delete code: %v", err)
+	}
+
 	return nil
 }
 
