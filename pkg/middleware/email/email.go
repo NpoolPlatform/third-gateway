@@ -93,6 +93,7 @@ func Contact(ctx context.Context, in *npool.ContactByEmailRequest) (*npool.Conta
 	}
 
 	body := fmt.Sprintf("From: %v<br>Name: %v<br>%v", in.GetSender(), in.GetSenderName(), in.GetBody())
+	body = strings.ReplaceAll(body, "\n", "<br>")
 
 	err = sendEmailByAWS(in.GetSubject(), body, resp.Info.Sender, resp.Info.Account, in.GetSender())
 	if err != nil {
