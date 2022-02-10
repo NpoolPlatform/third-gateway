@@ -31,6 +31,22 @@ func (s *Server) CreateAppContact(ctx context.Context, in *npool.CreateAppContac
 	return resp, nil
 }
 
+func (s *Server) CreateAppContactForOtherApp(ctx context.Context, in *npool.CreateAppContactForOtherAppRequest) (*npool.CreateAppContactForOtherAppResponse, error) {
+	info := in.GetInfo()
+	info.AppID = in.GetTargetAppID()
+
+	resp, err := appcontactcrud.Create(ctx, &npool.CreateAppContactRequest{
+		Info: info,
+	})
+	if err != nil {
+		logger.Sugar().Errorf("fail create app contact: %v", err)
+		return &npool.CreateAppContactForOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.CreateAppContactForOtherAppResponse{
+		Info: resp.Info,
+	}, nil
+}
+
 func (s *Server) GetAppContact(ctx context.Context, in *npool.GetAppContactRequest) (*npool.GetAppContactResponse, error) {
 	resp, err := appcontactcrud.Get(ctx, in)
 	if err != nil {
