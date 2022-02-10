@@ -22,6 +22,22 @@ func (s *Server) CreateAppSMSTemplate(ctx context.Context, in *npool.CreateAppSM
 	return resp, nil
 }
 
+func (s *Server) CreateAppSMSTemplateForOtherApp(ctx context.Context, in *npool.CreateAppSMSTemplateForOtherAppRequest) (*npool.CreateAppSMSTemplateForOtherAppResponse, error) {
+	info := in.GetInfo()
+	info.AppID = in.GetTargetAppID()
+
+	resp, err := appsmstemplatecrud.Create(ctx, &npool.CreateAppSMSTemplateRequest{
+		Info: info,
+	})
+	if err != nil {
+		logger.Sugar().Errorf("fail create app sms template: %v", err)
+		return &npool.CreateAppSMSTemplateForOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.CreateAppSMSTemplateForOtherAppResponse{
+		Info: resp.Info,
+	}, nil
+}
+
 func (s *Server) GetAppSMSTemplate(ctx context.Context, in *npool.GetAppSMSTemplateRequest) (*npool.GetAppSMSTemplateResponse, error) {
 	resp, err := appsmstemplatecrud.Get(ctx, in)
 	if err != nil {
@@ -78,6 +94,22 @@ func (s *Server) CreateAppEmailTemplate(ctx context.Context, in *npool.CreateApp
 		return &npool.CreateAppEmailTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil
+}
+
+func (s *Server) CreateAppEmailTemplateForOtherApp(ctx context.Context, in *npool.CreateAppEmailTemplateForOtherAppRequest) (*npool.CreateAppEmailTemplateForOtherAppResponse, error) {
+	info := in.GetInfo()
+	info.AppID = in.GetTargetAppID()
+
+	resp, err := appemailtemplatecrud.Create(ctx, &npool.CreateAppEmailTemplateRequest{
+		Info: info,
+	})
+	if err != nil {
+		logger.Sugar().Errorf("fail create app email template: %v", err)
+		return &npool.CreateAppEmailTemplateForOtherAppResponse{}, status.Error(codes.Internal, err.Error())
+	}
+	return &npool.CreateAppEmailTemplateForOtherAppResponse{
+		Info: resp.Info,
+	}, nil
 }
 
 func (s *Server) GetAppEmailTemplate(ctx context.Context, in *npool.GetAppEmailTemplateRequest) (*npool.GetAppEmailTemplateResponse, error) {
