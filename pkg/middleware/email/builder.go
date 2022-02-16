@@ -59,6 +59,8 @@ func buildBody(ctx context.Context, in *npool.SendEmailCodeRequest, template str
 	case constant.UsedForUpdate:
 		fallthrough // nolint
 	case constant.UsedForSignin:
+		fallthrough //nolint
+	case constant.UsedForSetWithdrawAddress:
 		return buildWithCode(ctx, in, template)
 	case constant.UsedForContact:
 		return "", xerrors.Errorf("NOT IMPLEMENTED")
