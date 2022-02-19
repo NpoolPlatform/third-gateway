@@ -53,6 +53,8 @@ func buildBody(ctx context.Context, in *npool.SendSMSCodeRequest, template strin
 		fallthrough // nolint
 	case constant.UsedForSetWithdrawAddress:
 		fallthrough // nolint
+	case constant.UsedForWithdraw:
+		fallthrough //nolint
 	case constant.UsedForUpdate:
 		return buildWithCode(ctx, in, template)
 	case constant.UsedForContact:

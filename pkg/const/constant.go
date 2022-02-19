@@ -6,6 +6,7 @@ const (
 	UsedForUpdate             = "UPDATE"
 	UsedForContact            = "CONTACT"
 	UsedForSetWithdrawAddress = "SETWITHDRAWADDRESS"
+	UsedForWithdraw           = "WITHDRAW"
 
 	GoogleRecaptchaV3URL    = "recaptcha_url"
 	GoogleRecaptchaV3Secret = "recaptcha_secret"
