@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
-
 	appusermgrpb "github.com/NpoolPlatform/message/npool/appusermgr"
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
 	grpc2 "github.com/NpoolPlatform/third-gateway/pkg/grpc"
@@ -119,8 +117,6 @@ func VerifyGoogleAuthentication(ctx context.Context, in *npool.VerifyGoogleAuthe
 			return nil, xerrors.Errorf("fail set app user control: %v", err)
 		}
 	}
-
-	logger.Sugar().Infof("verify google secret %v code %v: %v", resp1.Info.GoogleSecret, in.GetCode(), ok)
 
 	var code int32
 	if !ok {
