@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	appusermgrpb "github.com/NpoolPlatform/message/npool/appusermgr"
+	logingwpb "github.com/NpoolPlatform/message/npool/logingateway"
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
 	grpc2 "github.com/NpoolPlatform/third-gateway/pkg/grpc"
 
@@ -121,6 +122,15 @@ func VerifyGoogleAuthentication(ctx context.Context, in *npool.VerifyGoogleAuthe
 	var code int32
 	if !ok {
 		code = -1
+	}
+
+	if code == 0 {
+		_, err := grpc2.UpdateCache(ctx, &logingwpb.UpdateCacheRequest{
+			Info: resp.Info,
+		})
+		if err != nil {
+			return nil, xerrors.Errorf("fail update cache: %v", err)
+		}
 	}
 
 	return &npool.VerifyGoogleAuthenticationResponse{
