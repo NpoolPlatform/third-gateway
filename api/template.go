@@ -11,10 +11,19 @@ import (
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/google/uuid"
 )
 
 func (s *Server) CreateAppSMSTemplate(ctx context.Context, in *npool.CreateAppSMSTemplateRequest) (*npool.CreateAppSMSTemplateResponse, error) {
-	resp, err := appsmstemplatecrud.Create(ctx, in)
+	info := in.GetInfo()
+	if _, err := uuid.Parse(in.GetTargetLangID()); err == nil {
+		info.LangID = in.GetTargetLangID()
+	}
+
+	resp, err := appsmstemplatecrud.Create(ctx, &npool.CreateAppSMSTemplateRequest{
+		Info: info,
+	})
 	if err != nil {
 		logger.Sugar().Errorf("fail create app sms template: %v", err)
 		return &npool.CreateAppSMSTemplateResponse{}, status.Error(codes.Internal, err.Error())
@@ -27,7 +36,8 @@ func (s *Server) CreateAppSMSTemplateForOtherApp(ctx context.Context, in *npool.
 	info.AppID = in.GetTargetAppID()
 
 	resp, err := appsmstemplatecrud.Create(ctx, &npool.CreateAppSMSTemplateRequest{
-		Info: info,
+		TargetLangID: in.GetTargetLangID(),
+		Info:         info,
 	})
 	if err != nil {
 		logger.Sugar().Errorf("fail create app sms template: %v", err)
@@ -88,7 +98,14 @@ func (s *Server) GetAppSMSTemplateByAppLangUsedFor(ctx context.Context, in *npoo
 }
 
 func (s *Server) CreateAppEmailTemplate(ctx context.Context, in *npool.CreateAppEmailTemplateRequest) (*npool.CreateAppEmailTemplateResponse, error) {
-	resp, err := appemailtemplatecrud.Create(ctx, in)
+	info := in.GetInfo()
+	if _, err := uuid.Parse(in.GetTargetLangID()); err == nil {
+		info.LangID = in.GetTargetLangID()
+	}
+
+	resp, err := appemailtemplatecrud.Create(ctx, &npool.CreateAppEmailTemplateRequest{
+		Info: info,
+	})
 	if err != nil {
 		logger.Sugar().Errorf("fail create app email template: %v", err)
 		return &npool.CreateAppEmailTemplateResponse{}, status.Error(codes.Internal, err.Error())
@@ -101,7 +118,8 @@ func (s *Server) CreateAppEmailTemplateForOtherApp(ctx context.Context, in *npoo
 	info.AppID = in.GetTargetAppID()
 
 	resp, err := appemailtemplatecrud.Create(ctx, &npool.CreateAppEmailTemplateRequest{
-		Info: info,
+		TargetLangID: in.GetTargetLangID(),
+		Info:         info,
 	})
 	if err != nil {
 		logger.Sugar().Errorf("fail create app email template: %v", err)
