@@ -34,10 +34,12 @@ func (s *Server) CreateAppSMSTemplate(ctx context.Context, in *npool.CreateAppSM
 func (s *Server) CreateAppSMSTemplateForOtherApp(ctx context.Context, in *npool.CreateAppSMSTemplateForOtherAppRequest) (*npool.CreateAppSMSTemplateForOtherAppResponse, error) {
 	info := in.GetInfo()
 	info.AppID = in.GetTargetAppID()
+	if _, err := uuid.Parse(in.GetTargetLangID()); err == nil {
+		info.LangID = in.GetTargetLangID()
+	}
 
 	resp, err := appsmstemplatecrud.Create(ctx, &npool.CreateAppSMSTemplateRequest{
-		TargetLangID: in.GetTargetLangID(),
-		Info:         info,
+		Info: info,
 	})
 	if err != nil {
 		logger.Sugar().Errorf("fail create app sms template: %v", err)
@@ -116,10 +118,12 @@ func (s *Server) CreateAppEmailTemplate(ctx context.Context, in *npool.CreateApp
 func (s *Server) CreateAppEmailTemplateForOtherApp(ctx context.Context, in *npool.CreateAppEmailTemplateForOtherAppRequest) (*npool.CreateAppEmailTemplateForOtherAppResponse, error) {
 	info := in.GetInfo()
 	info.AppID = in.GetTargetAppID()
+	if _, err := uuid.Parse(in.GetTargetLangID()); err == nil {
+		info.LangID = in.GetTargetLangID()
+	}
 
 	resp, err := appemailtemplatecrud.Create(ctx, &npool.CreateAppEmailTemplateRequest{
-		TargetLangID: in.GetTargetLangID(),
-		Info:         info,
+		Info: info,
 	})
 	if err != nil {
 		logger.Sugar().Errorf("fail create app email template: %v", err)
