@@ -76,6 +76,13 @@ var (
 		Name:       "app_sms_templates",
 		Columns:    AppSmsTemplatesColumns,
 		PrimaryKey: []*schema.Column{AppSmsTemplatesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "appsmstemplate_app_id_lang_id_used_for",
+				Unique:  true,
+				Columns: []*schema.Column{AppSmsTemplatesColumns[1], AppSmsTemplatesColumns[2], AppSmsTemplatesColumns[3]},
+			},
+		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{

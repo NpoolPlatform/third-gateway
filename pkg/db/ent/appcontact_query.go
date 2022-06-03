@@ -107,7 +107,7 @@ func (acq *AppContactQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single AppContact entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one AppContact entity is not found.
+// Returns a *NotSingularError when more than one AppContact entity is found.
 // Returns a *NotFoundError when no AppContact entities are found.
 func (acq *AppContactQuery) Only(ctx context.Context) (*AppContact, error) {
 	nodes, err := acq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (acq *AppContactQuery) OnlyX(ctx context.Context) *AppContact {
 }
 
 // OnlyID is like Only, but returns the only AppContact ID in the query.
-// Returns a *NotSingularError when exactly one AppContact ID is not found.
+// Returns a *NotSingularError when more than one AppContact ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (acq *AppContactQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (acq *AppContactQuery) Clone() *AppContactQuery {
 		order:      append([]OrderFunc{}, acq.order...),
 		predicates: append([]predicate.AppContact{}, acq.predicates...),
 		// clone intermediate query.
-		sql:  acq.sql.Clone(),
-		path: acq.path,
+		sql:    acq.sql.Clone(),
+		path:   acq.path,
+		unique: acq.unique,
 	}
 }
 

@@ -3,7 +3,7 @@ module github.com/NpoolPlatform/third-gateway
 go 1.16
 
 require (
-	entgo.io/ent v0.10.0
+	entgo.io/ent v0.10.1
 	github.com/NpoolPlatform/api-manager v0.0.0-20220121051827-18c807c114dc
 	github.com/NpoolPlatform/appuser-manager v0.0.0-20220129103404-3f7941df7148
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20220127101433-3def4e496433

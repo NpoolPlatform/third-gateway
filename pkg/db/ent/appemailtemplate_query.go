@@ -107,7 +107,7 @@ func (aetq *AppEmailTemplateQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single AppEmailTemplate entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one AppEmailTemplate entity is not found.
+// Returns a *NotSingularError when more than one AppEmailTemplate entity is found.
 // Returns a *NotFoundError when no AppEmailTemplate entities are found.
 func (aetq *AppEmailTemplateQuery) Only(ctx context.Context) (*AppEmailTemplate, error) {
 	nodes, err := aetq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (aetq *AppEmailTemplateQuery) OnlyX(ctx context.Context) *AppEmailTemplate 
 }
 
 // OnlyID is like Only, but returns the only AppEmailTemplate ID in the query.
-// Returns a *NotSingularError when exactly one AppEmailTemplate ID is not found.
+// Returns a *NotSingularError when more than one AppEmailTemplate ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (aetq *AppEmailTemplateQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (aetq *AppEmailTemplateQuery) Clone() *AppEmailTemplateQuery {
 		order:      append([]OrderFunc{}, aetq.order...),
 		predicates: append([]predicate.AppEmailTemplate{}, aetq.predicates...),
 		// clone intermediate query.
-		sql:  aetq.sql.Clone(),
-		path: aetq.path,
+		sql:    aetq.sql.Clone(),
+		path:   aetq.path,
+		unique: aetq.unique,
 	}
 }
 

@@ -107,7 +107,7 @@ func (astq *AppSMSTemplateQuery) FirstIDX(ctx context.Context) uuid.UUID {
 }
 
 // Only returns a single AppSMSTemplate entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one AppSMSTemplate entity is not found.
+// Returns a *NotSingularError when more than one AppSMSTemplate entity is found.
 // Returns a *NotFoundError when no AppSMSTemplate entities are found.
 func (astq *AppSMSTemplateQuery) Only(ctx context.Context) (*AppSMSTemplate, error) {
 	nodes, err := astq.Limit(2).All(ctx)
@@ -134,7 +134,7 @@ func (astq *AppSMSTemplateQuery) OnlyX(ctx context.Context) *AppSMSTemplate {
 }
 
 // OnlyID is like Only, but returns the only AppSMSTemplate ID in the query.
-// Returns a *NotSingularError when exactly one AppSMSTemplate ID is not found.
+// Returns a *NotSingularError when more than one AppSMSTemplate ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (astq *AppSMSTemplateQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
@@ -243,8 +243,9 @@ func (astq *AppSMSTemplateQuery) Clone() *AppSMSTemplateQuery {
 		order:      append([]OrderFunc{}, astq.order...),
 		predicates: append([]predicate.AppSMSTemplate{}, astq.predicates...),
 		// clone intermediate query.
-		sql:  astq.sql.Clone(),
-		path: astq.path,
+		sql:    astq.sql.Clone(),
+		path:   astq.path,
+		unique: astq.unique,
 	}
 }
 
