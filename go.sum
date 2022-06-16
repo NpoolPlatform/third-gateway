@@ -72,6 +72,8 @@ github.com/NpoolPlatform/appuser-manager v0.0.0-20220129103404-3f7941df7148/go.m
 github.com/NpoolPlatform/go-service-framework v0.0.0-20220120091626-4e8035637592/go.mod h1:JqrktA7gNQe/Uprnr6DCs5UCFpheCZ30lDd0OkyRtC4=
 github.com/NpoolPlatform/go-service-framework v0.0.0-20220127101433-3def4e496433 h1:tvETQ3Kp4BDitT0VLN0dHhbQ70/9mSSHwSISsF/pPxw=
 github.com/NpoolPlatform/go-service-framework v0.0.0-20220127101433-3def4e496433/go.mod h1:G5SKpcIWWkyxeNtgI8c0iY8py6DY2xHZFGKPJpTEon0=
+github.com/NpoolPlatform/libent-cruder v0.0.0-20220526050249-956b54fac9f1 h1:zDRaaGeeptPv23uhTBXK6lJzBPxpJbJVr8aZhZs/vEc=
+github.com/NpoolPlatform/libent-cruder v0.0.0-20220526050249-956b54fac9f1/go.mod h1:zvvqlRwbOdTUauPQ9dFDhDuxa91ILV0CQfVdPBZj+eA=
 github.com/NpoolPlatform/login-gateway v0.0.0-20220328094651-99c681b06955 h1:BcHUv05IHwNrb6LJAERX0lkqnysXHa/vuAavRVtlAMY=
 github.com/NpoolPlatform/login-gateway v0.0.0-20220328094651-99c681b06955/go.mod h1:cPVoVjxG3ToJMCF8NJtj6o2J/0wfry2BbuY/vCpMHTY=
 github.com/NpoolPlatform/message v0.0.0-20220120075427-38182760a780/go.mod h1:tnsf7zHQ5Mv2uG0ezOwCfm/bxluiRW10DeuIl4SjG4Y=
@@ -79,6 +81,7 @@ github.com/NpoolPlatform/message v0.0.0-20220121040326-31d316062cdc/go.mod h1:tn
 github.com/NpoolPlatform/message v0.0.0-20220126154557-410153a86b92/go.mod h1:tnsf7zHQ5Mv2uG0ezOwCfm/bxluiRW10DeuIl4SjG4Y=
 github.com/NpoolPlatform/message v0.0.0-20220205093001-decb30c7827f/go.mod h1:3Wmbn7w0S4h2t/qDr/WYepO3VBKlRAxDGdxsPA9bqQ0=
 github.com/NpoolPlatform/message v0.0.0-20220324143711-0b3cb5d9ff13/go.mod h1:U/9AZ4KBnjLK74kc9y3OOvLeivFEqc7opw3yeUNnV/o=
+github.com/NpoolPlatform/message v0.0.0-20220501030927-34f296682c0c/go.mod h1:i/F/sQWjQk44RGvfgEB0zH0oAK/0qLvgJ1AsJDZQDkk=
 github.com/NpoolPlatform/message v0.0.0-20220616144445-e670acc37bf4 h1:MRHqo8WJwecmH8EbFF0J9fsXSbf8J26RDBWaI7FdNNM=
 github.com/NpoolPlatform/message v0.0.0-20220616144445-e670acc37bf4/go.mod h1:VWuStqZaa5i8scdETxGvBh5CJzebGWw1dxTE0EUqRXk=
 github.com/NpoolPlatform/third-gateway v0.0.0-20220205094704-a585d53bd025/go.mod h1:NZxtQVYHNvgKZp0NAegcDOMNDSjJGQ18gvmOP1hZrH4=
@@ -1044,6 +1047,8 @@ google.golang.org/protobuf v1.26.0-rc.1/go.mod h1:jlhhOSvTdKEhbULTjvd4ARK9grFBp0
 google.golang.org/protobuf v1.26.0/go.mod h1:9q0QmTI4eRPtz6boOQmLYwt+qCgq0jsYwAQnmE0givc=
 google.golang.org/protobuf v1.27.1 h1:SnqbnDw1V7RiZcXPx5MEeqPv2s79L9i7BJUlG/+RurQ=
 google.golang.org/protobuf v1.27.1/go.mod h1:9q0QmTI4eRPtz6boOQmLYwt+qCgq0jsYwAQnmE0givc=
+google.golang.org/protobuf v1.28.0 h1:w43yiav+6bVFTBQFZX0r7ipe9JQ1QsbMgHwbBziscLw=
+google.golang.org/protobuf v1.28.0/go.mod h1:HV8QOd/L58Z+nl8r43ehVNZIU/HEI6OcFqwMG9pJV4I=
 gopkg.in/alecthomas/kingpin.v2 v2.2.6/go.mod h1:FMv+mEhP44yOT+4EoQTLFTRgOQ1FBLkstjWtayDeSgw=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
