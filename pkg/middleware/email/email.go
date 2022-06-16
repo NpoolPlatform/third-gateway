@@ -60,7 +60,7 @@ func VerifyCode(ctx context.Context, in *npool.VerifyEmailCodeRequest) (*npool.V
 			AppID:  in.GetAppID(),
 			UserID: in.GetUserID(),
 		})
-		if err != nil {
+		if err != nil || resp.Info == nil {
 			return nil, xerrors.Errorf("invalid app user: %v", err)
 		}
 		emailAddr = resp.Info.EmailAddress
@@ -101,4 +101,46 @@ func Contact(ctx context.Context, in *npool.ContactByEmailRequest) (*npool.Conta
 	}
 
 	return &npool.ContactByEmailResponse{}, nil
+}
+
+func Notify(ctx context.Context, in *npool.NotifyEmailRequest) (*npool.NotifyEmailResponse, error) {
+	to, err := grpc2.GetAppUserByAppUser(ctx, &appusermgrpb.GetAppUserByAppUserRequest{
+		AppID:  in.GetAppID(),
+		UserID: in.GetReceiverID(),
+	})
+	if err != nil || to.Info == nil {
+		return nil, xerrors.Errorf("fail get user: %v", err)
+	}
+	if to.Info.EmailAddress == "" {
+		return &npool.NotifyEmailResponse{}, nil
+	}
+
+	from, err := grpc2.GetAppUserByAppUser(ctx, &appusermgrpb.GetAppUserByAppUserRequest{
+		AppID:  in.GetAppID(),
+		UserID: in.GetUserID(),
+	})
+	if err != nil || from.Info == nil {
+		return nil, xerrors.Errorf("fail get user: %v", err)
+	}
+
+	template, err := templatecrud.GetByAppLangUsedFor(ctx, &npool.GetAppEmailTemplateByAppLangUsedForRequest{
+		AppID:   in.GetAppID(),
+		LangID:  in.GetLangID(),
+		UsedFor: in.GetUsedFor(),
+	})
+	if err != nil || template.Info == nil {
+		return &npool.NotifyEmailResponse{}, nil
+	}
+
+	body := strings.ReplaceAll(template.Info.Body, "{ FROM }", from.Info.EmailAddress)
+	body = strings.ReplaceAll(body, "{ TO }", to.Info.EmailAddress)
+	body = strings.ReplaceAll(body, "{ RECEIVER }", in.GetReceiverName())
+	body = strings.ReplaceAll(body, "{ SENDER }", in.GetSenderName())
+
+	err = sendEmailByAWS(template.Info.Subject, body, template.Info.Sender, to.Info.EmailAddress)
+	if err != nil {
+		return nil, xerrors.Errorf("fail send email: %v", err)
+	}
+
+	return &npool.NotifyEmailResponse{}, nil
 }
