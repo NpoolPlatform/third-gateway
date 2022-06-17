@@ -132,10 +132,10 @@ func Notify(ctx context.Context, in *npool.NotifyEmailRequest) (*npool.NotifyEma
 		return &npool.NotifyEmailResponse{}, nil
 	}
 
-	body := strings.ReplaceAll(template.Info.Body, "{ FROM }", from.Info.EmailAddress)
-	body = strings.ReplaceAll(body, "{ TO }", to.Info.EmailAddress)
-	body = strings.ReplaceAll(body, "{ RECEIVER }", in.GetReceiverName())
-	body = strings.ReplaceAll(body, "{ SENDER }", in.GetSenderName())
+	body := strings.ReplaceAll(template.Info.Body, "{{ FROM }}", from.Info.EmailAddress)
+	body = strings.ReplaceAll(body, "{{ TO }}", to.Info.EmailAddress)
+	body = strings.ReplaceAll(body, "{{ RECEIVER }}", in.GetReceiverName())
+	body = strings.ReplaceAll(body, "{{ SENDER }}", in.GetSenderName())
 
 	err = sendEmailByAWS(template.Info.Subject, body, template.Info.Sender, to.Info.EmailAddress)
 	if err != nil {
