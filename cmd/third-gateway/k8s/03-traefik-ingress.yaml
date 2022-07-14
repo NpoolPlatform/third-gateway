@@ -57,15 +57,15 @@ spec:
     - host: api.npool.top
       http: &http_rules
         paths:
-          - path: /api/third-gateway/get
+          - path: /api/third-gateway/v1/get
             backend:
               serviceName: third-gateway
               servicePort: 50260
-          - path: /api/third-gateway/create
+          - path: /api/third-gateway/v1/create
             backend:
               serviceName: third-gateway
               servicePort: 50260
-          - path: /api/third-gateway/update
+          - path: /api/third-gateway/v1/update
             backend:
               serviceName: third-gateway
               servicePort: 50260
