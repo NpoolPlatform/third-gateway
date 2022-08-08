@@ -3,7 +3,7 @@ package sms
 import (
 	"context"
 
-	appusermgrpb "github.com/NpoolPlatform/message/npool/appusermgr"
+	appusermgrpb "github.com/NpoolPlatform/message/npool/appuser/mgr/v1"
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
 	templatecrud "github.com/NpoolPlatform/third-gateway/pkg/crud/appsmstemplate"
 	grpc2 "github.com/NpoolPlatform/third-gateway/pkg/grpc"
