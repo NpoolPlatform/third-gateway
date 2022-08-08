@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	appusermgrpb "github.com/NpoolPlatform/message/npool/appusermgr"
+	appusermgrpb "github.com/NpoolPlatform/message/npool/appuser/mgr/v1"
 	logingwpb "github.com/NpoolPlatform/message/npool/logingateway"
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
 	grpc2 "github.com/NpoolPlatform/third-gateway/pkg/grpc"

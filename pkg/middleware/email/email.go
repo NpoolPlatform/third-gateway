@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	appusermgrpb "github.com/NpoolPlatform/message/npool/appusermgr"
+	appusermgrpb "github.com/NpoolPlatform/message/npool/appuser/mgr/v1"
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
 	contactcrud "github.com/NpoolPlatform/third-gateway/pkg/crud/appcontact"
 	templatecrud "github.com/NpoolPlatform/third-gateway/pkg/crud/appemailtemplate"

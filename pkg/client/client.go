@@ -44,3 +44,59 @@ func NotifyEmail(ctx context.Context, in *npool.NotifyEmailRequest) error {
 
 	return nil
 }
+
+func VerifySMSCode(ctx context.Context, in *npool.VerifySMSCodeRequest) error {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.ThirdGatewayClient) (cruder.Any, error) {
+		resp, err := cli.VerifySMSCode(ctx, in)
+		if err != nil {
+			return nil, err
+		}
+		return resp, nil
+	})
+	if err != nil {
+		return err
+	}
+
+	if info.(*npool.VerifySMSCodeResponse).Code < 0 {
+		return fmt.Errorf("fail verify SMS code")
+	}
+	return nil
+}
+
+func VerifyEmailCode(ctx context.Context, in *npool.VerifyEmailCodeRequest) error {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.ThirdGatewayClient) (cruder.Any, error) {
+		resp, err := cli.VerifyEmailCode(ctx, in)
+		if err != nil {
+			return nil, err
+		}
+		return resp, nil
+	})
+	if err != nil {
+		return err
+	}
+
+	if info.(*npool.VerifyEmailCodeResponse).Code < 0 {
+		return fmt.Errorf("fail verify email code")
+	}
+
+	return nil
+}
+
+func VerifyGoogleAuthentication(ctx context.Context, in *npool.VerifyGoogleAuthenticationRequest) error {
+	info, err := do(ctx, func(_ctx context.Context, cli npool.ThirdGatewayClient) (cruder.Any, error) {
+		resp, err := cli.VerifyGoogleAuthentication(ctx, in)
+		if err != nil {
+			return nil, err
+		}
+		return resp, nil
+	})
+	if err != nil {
+		return err
+	}
+
+	if info.(*npool.VerifyGoogleAuthenticationResponse).Code < 0 {
+		return fmt.Errorf("fail verify google authentication")
+	}
+
+	return nil
+}
