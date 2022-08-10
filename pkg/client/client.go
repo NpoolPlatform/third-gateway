@@ -121,6 +121,12 @@ func VerifyCode(ctx context.Context, appID, userID string, signMethod signmethod
 			UsedFor: usedFor,
 			Code:    code,
 		})
+	case signmethodpb.SignMethodType_Google:
+		return VerifyGoogleAuthentication(ctx, &npool.VerifyGoogleAuthenticationRequest{
+			AppID:  appID,
+			UserID: userID,
+			Code:   code,
+		})
 	}
 	return fmt.Errorf("unknown sign method")
 }
