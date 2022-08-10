@@ -9,6 +9,8 @@ import (
 	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
 	constant "github.com/NpoolPlatform/third-gateway/pkg/message/const"
+
+	signmethodpb "github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 )
 
 func do(ctx context.Context, fn func(_ctx context.Context, cli npool.ThirdGatewayClient) (cruder.Any, error)) (cruder.Any, error) {
@@ -99,4 +101,26 @@ func VerifyGoogleAuthentication(ctx context.Context, in *npool.VerifyGoogleAuthe
 	}
 
 	return nil
+}
+
+func VerifyCode(ctx context.Context, appID, userID string, signMethod signmethodpb.SignMethodType, account, code, usedFor string) error {
+	switch signMethod {
+	case signmethodpb.SignMethodType_Email:
+		return VerifyEmailCode(ctx, &npool.VerifyEmailCodeRequest{
+			AppID:        appID,
+			UserID:       userID,
+			EmailAddress: account,
+			UsedFor:      usedFor,
+			Code:         code,
+		})
+	case signmethodpb.SignMethodType_Mobile:
+		return VerifySMSCode(ctx, &npool.VerifySMSCodeRequest{
+			AppID:   appID,
+			UserID:  userID,
+			PhoneNO: account,
+			UsedFor: usedFor,
+			Code:    code,
+		})
+	}
+	return fmt.Errorf("unknown sign method")
 }
