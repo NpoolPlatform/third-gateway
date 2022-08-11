@@ -9,7 +9,7 @@ require (
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20220127101433-3def4e496433
 	github.com/NpoolPlatform/libent-cruder v0.0.0-20220526050249-956b54fac9f1
 	github.com/NpoolPlatform/login-gateway v0.0.0-20220328094651-99c681b06955
-	github.com/NpoolPlatform/message v0.0.0-20220810041811-1c1cbdc58be4
+	github.com/NpoolPlatform/message v0.0.0-20220811055003-c46a227689fb
 	github.com/aws/aws-sdk-go v1.42.4
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-resty/resty/v2 v2.7.0
