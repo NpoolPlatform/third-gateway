@@ -130,3 +130,13 @@ func VerifyCode(ctx context.Context, appID, userID string, signMethod signmethod
 	}
 	return fmt.Errorf("unknown sign method")
 }
+
+func VerifyGoogleRecaptchaV3(ctx context.Context, recaptchaToken string) error {
+	_, err := do(ctx, func(_ctx context.Context, cli npool.ThirdGatewayClient) (cruder.Any, error) {
+		_, err := cli.VerifyGoogleRecaptchaV3(ctx, &npool.VerifyGoogleRecaptchaV3Request{
+			RecaptchaToken: recaptchaToken,
+		})
+		return nil, err
+	})
+	return err
+}
