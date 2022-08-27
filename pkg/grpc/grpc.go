@@ -9,9 +9,6 @@ import (
 	appusermgrconst "github.com/NpoolPlatform/appuser-manager/pkg/message/const" //nolint
 	appusermgrpb "github.com/NpoolPlatform/message/npool/appuser/mgr/v1"
 
-	logingwconst "github.com/NpoolPlatform/login-gateway/pkg/message/const"
-	logingwpb "github.com/NpoolPlatform/message/npool/logingateway"
-
 	"golang.org/x/xerrors"
 )
 
@@ -139,26 +136,4 @@ func GetAppUserInfoByAppUser(ctx context.Context, in *appusermgrpb.GetAppUserInf
 	defer cancel()
 
 	return cli.GetAppUserInfoByAppUser(ctx, in)
-}
-
-// -----------------------------------------------------------------------------------------------------
-
-func UpdateCache(ctx context.Context, in *logingwpb.UpdateCacheRequest) (*appusermgrpb.AppUserInfo, error) {
-	conn, err := grpc2.GetGRPCConn(logingwconst.ServiceName, grpc2.GRPCTAG)
-	if err != nil {
-		return nil, xerrors.Errorf("fail get login gateway connection: %v", err)
-	}
-	defer conn.Close()
-
-	cli := logingwpb.NewLoginGatewayClient(conn)
-
-	ctx, cancel := context.WithTimeout(ctx, grpcTimeout)
-	defer cancel()
-
-	resp, err := cli.UpdateCache(ctx, in)
-	if err != nil {
-		return nil, xerrors.Errorf("fail update cache: %v", err)
-	}
-
-	return resp.Info, nil
 }
