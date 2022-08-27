@@ -84,25 +84,6 @@ func VerifyEmailCode(ctx context.Context, in *npool.VerifyEmailCodeRequest) erro
 	return nil
 }
 
-func VerifyGoogleAuthentication(ctx context.Context, in *npool.VerifyGoogleAuthenticationRequest) error {
-	info, err := do(ctx, func(_ctx context.Context, cli npool.ThirdGatewayClient) (cruder.Any, error) {
-		resp, err := cli.VerifyGoogleAuthentication(ctx, in)
-		if err != nil {
-			return nil, err
-		}
-		return resp, nil
-	})
-	if err != nil {
-		return err
-	}
-
-	if info.(*npool.VerifyGoogleAuthenticationResponse).Code < 0 {
-		return fmt.Errorf("fail verify google authentication")
-	}
-
-	return nil
-}
-
 func VerifyCode(ctx context.Context, appID, userID string, signMethod signmethodpb.SignMethodType, account, code, usedFor string) error {
 	switch signMethod {
 	case signmethodpb.SignMethodType_Email:
@@ -120,12 +101,6 @@ func VerifyCode(ctx context.Context, appID, userID string, signMethod signmethod
 			PhoneNO: account,
 			UsedFor: usedFor,
 			Code:    code,
-		})
-	case signmethodpb.SignMethodType_Google:
-		return VerifyGoogleAuthentication(ctx, &npool.VerifyGoogleAuthenticationRequest{
-			AppID:  appID,
-			UserID: userID,
-			Code:   code,
 		})
 	}
 	return fmt.Errorf("unknown sign method")
