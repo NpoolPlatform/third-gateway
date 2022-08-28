@@ -3,12 +3,12 @@ module github.com/NpoolPlatform/third-gateway
 go 1.16
 
 require (
-	entgo.io/ent v0.10.1
-	github.com/NpoolPlatform/api-manager v0.0.0-20220121051827-18c807c114dc
+	entgo.io/ent v0.11.2
+	github.com/NpoolPlatform/api-manager v0.0.0-20220826022307-d72866fe3ec0
 	github.com/NpoolPlatform/appuser-manager v0.0.0-20220129103404-3f7941df7148
-	github.com/NpoolPlatform/go-service-framework v0.0.0-20220812032117-44ecffa2bb95
+	github.com/NpoolPlatform/go-service-framework v0.0.0-20220818105452-9457611ae070
 	github.com/NpoolPlatform/libent-cruder v0.0.0-20220526050249-956b54fac9f1
-	github.com/NpoolPlatform/message v0.0.0-20220811055003-c46a227689fb
+	github.com/NpoolPlatform/message v0.0.0-20220819134247-1dc75c85fe43
 	github.com/aws/aws-sdk-go v1.42.4
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-resty/resty/v2 v2.7.0
