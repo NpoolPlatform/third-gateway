@@ -62,6 +62,10 @@ func buildBody(ctx context.Context, in *npool.SendEmailCodeRequest, template str
 		fallthrough //nolint
 	case constant.UsedForWithdraw:
 		fallthrough //nolint
+	case constant.UsedForSetTransferTargetUser:
+		fallthrough //nolint
+	case constant.UsedForTransfer:
+		fallthrough //nolint
 	case constant.UsedForSetWithdrawAddress:
 		return buildWithCode(ctx, in, template)
 	case constant.UsedForContact:
