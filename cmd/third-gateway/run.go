@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/NpoolPlatform/third-gateway/api"
-	db "github.com/NpoolPlatform/third-gateway/pkg/db"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
@@ -16,15 +15,13 @@ import (
 	"google.golang.org/grpc"
 )
 
+// const MsgInterval = 3 * time.Second
+
 var runCmd = &cli.Command{
 	Name:    "run",
 	Aliases: []string{"s"},
 	Usage:   "Run the daemon",
 	Action: func(c *cli.Context) error {
-		if err := db.Init(); err != nil {
-			return err
-		}
-
 		go func() {
 			if err := grpc2.RunGRPC(rpcRegister); err != nil {
 				logger.Sugar().Errorf("fail to run grpc server: %v", err)
@@ -37,6 +34,9 @@ var runCmd = &cli.Command{
 
 func rpcRegister(server grpc.ServiceRegistrar) error {
 	api.Register(server)
+
+	apimgrcli.RegisterGRPC(server)
+
 	return nil
 }
 

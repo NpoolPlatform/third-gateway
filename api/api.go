@@ -2,20 +2,28 @@ package api
 
 import (
 	"context"
+	"github.com/NpoolPlatform/message/npool/third/gw/v1"
+	"github.com/NpoolPlatform/third-gateway/api/contact"
 
-	npool "github.com/NpoolPlatform/message/npool/thirdgateway"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
 
 type Server struct {
-	npool.UnimplementedThirdGatewayServer
+	v1.UnimplementedGatewayServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	npool.RegisterThirdGatewayServer(server, &Server{})
+	v1.RegisterGatewayServer(server, &Server{})
+	contact.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
-	return npool.RegisterThirdGatewayHandlerFromEndpoint(context.Background(), mux, endpoint, opts)
+	if err := v1.RegisterGatewayHandlerFromEndpoint(context.Background(), mux, endpoint, opts); err != nil {
+		return err
+	}
+	if err := contact.RegisterGateway(mux, endpoint, opts); err != nil {
+		return err
+	}
+	return nil
 }
