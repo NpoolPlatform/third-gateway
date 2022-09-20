@@ -1,6 +1,9 @@
 package contact
 
 import (
+	"context"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	"github.com/NpoolPlatform/message/npool"
 	"github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
@@ -13,9 +16,12 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
+
+	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/contact"
+	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/contact"
 )
 
-func validate(info *contact.CreateContactRequest) error {
+func validate(ctx context.Context, info *contact.CreateContactRequest) error {
 	if _, err := uuid.Parse(info.GetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "AppID", info.GetAppID())
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
@@ -35,7 +41,6 @@ func validate(info *contact.CreateContactRequest) error {
 
 	switch info.GetAccountType() {
 	case signmethod.SignMethodType_Email:
-	case signmethod.SignMethodType_Mobile:
 	default:
 		logger.Sugar().Errorw("validate", "AccountType", info.GetAccountType())
 		return status.Error(codes.InvalidArgument, "AccountType is invalid")
@@ -46,5 +51,28 @@ func validate(info *contact.CreateContactRequest) error {
 		return status.Error(codes.InvalidArgument, "Sender is empty")
 	}
 
+	exist, err := mgrcli.ExistContactConds(ctx, &mgrpb.Conds{
+		AppID: &npool.StringVal{
+			Op:    cruder.EQ,
+			Value: info.GetAppID(),
+		},
+		AccountType: &npool.Int32Val{
+			Op:    cruder.EQ,
+			Value: int32(info.GetAccountType().Number()),
+		},
+		UsedFor: &npool.Int32Val{
+			Op:    cruder.EQ,
+			Value: int32(info.GetUsedFor().Number()),
+		},
+	})
+	if err != nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return status.Error(codes.Internal, err.Error())
+	}
+
+	if exist {
+		logger.Sugar().Errorw("validate", "contact already exists")
+		return status.Error(codes.AlreadyExists, "Contact already exists")
+	}
 	return nil
 }

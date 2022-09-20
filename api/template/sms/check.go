@@ -1,16 +1,23 @@
 package sms
 
 import (
+	"context"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	"github.com/NpoolPlatform/message/npool"
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
+
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/NpoolPlatform/message/npool/third/gw/v1/template/sms"
+
+	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/sms"
+	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/template/sms"
 )
 
-func validate(in *sms.CreateSMSTemplateRequest) error {
+func validate(ctx context.Context, in *sms.CreateSMSTemplateRequest) error {
 	if _, err := uuid.Parse(in.GetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "AppID", in.GetAppID())
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
@@ -39,6 +46,29 @@ func validate(in *sms.CreateSMSTemplateRequest) error {
 	if in.GetMessage() == "" {
 		logger.Sugar().Errorw("validate", "Message", in.GetMessage())
 		return status.Error(codes.InvalidArgument, "Message is empty")
+	}
+
+	exist, err := mgrcli.ExistSMSTemplateConds(ctx, &mgrpb.Conds{
+		AppID: &npool.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetAppID(),
+		},
+		LangID: &npool.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetLangID(),
+		},
+		UsedFor: &npool.Int32Val{
+			Op:    cruder.EQ,
+			Value: int32(in.GetUsedFor().Number()),
+		},
+	})
+	if err != nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return status.Error(codes.Internal, err.Error())
+	}
+	if exist {
+		logger.Sugar().Errorw("validate", "SMS template already exists")
+		return status.Error(codes.AlreadyExists, "SMS template already exists")
 	}
 
 	return nil

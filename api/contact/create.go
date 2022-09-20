@@ -31,7 +31,7 @@ func (s *Server) CreateContact(ctx context.Context, in *npool.CreateContactReque
 		}
 	}()
 
-	err = validate(in)
+	err = validate(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (s *Server) CreateAppContact(ctx context.Context, in *npool.CreateAppContac
 		}
 	}()
 
-	err = validate(&npool.CreateContactRequest{
+	err = validate(ctx, &npool.CreateContactRequest{
 		AppID:       in.TargetAppID,
 		Account:     in.Account,
 		AccountType: in.AccountType,

@@ -37,7 +37,7 @@ func (s *Server) CreateEmailTemplate(
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateEmailTemplate")
 
-	err = validate(in)
+	err = validate(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func (s *Server) CreateAppEmailTemplate(
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateEmailTemplate")
 
-	err = validate(&npool.CreateEmailTemplateRequest{
+	err = validate(ctx, &npool.CreateEmailTemplateRequest{
 		AppID:             in.TargetAppID,
 		LangID:            in.LangID,
 		UsedFor:           in.UsedFor,

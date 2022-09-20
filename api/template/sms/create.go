@@ -37,7 +37,7 @@ func (s *Server) CreateSMSTemplate(
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateSMSTemplate")
 
-	err = validate(in)
+	err = validate(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func (s *Server) CreateAppSMSTemplate(
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateSMSTemplate")
 
-	err = validate(&npool.CreateSMSTemplateRequest{
+	err = validate(ctx, &npool.CreateSMSTemplateRequest{
 		AppID:   in.TargetAppID,
 		LangID:  in.LangID,
 		UsedFor: in.UsedFor,

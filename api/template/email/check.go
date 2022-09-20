@@ -1,16 +1,22 @@
 package email
 
 import (
+	"context"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	"github.com/NpoolPlatform/message/npool"
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/NpoolPlatform/message/npool/third/gw/v1/template/email"
+
+	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/email"
+	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/template/email"
 )
 
-func validate(in *email.CreateEmailTemplateRequest) error {
+func validate(ctx context.Context, in *email.CreateEmailTemplateRequest) error {
 	if _, err := uuid.Parse(in.GetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "AppID", in.GetAppID())
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
@@ -47,6 +53,29 @@ func validate(in *email.CreateEmailTemplateRequest) error {
 	if in.GetDefaultToUsername() == "" {
 		logger.Sugar().Errorw("validate", "DefaultToUsername", in.GetDefaultToUsername())
 		return status.Error(codes.InvalidArgument, "DefaultToUsername is empty")
+	}
+
+	exist, err := mgrcli.ExistEmailTemplateConds(ctx, &mgrpb.Conds{
+		AppID: &npool.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetAppID(),
+		},
+		LangID: &npool.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetLangID(),
+		},
+		UsedFor: &npool.Int32Val{
+			Op:    cruder.EQ,
+			Value: int32(in.GetUsedFor().Number()),
+		},
+	})
+	if err != nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return status.Error(codes.Internal, err.Error())
+	}
+	if exist {
+		logger.Sugar().Errorw("validate", "Email template already exists")
+		return status.Error(codes.AlreadyExists, "Email template already exists")
 	}
 
 	return nil
