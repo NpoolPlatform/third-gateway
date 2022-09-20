@@ -5,17 +5,16 @@ import (
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/contact"
-	contactpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/contact"
 	constant "github.com/NpoolPlatform/third-gateway/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/third-gateway/pkg/tracer"
-	"github.com/NpoolPlatform/third-manager/pkg/client/contact"
+	contact "github.com/NpoolPlatform/third-middleware/pkg/client/contact"
 	"go.opentelemetry.io/otel"
 	scodes "go.opentelemetry.io/otel/codes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (s *Server) UpdateContact(ctx context.Context, in *npool.UpdateContactRequest) (*npool.UpdateContactResponse, error) {
+func (s *Server) ContactViaEmail(ctx context.Context, in *npool.ContactViaEmailRequest) (*npool.ContactViaEmailResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateContact")
@@ -30,18 +29,19 @@ func (s *Server) UpdateContact(ctx context.Context, in *npool.UpdateContactReque
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateContact")
 
-	info, err := contact.UpdateContact(ctx, &contactpb.ContactReq{
-		ID:          &in.ID,
-		Account:     in.Account,
-		AccountType: in.AccountType,
-		Sender:      in.Sender,
-	})
+	err = contact.ContactViaEmail(
+		ctx,
+		in.GetAppID(),
+		in.GetUsedFor(),
+		in.GetSender(),
+		in.GetSubject(),
+		in.GetBody(),
+		in.GetSenderName(),
+	)
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.UpdateContactResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.ContactViaEmailResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	return &npool.UpdateContactResponse{
-		Info: info,
-	}, nil
+	return &npool.ContactViaEmailResponse{}, nil
 }

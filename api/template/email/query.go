@@ -1,28 +1,26 @@
 //nolint:dupl
-package contact
+package email
 
 import (
 	"context"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/contact"
+	npoolpb "github.com/NpoolPlatform/message/npool"
+	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/template/email"
 	constant "github.com/NpoolPlatform/third-gateway/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/third-gateway/pkg/tracer"
-
 	"github.com/google/uuid"
 	"go.opentelemetry.io/otel"
 	scodes "go.opentelemetry.io/otel/codes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	contactpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/contact"
-	"github.com/NpoolPlatform/third-manager/pkg/client/contact"
-
-	npoolpb "github.com/NpoolPlatform/message/npool"
+	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/email"
+	"github.com/NpoolPlatform/third-manager/pkg/client/template/email"
 )
 
-func (s *Server) GetContact(ctx context.Context, in *npool.GetContactRequest) (*npool.GetContactResponse, error) {
+func (s *Server) GetEmailTemplate(ctx context.Context, in *npool.GetEmailTemplateRequest) (*npool.GetEmailTemplateResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetContact")
@@ -39,21 +37,21 @@ func (s *Server) GetContact(ctx context.Context, in *npool.GetContactRequest) (*
 
 	if _, err := uuid.Parse(in.ID); err != nil {
 		logger.Sugar().Errorw("validate", "ID", in.GetID())
-		return &npool.GetContactResponse{}, status.Error(codes.InvalidArgument, "ID is invalid")
+		return &npool.GetEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "ID is invalid")
 	}
 
-	info, err := contact.GetContact(ctx, in.GetID())
+	info, err := email.GetEmailTemplate(ctx, in.GetID())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.GetContactResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.GetEmailTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	return &npool.GetContactResponse{
+	return &npool.GetEmailTemplateResponse{
 		Info: info,
 	}, nil
 }
 
-func (s *Server) GetContacts(ctx context.Context, in *npool.GetContactsRequest) (*npool.GetContactsResponse, error) {
+func (s *Server) GetEmailTemplates(ctx context.Context, in *npool.GetEmailTemplatesRequest) (*npool.GetEmailTemplatesResponse, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetContact")
@@ -70,27 +68,33 @@ func (s *Server) GetContacts(ctx context.Context, in *npool.GetContactsRequest) 
 
 	if _, err := uuid.Parse(in.GetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "AppID", in.GetAppID())
-		return &npool.GetContactsResponse{}, status.Error(codes.InvalidArgument, "AppID is invalid")
+		return &npool.GetEmailTemplatesResponse{}, status.Error(codes.InvalidArgument, "AppID is invalid")
 	}
 
-	infos, total, err := contact.GetContacts(ctx, &contactpb.Conds{
+	infos, total, err := email.GetEmailTemplates(ctx, &mgrpb.Conds{
 		AppID: &npoolpb.StringVal{
 			Op:    cruder.EQ,
 			Value: in.GetAppID(),
 		},
-	}, in.GetOffset(), in.GetOffset())
+	}, in.GetOffset(), in.GetLimit())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.GetContactsResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.GetEmailTemplatesResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	return &npool.GetContactsResponse{
+	return &npool.GetEmailTemplatesResponse{
 		Infos: infos,
 		Total: total,
 	}, nil
 }
 
-func (s *Server) GetAppContacts(ctx context.Context, in *npool.GetAppContactsRequest) (*npool.GetAppContactsResponse, error) {
+func (s *Server) GetAppEmailTemplates(
+	ctx context.Context,
+	in *npool.GetAppEmailTemplatesRequest,
+) (
+	*npool.GetAppEmailTemplatesResponse,
+	error,
+) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetContact")
@@ -107,21 +111,21 @@ func (s *Server) GetAppContacts(ctx context.Context, in *npool.GetAppContactsReq
 
 	if _, err := uuid.Parse(in.GetTargetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "TargetAppID", in.GetTargetAppID())
-		return &npool.GetAppContactsResponse{}, status.Error(codes.InvalidArgument, "TargetAppID is invalid")
+		return &npool.GetAppEmailTemplatesResponse{}, status.Error(codes.InvalidArgument, "TargetAppID is invalid")
 	}
 
-	infos, total, err := contact.GetContacts(ctx, &contactpb.Conds{
+	infos, total, err := email.GetEmailTemplates(ctx, &mgrpb.Conds{
 		AppID: &npoolpb.StringVal{
 			Op:    cruder.EQ,
 			Value: in.GetTargetAppID(),
 		},
-	}, in.GetOffset(), in.GetOffset())
+	}, in.GetOffset(), in.GetLimit())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.GetAppContactsResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.GetAppEmailTemplatesResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	return &npool.GetAppContactsResponse{
+	return &npool.GetAppEmailTemplatesResponse{
 		Infos: infos,
 		Total: total,
 	}, nil

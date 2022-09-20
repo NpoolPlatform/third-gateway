@@ -2,6 +2,7 @@ package contact
 
 import (
 	"context"
+
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/contact"
 	constant "github.com/NpoolPlatform/third-gateway/pkg/message/const"
