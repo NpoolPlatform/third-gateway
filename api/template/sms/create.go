@@ -2,6 +2,7 @@ package sms
 
 import (
 	"context"
+	tracer "github.com/NpoolPlatform/third-manager/pkg/tracer/template/sms"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/template/sms"
@@ -25,7 +26,7 @@ func (s *Server) CreateSMSTemplate(
 ) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateContact")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateSMSTemplate")
 	defer span.End()
 
 	defer func() {
@@ -35,20 +36,24 @@ func (s *Server) CreateSMSTemplate(
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateSMSTemplate")
+	contactInfo := &mgrpb.SMSTemplateReq{
+		AppID:   &in.AppID,
+		LangID:  &in.LangID,
+		UsedFor: &in.UsedFor,
+		Subject: &in.Subject,
+		Message: &in.Message,
+	}
+
+	tracer.Trace(span, contactInfo)
 
 	err = validate(ctx, in)
 	if err != nil {
 		return nil, err
 	}
 
-	info, err := mgrcli.CreateSMSTemplate(ctx, &mgrpb.SMSTemplateReq{
-		AppID:   &in.AppID,
-		LangID:  &in.LangID,
-		UsedFor: &in.UsedFor,
-		Subject: &in.Subject,
-		Message: &in.Message,
-	})
+	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateSMSTemplate")
+
+	info, err := mgrcli.CreateSMSTemplate(ctx, contactInfo)
 
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
@@ -69,7 +74,7 @@ func (s *Server) CreateAppSMSTemplate(
 ) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateContact")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateAppSMSTemplate")
 	defer span.End()
 
 	defer func() {
@@ -79,7 +84,17 @@ func (s *Server) CreateAppSMSTemplate(
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateSMSTemplate")
+	contactInfo := &mgrpb.SMSTemplateReq{
+		AppID:   &in.TargetAppID,
+		LangID:  &in.LangID,
+		UsedFor: &in.UsedFor,
+		Subject: &in.Subject,
+		Message: &in.Message,
+	}
+
+	tracer.Trace(span, contactInfo)
+
+	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateAppSMSTemplate")
 
 	err = validate(ctx, &npool.CreateSMSTemplateRequest{
 		AppID:   in.TargetAppID,
@@ -92,13 +107,7 @@ func (s *Server) CreateAppSMSTemplate(
 		return nil, err
 	}
 
-	info, err := mgrcli.CreateSMSTemplate(ctx, &mgrpb.SMSTemplateReq{
-		AppID:   &in.TargetAppID,
-		LangID:  &in.LangID,
-		UsedFor: &in.UsedFor,
-		Subject: &in.Subject,
-		Message: &in.Message,
-	})
+	info, err := mgrcli.CreateSMSTemplate(ctx, contactInfo)
 
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)

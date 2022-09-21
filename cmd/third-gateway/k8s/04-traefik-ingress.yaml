@@ -21,10 +21,92 @@ spec:
     - host: api.npool.top
       http: &http_rules
         paths:
-          - path: /api/third-gateway
+          - path: /api/third-gateway/v1/create/contact
             backend:
               serviceName: third-gateway
-              servicePort: 50330
+              servicePort: 50260
+          - path: /api/third-gateway/v1/create/app/contact
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/get/contact
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/get/contacts
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/get/app/contacts
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/update/contact
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/contact/viaemail
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+
+
+          - path: /api/third-gateway/v1/create/emailtemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/create/app/emailtemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/get/emailtemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/get/emailtemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/get/app/emailtemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/update/emailtemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+
+
+          - path: /api/third-gateway/v1/create/smstemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/create/app/smstemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/get/smstemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/get/smstemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/get/app/smstemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third-gateway/v1/update/smstemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+
+
+          - path: /api/third-gateway/v1/send/code
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
     - host: api.procyon.vip
       http: *http_rules
     - host: api.xpool.top

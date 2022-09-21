@@ -2,6 +2,7 @@ package email
 
 import (
 	"context"
+	tracer "github.com/NpoolPlatform/third-manager/pkg/tracer/template/email"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/template/email"
@@ -35,14 +36,7 @@ func (s *Server) CreateEmailTemplate(
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateEmailTemplate")
-
-	err = validate(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-
-	info, err := mgrcli.CreateEmailTemplate(ctx, &mgrpb.EmailTemplateReq{
+	templateInfo := &mgrpb.EmailTemplateReq{
 		AppID:             &in.AppID,
 		LangID:            &in.LangID,
 		UsedFor:           &in.UsedFor,
@@ -52,7 +46,18 @@ func (s *Server) CreateEmailTemplate(
 		Subject:           &in.Subject,
 		Body:              &in.Body,
 		DefaultToUsername: &in.DefaultToUsername,
-	})
+	}
+
+	tracer.Trace(span, templateInfo)
+
+	err = validate(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+
+	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateEmailTemplate")
+
+	info, err := mgrcli.CreateEmailTemplate(ctx, templateInfo)
 
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
@@ -83,6 +88,20 @@ func (s *Server) CreateAppEmailTemplate(
 		}
 	}()
 
+	templateInfo := &mgrpb.EmailTemplateReq{
+		AppID:             &in.TargetAppID,
+		LangID:            &in.LangID,
+		UsedFor:           &in.UsedFor,
+		Sender:            &in.Sender,
+		ReplyTos:          in.ReplyTos,
+		CCTos:             in.CCTos,
+		Subject:           &in.Subject,
+		Body:              &in.Body,
+		DefaultToUsername: &in.DefaultToUsername,
+	}
+
+	tracer.Trace(span, templateInfo)
+
 	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateEmailTemplate")
 
 	err = validate(ctx, &npool.CreateEmailTemplateRequest{
@@ -100,17 +119,7 @@ func (s *Server) CreateAppEmailTemplate(
 		return nil, err
 	}
 
-	info, err := mgrcli.CreateEmailTemplate(ctx, &mgrpb.EmailTemplateReq{
-		AppID:             &in.TargetAppID,
-		LangID:            &in.LangID,
-		UsedFor:           &in.UsedFor,
-		Sender:            &in.Sender,
-		ReplyTos:          in.ReplyTos,
-		CCTos:             in.CCTos,
-		Subject:           &in.Subject,
-		Body:              &in.Body,
-		DefaultToUsername: &in.DefaultToUsername,
-	})
+	info, err := mgrcli.CreateEmailTemplate(ctx, templateInfo)
 
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)

@@ -23,7 +23,7 @@ import (
 func (s *Server) GetEmailTemplate(ctx context.Context, in *npool.GetEmailTemplateRequest) (*npool.GetEmailTemplateResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetContact")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetEmailTemplate")
 	defer span.End()
 
 	defer func() {
@@ -33,9 +33,10 @@ func (s *Server) GetEmailTemplate(ctx context.Context, in *npool.GetEmailTemplat
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "GetContact")
+	span = commontracer.TraceInvoker(span, "contact", "manager", "GetEmailTemplate")
+	commontracer.TraceID(span, in.GetID())
 
-	if _, err := uuid.Parse(in.ID); err != nil {
+	if _, err := uuid.Parse(in.GetID()); err != nil {
 		logger.Sugar().Errorw("validate", "ID", in.GetID())
 		return &npool.GetEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "ID is invalid")
 	}
@@ -54,7 +55,7 @@ func (s *Server) GetEmailTemplate(ctx context.Context, in *npool.GetEmailTemplat
 func (s *Server) GetEmailTemplates(ctx context.Context, in *npool.GetEmailTemplatesRequest) (*npool.GetEmailTemplatesResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetContact")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetEmailTemplates")
 	defer span.End()
 
 	defer func() {
@@ -64,7 +65,7 @@ func (s *Server) GetEmailTemplates(ctx context.Context, in *npool.GetEmailTempla
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "GetContact")
+	span = commontracer.TraceInvoker(span, "contact", "manager", "GetEmailTemplates")
 
 	if _, err := uuid.Parse(in.GetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "AppID", in.GetAppID())
@@ -97,7 +98,7 @@ func (s *Server) GetAppEmailTemplates(
 ) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetContact")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "GetAppEmailTemplates")
 	defer span.End()
 
 	defer func() {
@@ -107,7 +108,8 @@ func (s *Server) GetAppEmailTemplates(
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "GetContact")
+	span = commontracer.TraceInvoker(span, "contact", "manager", "GetAppEmailTemplates")
+	commontracer.TraceOffsetLimit(span, int(in.GetOffset()), int(in.GetLimit()))
 
 	if _, err := uuid.Parse(in.GetTargetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "TargetAppID", in.GetTargetAppID())

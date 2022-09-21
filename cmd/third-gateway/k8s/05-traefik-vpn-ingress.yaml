@@ -24,7 +24,7 @@ spec:
           - path: /api/third-gateway
             backend:
               serviceName: third-gateway
-              servicePort: 50330
+              servicePort: 50260
     - host: api.procyon.vip
       http: *http_rules
     - host: api.xpool.top

@@ -25,7 +25,7 @@ func (s *Server) UpdateEmailTemplate(
 ) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateContact")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateEmailTemplate")
 	defer span.End()
 
 	defer func() {
@@ -35,7 +35,7 @@ func (s *Server) UpdateEmailTemplate(
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateEmailTemplate")
+	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateEmailTemplate")
 
 	info, err := mgrcli.UpdateEmailTemplate(ctx, &mgrpb.EmailTemplateReq{
 		ID:                &in.ID,

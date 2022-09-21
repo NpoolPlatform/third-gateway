@@ -3,6 +3,7 @@ package contact
 
 import (
 	"context"
+	"go.opentelemetry.io/otel/attribute"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -35,12 +36,14 @@ func (s *Server) GetContact(ctx context.Context, in *npool.GetContactRequest) (*
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "GetContact")
+	commontracer.TraceID(span, in.GetID())
 
-	if _, err := uuid.Parse(in.ID); err != nil {
+	if _, err := uuid.Parse(in.GetID()); err != nil {
 		logger.Sugar().Errorw("validate", "ID", in.GetID())
 		return &npool.GetContactResponse{}, status.Error(codes.InvalidArgument, "ID is invalid")
 	}
+
+	span = commontracer.TraceInvoker(span, "contact", "manager", "GetContact")
 
 	info, err := contact.GetContact(ctx, in.GetID())
 	if err != nil {
@@ -66,19 +69,24 @@ func (s *Server) GetContacts(ctx context.Context, in *npool.GetContactsRequest) 
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "GetContact")
+	span.SetAttributes(
+		attribute.String("AppID", in.GetAppID()),
+	)
+	span = commontracer.TraceOffsetLimit(span, int(in.GetOffset()), int(in.GetLimit()))
 
 	if _, err := uuid.Parse(in.GetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "AppID", in.GetAppID())
 		return &npool.GetContactsResponse{}, status.Error(codes.InvalidArgument, "AppID is invalid")
 	}
 
+	span = commontracer.TraceInvoker(span, "contact", "manager", "GetContacts")
+
 	infos, total, err := contact.GetContacts(ctx, &contactpb.Conds{
 		AppID: &npoolpb.StringVal{
 			Op:    cruder.EQ,
 			Value: in.GetAppID(),
 		},
-	}, in.GetOffset(), in.GetOffset())
+	}, in.GetOffset(), in.GetLimit())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
 		return &npool.GetContactsResponse{}, status.Error(codes.Internal, err.Error())
@@ -103,19 +111,24 @@ func (s *Server) GetAppContacts(ctx context.Context, in *npool.GetAppContactsReq
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "GetContact")
+	span.SetAttributes(
+		attribute.String("AppID", in.GetTargetAppID()),
+	)
+	span = commontracer.TraceOffsetLimit(span, int(in.GetOffset()), int(in.GetLimit()))
 
 	if _, err := uuid.Parse(in.GetTargetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "TargetAppID", in.GetTargetAppID())
 		return &npool.GetAppContactsResponse{}, status.Error(codes.InvalidArgument, "TargetAppID is invalid")
 	}
 
+	span = commontracer.TraceInvoker(span, "contact", "manager", "GetAppContacts")
+
 	infos, total, err := contact.GetContacts(ctx, &contactpb.Conds{
 		AppID: &npoolpb.StringVal{
 			Op:    cruder.EQ,
 			Value: in.GetTargetAppID(),
 		},
-	}, in.GetOffset(), in.GetOffset())
+	}, in.GetOffset(), in.GetLimit())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
 		return &npool.GetAppContactsResponse{}, status.Error(codes.Internal, err.Error())

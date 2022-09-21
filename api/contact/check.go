@@ -71,7 +71,7 @@ func validate(ctx context.Context, info *contact.CreateContactRequest) error {
 	}
 
 	if exist {
-		logger.Sugar().Errorw("validate", "contact already exists")
+		logger.Sugar().Errorw("validate", "Contact already exists")
 		return status.Error(codes.AlreadyExists, "Contact already exists")
 	}
 	return nil

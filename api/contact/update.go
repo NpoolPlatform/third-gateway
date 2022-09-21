@@ -2,6 +2,7 @@ package contact
 
 import (
 	"context"
+	tracer "github.com/NpoolPlatform/third-manager/pkg/tracer/contact"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/contact"
@@ -18,7 +19,7 @@ import (
 func (s *Server) UpdateContact(ctx context.Context, in *npool.UpdateContactRequest) (*npool.UpdateContactResponse, error) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateContact")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateContact")
 	defer span.End()
 
 	defer func() {
@@ -28,14 +29,17 @@ func (s *Server) UpdateContact(ctx context.Context, in *npool.UpdateContactReque
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateContact")
-
-	info, err := contact.UpdateContact(ctx, &contactpb.ContactReq{
+	contactInfo := &contactpb.ContactReq{
 		ID:          &in.ID,
 		Account:     in.Account,
 		AccountType: in.AccountType,
 		Sender:      in.Sender,
-	})
+	}
+	tracer.Trace(span, contactInfo)
+
+	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateContact")
+
+	info, err := contact.UpdateContact(ctx, contactInfo)
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
 		return &npool.UpdateContactResponse{}, status.Error(codes.Internal, err.Error())

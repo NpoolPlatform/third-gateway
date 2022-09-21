@@ -16,6 +16,8 @@ import (
 
 	contactpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/contact"
 	"github.com/NpoolPlatform/third-manager/pkg/client/contact"
+
+	tracer "github.com/NpoolPlatform/third-manager/pkg/tracer/contact"
 )
 
 func (s *Server) CreateContact(ctx context.Context, in *npool.CreateContactRequest) (*npool.CreateContactResponse, error) {
@@ -31,6 +33,16 @@ func (s *Server) CreateContact(ctx context.Context, in *npool.CreateContactReque
 		}
 	}()
 
+	contactInfo := &contactpb.ContactReq{
+		AppID:       &in.AppID,
+		Account:     &in.Account,
+		AccountType: &in.AccountType,
+		UsedFor:     &in.UsedFor,
+		Sender:      &in.Sender,
+	}
+
+	tracer.Trace(span, contactInfo)
+
 	err = validate(ctx, in)
 	if err != nil {
 		return nil, err
@@ -38,13 +50,7 @@ func (s *Server) CreateContact(ctx context.Context, in *npool.CreateContactReque
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateContact")
 
-	info, err := contact.CreateContact(ctx, &contactpb.ContactReq{
-		AppID:       &in.AppID,
-		Account:     &in.Account,
-		AccountType: &in.AccountType,
-		UsedFor:     &in.UsedFor,
-		Sender:      &in.Sender,
-	})
+	info, err := contact.CreateContact(ctx, contactInfo)
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
 		return &npool.CreateContactResponse{}, status.Error(codes.Internal, err.Error())
@@ -68,6 +74,16 @@ func (s *Server) CreateAppContact(ctx context.Context, in *npool.CreateAppContac
 		}
 	}()
 
+	contactInfo := &contactpb.ContactReq{
+		AppID:       &in.TargetAppID,
+		Account:     &in.Account,
+		AccountType: &in.AccountType,
+		UsedFor:     &in.UsedFor,
+		Sender:      &in.Sender,
+	}
+
+	tracer.Trace(span, contactInfo)
+
 	err = validate(ctx, &npool.CreateContactRequest{
 		AppID:       in.TargetAppID,
 		Account:     in.Account,
@@ -81,13 +97,7 @@ func (s *Server) CreateAppContact(ctx context.Context, in *npool.CreateAppContac
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateContact")
 
-	info, err := contact.CreateContact(ctx, &contactpb.ContactReq{
-		AppID:       &in.TargetAppID,
-		Account:     &in.Account,
-		AccountType: &in.AccountType,
-		UsedFor:     &in.UsedFor,
-		Sender:      &in.Sender,
-	})
+	info, err := contact.CreateContact(ctx, contactInfo)
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
 		return &npool.CreateAppContactResponse{}, status.Error(codes.Internal, err.Error())
