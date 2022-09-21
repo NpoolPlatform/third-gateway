@@ -15,8 +15,8 @@ func SendCode(
 	ctx context.Context,
 	appID,
 	langID string,
-	userID *string,
-	account string,
+	userID,
+	account *string,
 	accountType signmethod.SignMethodType,
 	usedFor usedfor.UsedFor,
 ) error {
@@ -29,16 +29,16 @@ func SendCode(
 		}
 		switch accountType {
 		case signmethod.SignMethodType_Mobile:
-			account = user.PhoneNO
+			account = &user.PhoneNO
 		case signmethod.SignMethodType_Email:
-			account = user.EmailAddress
+			account = &user.EmailAddress
 		}
 		if user.GetUsername() != "" {
 			toUserName = &user.Username
 		}
 	}
 
-	err := verify.SendCode(ctx, appID, langID, account, accountType, usedFor, toUserName)
+	err := verify.SendCode(ctx, appID, langID, *account, accountType, usedFor, toUserName)
 	if err != nil {
 		return err
 	}

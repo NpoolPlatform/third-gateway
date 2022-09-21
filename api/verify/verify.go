@@ -59,9 +59,9 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (*npoo
 		}
 	}
 
-	if in.GetAccount() == "" {
-		logger.Sugar().Errorw("validate", "Account", in.GetAccount())
-		return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, "Account is empty")
+	if in.Account == nil && in.UserID == nil {
+		logger.Sugar().Errorw("validate", "Account", in.GetAccount(), "UserID", in.GetUserID())
+		return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, "Account and UserID cannot all be empty")
 	}
 
 	switch in.GetAccountType() {
@@ -90,7 +90,7 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (*npoo
 		in.GetAppID(),
 		in.GetLangID(),
 		in.UserID,
-		in.GetAccount(),
+		in.Account,
 		in.GetAccountType(),
 		in.GetUsedFor(),
 	)
