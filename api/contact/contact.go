@@ -2,6 +2,7 @@ package contact
 
 import (
 	"context"
+
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
 	commontracer "github.com/NpoolPlatform/third-gateway/pkg/tracer"
 	"github.com/google/uuid"

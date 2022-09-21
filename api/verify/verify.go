@@ -18,6 +18,7 @@ import (
 	mverify "github.com/NpoolPlatform/third-gateway/pkg/verify"
 )
 
+//nolint:gocyclo
 func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (*npool.SendCodeResponse, error) {
 	var err error
 
@@ -37,9 +38,21 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (*npoo
 	}
 
 	switch in.GetUsedFor() {
-	case usedfor.UsedFor_Signup:
+	case usedfor.UsedFor_Update:
 		fallthrough //nolint
-	case usedfor.UsedFor_Signin:
+	case usedfor.UsedFor_Contact:
+		fallthrough //nolint
+	case usedfor.UsedFor_SetWithdrawAddress:
+		fallthrough //nolint
+	case usedfor.UsedFor_Withdraw:
+		fallthrough //nolint
+	case usedfor.UsedFor_CreateInvitationCode:
+		fallthrough //nolint
+	case usedfor.UsedFor_SetCommission:
+		fallthrough //nolint
+	case usedfor.UsedFor_SetTransferTargetUser:
+		fallthrough //nolint
+	case usedfor.UsedFor_Transfer:
 		if _, err := uuid.Parse(in.GetUserID()); err != nil {
 			logger.Sugar().Errorw("validate", "UserID", in.GetUserID())
 			return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, "UserID is invalid")

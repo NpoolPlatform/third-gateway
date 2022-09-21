@@ -2,6 +2,7 @@ package email
 
 import (
 	"context"
+
 	tracer "github.com/NpoolPlatform/third-manager/pkg/tracer/template/email"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"

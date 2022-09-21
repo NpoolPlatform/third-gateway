@@ -2,6 +2,7 @@ package contact
 
 import (
 	"context"
+
 	tracer "github.com/NpoolPlatform/third-manager/pkg/tracer/contact"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"

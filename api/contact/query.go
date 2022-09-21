@@ -3,6 +3,7 @@ package contact
 
 import (
 	"context"
+
 	"go.opentelemetry.io/otel/attribute"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
