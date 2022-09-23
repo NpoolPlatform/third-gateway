@@ -93,6 +93,7 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (*npoo
 		in.Account,
 		in.GetAccountType(),
 		in.GetUsedFor(),
+		in.ToUsername,
 	)
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)

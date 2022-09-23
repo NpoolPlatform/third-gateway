@@ -19,9 +19,8 @@ func SendCode(
 	account *string,
 	accountType signmethod.SignMethodType,
 	usedFor usedfor.UsedFor,
+	toUserName *string,
 ) error {
-	var toUserName *string
-
 	if userID != nil {
 		user, err := usermwcli.GetUser(ctx, appID, *userID)
 		if err != nil {
@@ -32,9 +31,6 @@ func SendCode(
 			account = &user.PhoneNO
 		case signmethod.SignMethodType_Email:
 			account = &user.EmailAddress
-		}
-		if user.GetUsername() != "" {
-			toUserName = &user.Username
 		}
 	}
 
