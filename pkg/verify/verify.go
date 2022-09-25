@@ -21,7 +21,7 @@ func SendCode(
 	usedFor usedfor.UsedFor,
 	toUserName *string,
 ) error {
-	if userID != nil {
+	if userID != nil && *userID != "" {
 		user, err := usermwcli.GetUser(ctx, appID, *userID)
 		if err != nil {
 			return err
