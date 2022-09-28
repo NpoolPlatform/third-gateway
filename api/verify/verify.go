@@ -38,8 +38,6 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (*npoo
 	}
 
 	switch in.GetUsedFor() {
-	case usedfor.UsedFor_Update:
-		fallthrough //nolint
 	case usedfor.UsedFor_Contact:
 		fallthrough //nolint
 	case usedfor.UsedFor_SetWithdrawAddress:

@@ -21,16 +21,31 @@ func SendCode(
 	usedFor usedfor.UsedFor,
 	toUserName *string,
 ) error {
-	if userID != nil && *userID != "" {
-		user, err := usermwcli.GetUser(ctx, appID, *userID)
-		if err != nil {
-			return err
-		}
-		switch accountType {
-		case signmethod.SignMethodType_Mobile:
-			account = &user.PhoneNO
-		case signmethod.SignMethodType_Email:
-			account = &user.EmailAddress
+	switch usedFor {
+	case usedfor.UsedFor_Contact:
+		fallthrough //nolint
+	case usedfor.UsedFor_SetWithdrawAddress:
+		fallthrough //nolint
+	case usedfor.UsedFor_Withdraw:
+		fallthrough //nolint
+	case usedfor.UsedFor_CreateInvitationCode:
+		fallthrough //nolint
+	case usedfor.UsedFor_SetCommission:
+		fallthrough //nolint
+	case usedfor.UsedFor_SetTransferTargetUser:
+		fallthrough //nolint
+	case usedfor.UsedFor_Transfer:
+		if userID != nil && *userID != "" {
+			user, err := usermwcli.GetUser(ctx, appID, *userID)
+			if err != nil {
+				return err
+			}
+			switch accountType {
+			case signmethod.SignMethodType_Mobile:
+				account = &user.PhoneNO
+			case signmethod.SignMethodType_Email:
+				account = &user.EmailAddress
+			}
 		}
 	}
 
