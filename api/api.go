@@ -6,7 +6,7 @@ import (
 	"github.com/NpoolPlatform/third-gateway/api/template/sms"
 	"github.com/NpoolPlatform/third-gateway/api/verify"
 
-	v1 "github.com/NpoolPlatform/message/npool/order/gw/v1"
+	v1 "github.com/NpoolPlatform/message/npool/third/gw/v1"
 	"github.com/NpoolPlatform/third-gateway/api/contact"
 	"github.com/NpoolPlatform/third-gateway/api/template/email"
 
