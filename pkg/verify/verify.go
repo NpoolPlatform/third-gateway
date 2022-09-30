@@ -2,6 +2,7 @@ package verify
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
@@ -47,6 +48,10 @@ func SendCode(
 				account = &user.EmailAddress
 			}
 		}
+	}
+
+	if *account == "" {
+		return fmt.Errorf("invalid account")
 	}
 
 	err := verify.SendCode(ctx, appID, langID, *account, accountType, usedFor, toUserName)

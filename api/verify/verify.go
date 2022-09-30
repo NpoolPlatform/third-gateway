@@ -33,7 +33,7 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (*npoo
 	}()
 
 	if _, err := uuid.Parse(in.GetAppID()); err != nil {
-		logger.Sugar().Errorw("validate", "AppID", in.GetAppID())
+		logger.Sugar().Errorw("SendCode", "AppID", in.GetAppID())
 		return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, "AppID is invalid")
 	}
 
@@ -52,13 +52,13 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (*npoo
 		fallthrough //nolint
 	case usedfor.UsedFor_Transfer:
 		if _, err := uuid.Parse(in.GetUserID()); err != nil {
-			logger.Sugar().Errorw("validate", "UserID", in.GetUserID())
+			logger.Sugar().Errorw("SendCode", "UserID", in.GetUserID())
 			return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, "UserID is invalid")
 		}
 	}
 
 	if in.Account == nil && in.UserID == nil {
-		logger.Sugar().Errorw("validate", "Account", in.GetAccount(), "UserID", in.GetUserID())
+		logger.Sugar().Errorw("SendCode", "Account", in.GetAccount(), "UserID", in.GetUserID())
 		return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, "Account and UserID cannot all be empty")
 	}
 
@@ -66,7 +66,7 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (*npoo
 	case signmethod.SignMethodType_Email:
 	case signmethod.SignMethodType_Mobile:
 	default:
-		logger.Sugar().Errorw("validate", "AccountType", in.GetAccountType())
+		logger.Sugar().Errorw("SendCode", "AccountType", in.GetAccountType())
 		return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, "AccountType is invalid")
 	}
 
@@ -77,7 +77,7 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (*npoo
 		}
 	}
 	if !usedFor {
-		logger.Sugar().Errorw("validate", "UsedFor", in.GetUsedFor())
+		logger.Sugar().Errorw("SendCode", "UsedFor", in.GetUsedFor())
 		return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, "UsedFor is invalid")
 	}
 
@@ -94,7 +94,7 @@ func (s *Server) SendCode(ctx context.Context, in *npool.SendCodeRequest) (*npoo
 		in.ToUsername,
 	)
 	if err != nil {
-		logger.Sugar().Errorw("validate", "err", err)
+		logger.Sugar().Errorw("SendCode", "err", err)
 		return &npool.SendCodeResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
