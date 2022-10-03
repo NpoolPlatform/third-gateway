@@ -12,7 +12,7 @@ import (
 	"github.com/NpoolPlatform/third-middleware/pkg/client/verify"
 )
 
-func SendCode(
+func SendCode( //nolint
 	ctx context.Context,
 	appID,
 	langID string,
