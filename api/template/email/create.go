@@ -39,7 +39,7 @@ func (s *Server) CreateEmailTemplate(
 
 	templateInfo := &mgrpb.EmailTemplateReq{
 		AppID:             &in.AppID,
-		LangID:            &in.LangID,
+		LangID:            &in.TargetLangID,
 		UsedFor:           &in.UsedFor,
 		Sender:            &in.Sender,
 		ReplyTos:          in.ReplyTos,
@@ -51,7 +51,17 @@ func (s *Server) CreateEmailTemplate(
 
 	tracer.Trace(span, templateInfo)
 
-	err = validate(ctx, in)
+	err = validate(ctx, &npool.CreateEmailTemplateRequest{
+		AppID:             in.AppID,
+		LangID:            in.TargetLangID,
+		UsedFor:           in.UsedFor,
+		Sender:            in.Sender,
+		ReplyTos:          in.ReplyTos,
+		CCTos:             in.CCTos,
+		Subject:           in.Subject,
+		Body:              in.Body,
+		DefaultToUsername: in.DefaultToUsername,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +101,7 @@ func (s *Server) CreateAppEmailTemplate(
 
 	templateInfo := &mgrpb.EmailTemplateReq{
 		AppID:             &in.TargetAppID,
-		LangID:            &in.LangID,
+		LangID:            &in.TargetLangID,
 		UsedFor:           &in.UsedFor,
 		Sender:            &in.Sender,
 		ReplyTos:          in.ReplyTos,
@@ -107,7 +117,7 @@ func (s *Server) CreateAppEmailTemplate(
 
 	err = validate(ctx, &npool.CreateEmailTemplateRequest{
 		AppID:             in.TargetAppID,
-		LangID:            in.LangID,
+		LangID:            in.TargetLangID,
 		UsedFor:           in.UsedFor,
 		Sender:            in.Sender,
 		ReplyTos:          in.ReplyTos,
