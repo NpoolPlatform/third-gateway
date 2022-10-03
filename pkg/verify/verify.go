@@ -41,6 +41,9 @@ func SendCode(
 			if err != nil {
 				return err
 			}
+			if user == nil {
+				return fmt.Errorf("invalid user")
+			}
 			switch accountType {
 			case signmethod.SignMethodType_Mobile:
 				account = &user.PhoneNO
