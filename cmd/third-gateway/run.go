@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/NpoolPlatform/third-gateway/api"
-	db "github.com/NpoolPlatform/third-gateway/pkg/db"
+	"github.com/NpoolPlatform/third-manager/pkg/db"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
@@ -15,6 +15,8 @@ import (
 
 	"google.golang.org/grpc"
 )
+
+// const MsgInterval = 3 * time.Second
 
 var runCmd = &cli.Command{
 	Name:    "run",
@@ -37,6 +39,9 @@ var runCmd = &cli.Command{
 
 func rpcRegister(server grpc.ServiceRegistrar) error {
 	api.Register(server)
+
+	apimgrcli.RegisterGRPC(server)
+
 	return nil
 }
 

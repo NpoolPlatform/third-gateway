@@ -1,0 +1,172 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: third-gateway-traefik-app-ingress
+  namespace: kube-system
+  annotations:
+    k8s.kuboard.cn/displayName: third-gateway-traefik-app
+    k8s.kuboard.cn/workload: third-gateway-traefik-app
+    kubernetes.io/ingress.class: "traefik-internet"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares:
+      kube-system-strip-third-gateway-prefix@kubernetescrd,
+      kube-system-common-headers@kubernetescrd,
+      kube-system-headers-appid-to-body@kubernetescrd,
+      kube-system-headers-userid-to-body@kubernetescrd,
+      kube-system-headers-langid-to-body@kubernetescrd,
+      kube-system-headers-app-login-token-to-body@kubernetescrd,
+      kube-system-app-rbac-auth@kubernetescrd
+
+spec:
+  rules:
+    - host: api.npool.top
+      http: &http_rules
+        paths:
+          - path: /api/third/v1/get/contact
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/contacts
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+
+          - path: /api/third/v1/get/emailtemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/emailtemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+
+          - path: /api/third/v1/get/smstemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/smstemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+
+          - path: /api/third/v1/send/code
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+    - host: api.procyon.vip
+      http: *http_rules
+    - host: api.xpool.top
+      http: *http_rules
+    - host: api.ohhash.com
+      http: *http_rules
+    - host: api.procyon.xpool.top
+      http: *http_rules
+    - host: api.development.npool.top
+      http: *http_rules
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: third-gateway-traefik-app-user-ingress
+  namespace: kube-system
+  annotations:
+    k8s.kuboard.cn/displayName: third-gateway-traefik-app
+    k8s.kuboard.cn/workload: third-gateway-traefik-app
+    kubernetes.io/ingress.class: "traefik-internet"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares:
+      kube-system-strip-third-gateway-prefix@kubernetescrd,
+      kube-system-common-headers@kubernetescrd,
+      kube-system-headers-appid-to-body@kubernetescrd,
+      kube-system-headers-userid-to-body@kubernetescrd,
+      kube-system-headers-langid-to-body@kubernetescrd,
+      kube-system-headers-app-login-token-to-body@kubernetescrd,
+      kube-system-app-user-role-rbac-auth@kubernetescrd
+
+spec:
+  rules:
+    - host: api.npool.top
+      http: &http_rules
+        paths:
+          - path: /api/third/v1/create/contact
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/create/contact
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/create/app/contact
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/app/contacts
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/update/contact
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/update/app/contact
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/contact/viaemail
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+
+
+          - path: /api/third/v1/create/emailtemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/create/app/emailtemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/app/emailtemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/update/emailtemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/update/app/emailtemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+
+
+          - path: /api/third/v1/create/smstemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/create/app/smstemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/app/smstemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/update/smstemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/update/app/smstemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+    - host: api.procyon.vip
+      http: *http_rules
+    - host: api.xpool.top
+      http: *http_rules
+    - host: api.ohhash.com
+      http: *http_rules
+    - host: api.procyon.xpool.top
+      http: *http_rules
+    - host: api.development.npool.top
+      http: *http_rules

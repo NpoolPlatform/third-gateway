@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: third-gateway
+  namespace: kube-system
+  annotations:
+    "sidecar.jaegertracing.io/inject": "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: third-gateway
+  template:
+    metadata:
+      labels:
+        app: third-gateway
+    spec:
+      containers:
+        - name: third-gateway
+          image: uhub.service.ucloud.cn/entropypool/third-gateway:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: service-config
+              mountPath: /etc/ThirdGateway
+          env:
+            - name: ENV_ENVIRONMENT_TARGET
+              valueFrom:
+                configMapKeyRef:
+                  name: system-environment
+                  key: environment.target
+            - name: ENV_CONSUL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: system-environment
+                  key: environment.consul_host
+            - name: ENV_CONSUL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: system-environment
+                  key: environment.consul_port
+            - name: ENV_CLUSTER_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+      volumes:
+        - name: service-config
+          configMap:
+            name: third-gateway-config
+            items:
+              - key: service-conf
+                path: ThirdGateway.viper.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: third-gateway
+  namespace: kube-system
+spec:
+  ports:
+    - name: http
+      port: 50260
+      targetPort: 50260
+    - name: grpc
+      port: 50261
+      targetPort: 50261
+    - name: healthz
+      port: 50262
+      targetPort: 50262
+    - name: prometheus
+      port: 50263
+      targetPort: 50263
+  selector:
+    app: third-gateway

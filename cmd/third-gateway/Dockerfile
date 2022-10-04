@@ -1,6 +1,11 @@
-FROM jrei/systemd-centos:7
+FROM uhub.service.ucloud.cn/entropypool/alpine:3.16
 
-COPY ThirdGateway.viper.yaml /etc/ThirdGateway/ThirdGateway.viper.yaml
-COPY third-gateway /usr/local/bin/third-gateway
+WORKDIR /app
 
-CMD ["third-gateway", "run"]
+COPY third-gateway /app
+
+ENTRYPOINT ["/app/third-gateway"]
+
+EXPOSE 50330 50331 50332 50333
+
+CMD ["run"]

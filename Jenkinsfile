@@ -15,19 +15,6 @@ pipeline {
 
     stage('Prepare') {
       steps {
-        // Get linter and other build tools.
-        sh 'go get golang.org/x/lint/golint'
-        sh 'go install golang.org/x/lint/golint'
-        sh 'go get github.com/tebeka/go2xunit'
-        sh 'go install github.com/tebeka/go2xunit'
-        sh 'go get github.com/t-yuki/gocover-cobertura'
-        sh 'go install github.com/t-yuki/gocover-cobertura'
-
-        // Get dependencies
-        sh 'go get golang.org/x/image/tiff/lzw'
-        sh 'go install golang.org/x/image/tiff/lzw'
-        sh 'go get github.com/boombuler/barcode'
-        sh 'go install github.com/boombuler/barcode'
         sh 'make deps'
       }
     }
@@ -86,11 +73,6 @@ pipeline {
             cd .apollo-base-config
             ./apollo-base-config.sh $APP_ID $TARGET_ENV $vhost
             ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost database_name third_gateway
-            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost aws_region $AWS_REGION
-            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost aws_access_key $AWS_ACCESS_KEY
-            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost aws_secret_key $AWS_SECRET_KEY
-            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost recaptcha_url $RECAPTCHA_URL
-            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost recaptcha_secret $RECAPTCHA_SECRET
             cd -
           done
         '''.stripIndent())
@@ -103,7 +85,7 @@ pipeline {
       }
       steps {
         sh (returnStdout: false, script: '''
-          devboxpod=`kubectl get pods -A | grep development-box | awk '{print $2}' | head -n1`
+          devboxpod=`kubectl get pods -A | grep development-box | head -n1 | awk '{print $2}'`
           servicename="third-gateway"
 
           kubectl exec --namespace kube-system $devboxpod -- make -C /tmp/$servicename after-test || true
@@ -114,6 +96,7 @@ pipeline {
           kubectl exec --namespace kube-system $devboxpod -- rm -rf /tmp/$servicename
 
           swaggeruipod=`kubectl get pods -A | grep swagger | awk '{print $2}'`
+          kubectl cp message/npool/*.swagger.json kube-system/$swaggeruipod:/usr/share/nginx/html || true
         '''.stripIndent())
       }
     }
@@ -125,17 +108,6 @@ pipeline {
       steps {
         sh 'make verify-build'
         sh 'DEVELOPMENT=development DOCKER_REGISTRY=$DOCKER_REGISTRY make generate-docker-images'
-      }
-    }
-
-    stage('Generate docker image for feature test') {
-      when {
-        expression { BUILD_TARGET == 'true' }
-        expression { BRANCH_NAME != 'master' }
-      }
-      steps {
-        sh 'make verify-build'
-        sh 'DEVELOPMENT=feature DOCKER_REGISTRY=$DOCKER_REGISTRY make generate-docker-images'
       }
     }
 
@@ -278,23 +250,6 @@ pipeline {
       }
     }
 
-    stage('Release docker image for feature test') {
-      when {
-        expression { RELEASE_TARGET == 'true' }
-      }
-      steps {
-        sh(returnStdout: false, script: '''
-          set +e
-          docker images | grep staker-manager | grep feature
-          rc=$?
-          set -e
-          if [ 0 -eq $rc ]; then
-            TAG=feature DOCKER_REGISTRY=$DOCKER_REGISTRY make release-docker-images
-          fi
-        '''.stripIndent())
-      }
-    }
-
     stage('Release docker image for testing') {
       when {
         expression { RELEASE_TARGET == 'true' }
@@ -348,7 +303,7 @@ pipeline {
         expression { TARGET_ENV ==~ /.*development.*/ }
       }
       steps {
-        sh 'sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/third-gateway/k8s/01-third-gateway.yaml'
+        sh 'sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/third-gateway/k8s/02-third-gateway.yaml'
         sh 'TAG=latest make deploy-to-k8s-cluster'
       }
     }
@@ -365,8 +320,8 @@ pipeline {
 
           git reset --hard
           git checkout $tag
-          sed -i "s/third-gateway:latest/third-gateway:$tag/g" cmd/third-gateway/k8s/01-third-gateway.yaml
-          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/third-gateway/k8s/01-third-gateway.yaml
+          sed -i "s/third-gateway:latest/third-gateway:$tag/g" cmd/third-gateway/k8s/02-third-gateway.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/third-gateway/k8s/02-third-gateway.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }
@@ -390,8 +345,8 @@ pipeline {
 
           git reset --hard
           git checkout $tag
-          sed -i "s/third-gateway:latest/third-gateway:$tag/g" cmd/third-gateway/k8s/01-third-gateway.yaml
-          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/third-gateway/k8s/01-third-gateway.yaml
+          sed -i "s/third-gateway:latest/third-gateway:$tag/g" cmd/third-gateway/k8s/02-third-gateway.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/third-gateway/k8s/02-third-gateway.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }

@@ -4,7 +4,8 @@ config:
   http_port: 50260
   grpc_port: 50261
   healthz_port: 50262
+  prometheus_port: 50263
   appid: "89089012783789789719823798127398"
-  serviceid: "c64c06d2-817c-11ec-a708-665d3bd3c18c"
+  serviceid: "00701fe5-4e32-4a48-8696-7cdbece8e8c8"
   logdir: "./"
   apolloAccessKey: "0147fb70b815403790e8634b899fac07"
