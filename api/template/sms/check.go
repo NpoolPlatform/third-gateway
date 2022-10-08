@@ -2,6 +2,7 @@ package sms
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -30,11 +31,13 @@ func validate(ctx context.Context, in *sms.CreateSMSTemplateRequest) error {
 
 	usedFor := false
 	for key := range usedfor.UsedFor_value {
-		if key == in.UsedFor.String() {
+		if key == in.UsedFor.String() && in.UsedFor != usedfor.UsedFor_DefaultUsedFor {
 			usedFor = true
 		}
 	}
 
+	fmt.Println("*********usedFor")
+	fmt.Println(usedFor)
 	if !usedFor {
 		logger.Sugar().Errorw("validate", "UsedFor", in.GetUsedFor())
 		return status.Error(codes.InvalidArgument, "UsedFor is invalid")

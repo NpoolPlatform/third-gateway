@@ -29,7 +29,7 @@ func validate(ctx context.Context, in *email.CreateEmailTemplateRequest) error {
 
 	usedFor := false
 	for key := range usedfor.UsedFor_value {
-		if key == in.UsedFor.String() {
+		if key == in.UsedFor.String() && in.UsedFor != usedfor.UsedFor_DefaultUsedFor {
 			usedFor = true
 		}
 	}
