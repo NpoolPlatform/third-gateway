@@ -44,10 +44,6 @@ func validate(ctx context.Context, in *sms.CreateSMSTemplateRequest) error {
 		logger.Sugar().Errorw("validate", "Subject", in.GetSubject())
 		return status.Error(codes.InvalidArgument, "Subject is empty")
 	}
-	if in.GetMessage() == "" {
-		logger.Sugar().Errorw("validate", "Message", in.GetMessage())
-		return status.Error(codes.InvalidArgument, "Message is empty")
-	}
 
 	exist, err := mgrcli.ExistSMSTemplateConds(ctx, &mgrpb.Conds{
 		AppID: &npool.StringVal{

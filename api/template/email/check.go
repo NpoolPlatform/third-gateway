@@ -47,10 +47,6 @@ func validate(ctx context.Context, in *email.CreateEmailTemplateRequest) error {
 		logger.Sugar().Errorw("validate", "Subject", in.GetSubject())
 		return status.Error(codes.InvalidArgument, "Subject is empty")
 	}
-	if in.GetBody() == "" {
-		logger.Sugar().Errorw("validate", "Body", in.GetBody())
-		return status.Error(codes.InvalidArgument, "Body is empty")
-	}
 	if in.GetDefaultToUsername() == "" {
 		logger.Sugar().Errorw("validate", "DefaultToUsername", in.GetDefaultToUsername())
 		return status.Error(codes.InvalidArgument, "DefaultToUsername is empty")

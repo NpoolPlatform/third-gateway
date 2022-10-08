@@ -42,6 +42,11 @@ func (s *Server) UpdateEmailTemplate(
 		return &npool.UpdateEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "ID is invalid")
 	}
 
+	if _, err := uuid.Parse(in.GetTargetLangID()); err != nil {
+		logger.Sugar().Errorw("validate", "ID", in.GetID())
+		return &npool.UpdateEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
+	}
+
 	info, err := mgrcli.GetEmailTemplate(ctx, in.GetID())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
@@ -96,6 +101,11 @@ func (s *Server) UpdateAppEmailTemplate(
 	}()
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateEmailTemplate")
+
+	if _, err := uuid.Parse(in.GetTargetLangID()); err != nil {
+		logger.Sugar().Errorw("validate", "ID", in.GetID())
+		return &npool.UpdateAppEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
+	}
 
 	info, err := mgrcli.UpdateEmailTemplate(ctx, &mgrpb.EmailTemplateReq{
 		ID:                &in.ID,
