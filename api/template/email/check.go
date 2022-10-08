@@ -15,16 +15,44 @@ import (
 
 	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/email"
 	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/template/email"
+
+	appusermgrcli "github.com/NpoolPlatform/appuser-manager/pkg/client/app"
+
+	internationalizationcli "github.com/NpoolPlatform/internationalization/pkg/client/lang"
 )
 
+//nolint
 func validate(ctx context.Context, in *email.CreateEmailTemplateRequest) error {
 	if _, err := uuid.Parse(in.GetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "AppID", in.GetAppID())
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
 	}
+
+	exist, err := appusermgrcli.ExistApp(ctx, in.GetAppID())
+	if err != nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return status.Error(codes.Internal, err.Error())
+	}
+
+	if !exist {
+		logger.Sugar().Errorw("validate", "AppID", in.GetAppID())
+		return status.Error(codes.InvalidArgument, "AppID is not exist")
+	}
+
 	if _, err := uuid.Parse(in.GetLangID()); err != nil {
 		logger.Sugar().Errorw("validate", "LangID", in.GetLangID())
 		return status.Error(codes.InvalidArgument, "LangID is invalid")
+	}
+
+	exist, err = internationalizationcli.ExistLang(ctx, in.GetLangID())
+	if err != nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return status.Error(codes.Internal, err.Error())
+	}
+
+	if !exist {
+		logger.Sugar().Errorw("validate", "LangID", in.GetLangID())
+		return status.Error(codes.InvalidArgument, "LangID is not exist")
 	}
 
 	usedFor := false
@@ -52,7 +80,7 @@ func validate(ctx context.Context, in *email.CreateEmailTemplateRequest) error {
 		return status.Error(codes.InvalidArgument, "DefaultToUsername is empty")
 	}
 
-	exist, err := mgrcli.ExistEmailTemplateConds(ctx, &mgrpb.Conds{
+	exist, err = mgrcli.ExistEmailTemplateConds(ctx, &mgrpb.Conds{
 		AppID: &npool.StringVal{
 			Op:    cruder.EQ,
 			Value: in.GetAppID(),
