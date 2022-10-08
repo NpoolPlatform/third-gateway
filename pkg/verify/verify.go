@@ -2,6 +2,7 @@ package verify
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/NpoolPlatform/message/npool/appuser/mgr/v2/signmethod"
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
@@ -11,7 +12,7 @@ import (
 	"github.com/NpoolPlatform/third-middleware/pkg/client/verify"
 )
 
-func SendCode(
+func SendCode( //nolint
 	ctx context.Context,
 	appID,
 	langID string,
@@ -40,6 +41,9 @@ func SendCode(
 			if err != nil {
 				return err
 			}
+			if user == nil {
+				return fmt.Errorf("invalid user")
+			}
 			switch accountType {
 			case signmethod.SignMethodType_Mobile:
 				account = &user.PhoneNO
@@ -47,6 +51,10 @@ func SendCode(
 				account = &user.EmailAddress
 			}
 		}
+	}
+
+	if *account == "" {
+		return fmt.Errorf("invalid account")
 	}
 
 	err := verify.SendCode(ctx, appID, langID, *account, accountType, usedFor, toUserName)
