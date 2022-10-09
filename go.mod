@@ -7,9 +7,9 @@ require (
 	github.com/NpoolPlatform/appuser-middleware v0.0.0-20220830145114-e7d2cde1cc9c
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20220908115503-7dd1d00f71fa
 	github.com/NpoolPlatform/libent-cruder v0.0.0-20220821121920-9559f5776d15
-	github.com/NpoolPlatform/message v0.0.0-20220930102230-f706b8d045a9
-	github.com/NpoolPlatform/third-manager v0.0.0-20221003094025-37ca575ebdde
-	github.com/NpoolPlatform/third-middleware v0.0.0-20221003094853-cb429e0e35a2
+	github.com/NpoolPlatform/message v0.0.0-20220928085422-7409d1e2c015
+	github.com/NpoolPlatform/third-manager v0.0.0-20221009022150-b33923e15a00
+	github.com/NpoolPlatform/third-middleware v0.0.0-20221009023028-a03f61587619
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3
@@ -59,7 +59,6 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.10.0 // indirect
 	github.com/hashicorp/serf v0.9.7 // indirect
-	github.com/kr/pretty v0.3.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
@@ -75,7 +74,6 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
