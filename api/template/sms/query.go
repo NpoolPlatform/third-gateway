@@ -35,7 +35,7 @@ func (s *Server) GetSMSTemplate(ctx context.Context, in *npool.GetSMSTemplateReq
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "GetContact")
 
-	if _, err := uuid.Parse(in.ID); err != nil {
+	if _, err := uuid.Parse(in.GetID()); err != nil {
 		logger.Sugar().Errorw("validate", "ID", in.GetID())
 		return &npool.GetSMSTemplateResponse{}, status.Error(codes.InvalidArgument, "ID is invalid")
 	}
