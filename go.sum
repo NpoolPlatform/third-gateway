@@ -86,8 +86,8 @@ github.com/NpoolPlatform/libent-cruder v0.0.0-20220821121920-9559f5776d15 h1:iBK
 github.com/NpoolPlatform/libent-cruder v0.0.0-20220821121920-9559f5776d15/go.mod h1:zvvqlRwbOdTUauPQ9dFDhDuxa91ILV0CQfVdPBZj+eA=
 github.com/NpoolPlatform/message v0.0.0-20220501030927-34f296682c0c/go.mod h1:i/F/sQWjQk44RGvfgEB0zH0oAK/0qLvgJ1AsJDZQDkk=
 github.com/NpoolPlatform/message v0.0.0-20220819134247-1dc75c85fe43/go.mod h1:8YXp4MghMHLZ9bBdQQyfjcRtLI2RbEHAQoNCejT2nZU=
-github.com/NpoolPlatform/message v0.0.0-20220928085422-7409d1e2c015 h1:wm4XlkA7TbDPjYdZj5EfzQfR4Jj4vAr52UdT3SRZMjg=
-github.com/NpoolPlatform/message v0.0.0-20220928085422-7409d1e2c015/go.mod h1:dJ9HB+nfu9iNKhhZjauFE7Hbsj/kJmJb3BwUnYGHEOk=
+github.com/NpoolPlatform/message v0.0.0-20221009051701-944df24faf9c h1:RKWnUXRFNmcAhrVnPh9iXZ7nXlojPCy73w47lwOSl9s=
+github.com/NpoolPlatform/message v0.0.0-20221009051701-944df24faf9c/go.mod h1:dJ9HB+nfu9iNKhhZjauFE7Hbsj/kJmJb3BwUnYGHEOk=
 github.com/NpoolPlatform/third-manager v0.0.0-20221009022150-b33923e15a00 h1:eMpch6n+0oNhOYwMzuB4d2vgQrrxwTa+oJ0LzUbY2+Q=
 github.com/NpoolPlatform/third-manager v0.0.0-20221009022150-b33923e15a00/go.mod h1:aPqmjzEDGm/T0/XyE4VYNRDR56DhY1TqKe6N+/z2QEk=
 github.com/NpoolPlatform/third-middleware v0.0.0-20221009023028-a03f61587619 h1:ah0zRiPjFcBdQTcm2htoMvkgUlwLteMJjgunDWN5J9s=
