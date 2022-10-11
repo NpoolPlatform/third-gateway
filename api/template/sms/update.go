@@ -53,6 +53,11 @@ func (s *Server) UpdateSMSTemplate(
 		return &npool.UpdateSMSTemplateResponse{}, status.Error(codes.PermissionDenied, "permission denied")
 	}
 
+	if _, err := uuid.Parse(in.GetTargetLangID()); err != nil {
+		logger.Sugar().Errorw("validate", "ID", in.GetID())
+		return &npool.UpdateSMSTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
+	}
+
 	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateSMSTemplate")
 
 	info, err = mgrcli.UpdateSMSTemplate(ctx, &mgrpb.SMSTemplateReq{
@@ -90,6 +95,16 @@ func (s *Server) UpdateAppSMSTemplate(
 			span.RecordError(err)
 		}
 	}()
+
+	if _, err := uuid.Parse(in.GetID()); err != nil {
+		logger.Sugar().Errorw("validate", "ID", in.GetID())
+		return &npool.UpdateAppSMSTemplateResponse{}, status.Error(codes.InvalidArgument, "ID is invalid")
+	}
+
+	if _, err := uuid.Parse(in.GetTargetLangID()); err != nil {
+		logger.Sugar().Errorw("validate", "ID", in.GetID())
+		return &npool.UpdateAppSMSTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
+	}
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateSMSTemplate")
 

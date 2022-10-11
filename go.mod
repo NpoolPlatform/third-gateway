@@ -4,10 +4,12 @@ go 1.17
 
 require (
 	github.com/NpoolPlatform/api-manager v0.0.0-20220826022307-d72866fe3ec0
+	github.com/NpoolPlatform/appuser-manager v0.0.0-20220909031011-96b9cfcbda29
 	github.com/NpoolPlatform/appuser-middleware v0.0.0-20220830145114-e7d2cde1cc9c
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20220908115503-7dd1d00f71fa
+	github.com/NpoolPlatform/internationalization v0.0.0-20221008093629-c2808a2a08da
 	github.com/NpoolPlatform/libent-cruder v0.0.0-20220821121920-9559f5776d15
-	github.com/NpoolPlatform/message v0.0.0-20220928085422-7409d1e2c015
+	github.com/NpoolPlatform/message v0.0.0-20221009051701-944df24faf9c
 	github.com/NpoolPlatform/third-manager v0.0.0-20221009022150-b33923e15a00
 	github.com/NpoolPlatform/third-middleware v0.0.0-20221009023028-a03f61587619
 	github.com/go-resty/resty/v2 v2.7.0
@@ -24,7 +26,6 @@ require (
 require (
 	ariga.io/atlas v0.5.1-0.20220717122844-8593d7eb1a8e // indirect
 	entgo.io/ent v0.11.2 // indirect
-	github.com/NpoolPlatform/appuser-manager v0.0.0-20220909031011-96b9cfcbda29 // indirect
 	github.com/Shonminh/apollo-client v0.4.0 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect

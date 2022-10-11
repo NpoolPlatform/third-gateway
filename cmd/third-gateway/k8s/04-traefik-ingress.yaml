@@ -60,6 +60,8 @@ spec:
               servicePort: 50260
     - host: api.procyon.vip
       http: *http_rules
+    - host: api.lpsecretbase.com
+      http: *http_rules
     - host: api.xpool.top
       http: *http_rules
     - host: api.ohhash.com
@@ -67,6 +69,8 @@ spec:
     - host: api.procyon.xpool.top
       http: *http_rules
     - host: api.development.npool.top
+      http: *http_rules
+    - host: api.jh-testing.npool.top
       http: *http_rules
 ---
 apiVersion: networking.k8s.io/v1beta1
@@ -163,6 +167,8 @@ spec:
               servicePort: 50260
     - host: api.procyon.vip
       http: *http_rules
+    - host: api.lpsecretbase.com
+      http: *http_rules
     - host: api.xpool.top
       http: *http_rules
     - host: api.ohhash.com
@@ -170,4 +176,6 @@ spec:
     - host: api.procyon.xpool.top
       http: *http_rules
     - host: api.development.npool.top
+      http: *http_rules
+    - host: api.jh-testing.npool.top
       http: *http_rules

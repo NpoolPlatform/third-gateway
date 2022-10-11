@@ -3,7 +3,9 @@ package sms
 import (
 	"context"
 
+	appusermgrcli "github.com/NpoolPlatform/appuser-manager/pkg/client/app"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
+	internationalizationcli "github.com/NpoolPlatform/internationalization/pkg/client/lang"
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	"github.com/NpoolPlatform/message/npool"
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
@@ -23,14 +25,37 @@ func validate(ctx context.Context, in *sms.CreateSMSTemplateRequest) error {
 		logger.Sugar().Errorw("validate", "AppID", in.GetAppID())
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
 	}
+
+	exist, err := appusermgrcli.ExistApp(ctx, in.GetAppID())
+	if err != nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return status.Error(codes.Internal, err.Error())
+	}
+
+	if !exist {
+		logger.Sugar().Errorw("validate", "AppID", in.GetAppID())
+		return status.Error(codes.InvalidArgument, "AppID is not exist")
+	}
+
 	if _, err := uuid.Parse(in.GetLangID()); err != nil {
 		logger.Sugar().Errorw("validate", "LangID", in.GetLangID())
 		return status.Error(codes.InvalidArgument, "LangID is invalid")
 	}
 
+	exist, err = internationalizationcli.ExistLang(ctx, in.GetLangID())
+	if err != nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return status.Error(codes.Internal, err.Error())
+	}
+
+	if !exist {
+		logger.Sugar().Errorw("validate", "LangID", in.GetLangID())
+		return status.Error(codes.InvalidArgument, "LangID is not exist")
+	}
+
 	usedFor := false
 	for key := range usedfor.UsedFor_value {
-		if key == in.UsedFor.String() {
+		if key == in.UsedFor.String() && in.UsedFor != usedfor.UsedFor_DefaultUsedFor {
 			usedFor = true
 		}
 	}
@@ -44,12 +69,8 @@ func validate(ctx context.Context, in *sms.CreateSMSTemplateRequest) error {
 		logger.Sugar().Errorw("validate", "Subject", in.GetSubject())
 		return status.Error(codes.InvalidArgument, "Subject is empty")
 	}
-	if in.GetMessage() == "" {
-		logger.Sugar().Errorw("validate", "Message", in.GetMessage())
-		return status.Error(codes.InvalidArgument, "Message is empty")
-	}
 
-	exist, err := mgrcli.ExistSMSTemplateConds(ctx, &mgrpb.Conds{
+	exist, err = mgrcli.ExistSMSTemplateConds(ctx, &mgrpb.Conds{
 		AppID: &npool.StringVal{
 			Op:    cruder.EQ,
 			Value: in.GetAppID(),

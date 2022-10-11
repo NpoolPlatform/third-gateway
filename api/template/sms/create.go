@@ -39,7 +39,7 @@ func (s *Server) CreateSMSTemplate(
 
 	contactInfo := &mgrpb.SMSTemplateReq{
 		AppID:   &in.AppID,
-		LangID:  &in.TargetLangID,
+		LangID:  &in.LangID,
 		UsedFor: &in.UsedFor,
 		Subject: &in.Subject,
 		Message: &in.Message,
@@ -49,7 +49,7 @@ func (s *Server) CreateSMSTemplate(
 
 	err = validate(ctx, &npool.CreateSMSTemplateRequest{
 		AppID:   in.AppID,
-		LangID:  in.TargetLangID,
+		LangID:  in.LangID,
 		UsedFor: in.UsedFor,
 		Subject: in.Subject,
 		Message: in.Message,
