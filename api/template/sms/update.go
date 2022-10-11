@@ -58,6 +58,11 @@ func (s *Server) UpdateSMSTemplate(
 		return &npool.UpdateSMSTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
 	}
 
+	if in.GetSubject() == "" {
+		logger.Sugar().Errorw("validate", "Subject", in.GetSubject())
+		return &npool.UpdateSMSTemplateResponse{}, status.Error(codes.InvalidArgument, "Subject is empty")
+	}
+
 	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateSMSTemplate")
 
 	info, err = mgrcli.UpdateSMSTemplate(ctx, &mgrpb.SMSTemplateReq{
