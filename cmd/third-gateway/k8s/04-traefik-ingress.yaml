@@ -53,6 +53,11 @@ spec:
             backend:
               serviceName: third-gateway
               servicePort: 50260
+
+          - path: /api/third/v1/contact/viaemail
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
     - host: api.procyon.vip
       http: *http_rules
     - host: api.xpool.top
@@ -109,10 +114,6 @@ spec:
               serviceName: third-gateway
               servicePort: 50260
           - path: /api/third/v1/update/app/contact
-            backend:
-              serviceName: third-gateway
-              servicePort: 50260
-          - path: /api/third/v1/contact/viaemail
             backend:
               serviceName: third-gateway
               servicePort: 50260
