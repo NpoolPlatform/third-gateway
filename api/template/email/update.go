@@ -47,6 +47,11 @@ func (s *Server) UpdateEmailTemplate(
 		return &npool.UpdateEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
 	}
 
+	if in.GetSubject() == "" {
+		logger.Sugar().Errorw("validate", "Subject", in.GetSubject())
+		return &npool.UpdateEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "Subject is empty")
+	}
+
 	info, err := mgrcli.GetEmailTemplate(ctx, in.GetID())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
