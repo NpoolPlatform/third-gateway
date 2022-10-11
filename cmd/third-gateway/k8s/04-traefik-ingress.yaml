@@ -135,6 +135,10 @@ spec:
             backend:
               serviceName: third-gateway
               servicePort: 50260
+          - path: /api/third/v1/get/app/smstemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
           - path: /api/third/v1/update/emailtemplate
             backend:
               serviceName: third-gateway
