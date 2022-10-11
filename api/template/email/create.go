@@ -53,7 +53,7 @@ func (s *Server) CreateEmailTemplate(
 
 	err = validate(ctx, &npool.CreateEmailTemplateRequest{
 		AppID:             in.AppID,
-		LangID:            in.TargetLangID,
+		TargetLangID:      in.TargetLangID,
 		UsedFor:           in.UsedFor,
 		Sender:            in.Sender,
 		ReplyTos:          in.ReplyTos,
@@ -117,7 +117,7 @@ func (s *Server) CreateAppEmailTemplate(
 
 	err = validate(ctx, &npool.CreateEmailTemplateRequest{
 		AppID:             in.TargetAppID,
-		LangID:            in.TargetLangID,
+		TargetLangID:      in.TargetLangID,
 		UsedFor:           in.UsedFor,
 		Sender:            in.Sender,
 		ReplyTos:          in.ReplyTos,

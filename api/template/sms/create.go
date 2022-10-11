@@ -39,7 +39,7 @@ func (s *Server) CreateSMSTemplate(
 
 	contactInfo := &mgrpb.SMSTemplateReq{
 		AppID:   &in.AppID,
-		LangID:  &in.LangID,
+		LangID:  &in.TargetLangID,
 		UsedFor: &in.UsedFor,
 		Subject: &in.Subject,
 		Message: &in.Message,
@@ -48,11 +48,11 @@ func (s *Server) CreateSMSTemplate(
 	tracer.Trace(span, contactInfo)
 
 	err = validate(ctx, &npool.CreateSMSTemplateRequest{
-		AppID:   in.AppID,
-		LangID:  in.LangID,
-		UsedFor: in.UsedFor,
-		Subject: in.Subject,
-		Message: in.Message,
+		AppID:        in.AppID,
+		TargetLangID: in.TargetLangID,
+		UsedFor:      in.UsedFor,
+		Subject:      in.Subject,
+		Message:      in.Message,
 	})
 	if err != nil {
 		return nil, err
@@ -104,11 +104,11 @@ func (s *Server) CreateAppSMSTemplate(
 	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateAppSMSTemplate")
 
 	err = validate(ctx, &npool.CreateSMSTemplateRequest{
-		AppID:   in.TargetAppID,
-		LangID:  in.TargetLangID,
-		UsedFor: in.UsedFor,
-		Subject: in.Subject,
-		Message: in.Message,
+		AppID:        in.TargetAppID,
+		TargetLangID: in.TargetLangID,
+		UsedFor:      in.UsedFor,
+		Subject:      in.Subject,
+		Message:      in.Message,
 	})
 	if err != nil {
 		return nil, err

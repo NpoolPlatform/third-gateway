@@ -37,20 +37,20 @@ func validate(ctx context.Context, in *sms.CreateSMSTemplateRequest) error {
 		return status.Error(codes.InvalidArgument, "AppID is not exist")
 	}
 
-	if _, err := uuid.Parse(in.GetLangID()); err != nil {
-		logger.Sugar().Errorw("validate", "LangID", in.GetLangID())
-		return status.Error(codes.InvalidArgument, "LangID is invalid")
+	if _, err := uuid.Parse(in.GetTargetLangID()); err != nil {
+		logger.Sugar().Errorw("validate", "TargetLangID", in.GetTargetLangID())
+		return status.Error(codes.InvalidArgument, "TargetLangID is invalid")
 	}
 
-	exist, err = internationalizationcli.ExistLang(ctx, in.GetLangID())
+	exist, err = internationalizationcli.ExistLang(ctx, in.GetTargetLangID())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
 		return status.Error(codes.Internal, err.Error())
 	}
 
 	if !exist {
-		logger.Sugar().Errorw("validate", "LangID", in.GetLangID())
-		return status.Error(codes.InvalidArgument, "LangID is not exist")
+		logger.Sugar().Errorw("validate", "TargetLangID", in.GetTargetLangID())
+		return status.Error(codes.InvalidArgument, "TargetLangID is not exist")
 	}
 
 	usedFor := false
@@ -77,7 +77,7 @@ func validate(ctx context.Context, in *sms.CreateSMSTemplateRequest) error {
 		},
 		LangID: &npool.StringVal{
 			Op:    cruder.EQ,
-			Value: in.GetLangID(),
+			Value: in.GetTargetLangID(),
 		},
 		UsedFor: &npool.Int32Val{
 			Op:    cruder.EQ,
