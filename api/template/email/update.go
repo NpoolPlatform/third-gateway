@@ -2,6 +2,7 @@ package email
 
 import (
 	"context"
+	internationalizationcli "github.com/NpoolPlatform/internationalization/pkg/client/lang"
 
 	"github.com/google/uuid"
 
@@ -63,6 +64,17 @@ func (s *Server) UpdateEmailTemplate(
 		return &npool.UpdateEmailTemplateResponse{}, status.Error(codes.PermissionDenied, "permission denied")
 	}
 
+	exist, err := internationalizationcli.ExistLang(ctx, in.GetTargetLangID())
+	if err != nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return &npool.UpdateEmailTemplateResponse{}, status.Error(codes.Internal, err.Error())
+	}
+
+	if !exist {
+		logger.Sugar().Errorw("validate", "LangID", in.GetTargetLangID())
+		return &npool.UpdateEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is not exist")
+	}
+
 	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateEmailTemplate")
 
 	info, err = mgrcli.UpdateEmailTemplate(ctx, &mgrpb.EmailTemplateReq{
@@ -121,6 +133,18 @@ func (s *Server) UpdateAppEmailTemplate(
 		logger.Sugar().Errorw("validate", "Subject", in.GetSubject())
 		return &npool.UpdateAppEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "Subject is empty")
 	}
+
+	exist, err := internationalizationcli.ExistLang(ctx, in.GetTargetLangID())
+	if err != nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return &npool.UpdateAppEmailTemplateResponse{}, status.Error(codes.Internal, err.Error())
+	}
+
+	if !exist {
+		logger.Sugar().Errorw("validate", "LangID", in.GetTargetLangID())
+		return &npool.UpdateAppEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is not exist")
+	}
+
 	info, err := mgrcli.UpdateEmailTemplate(ctx, &mgrpb.EmailTemplateReq{
 		ID:                &in.ID,
 		LangID:            &in.TargetLangID,
