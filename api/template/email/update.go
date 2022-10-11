@@ -2,6 +2,7 @@ package email
 
 import (
 	"context"
+
 	internationalizationcli "github.com/NpoolPlatform/internationalization/pkg/client/lang"
 
 	"github.com/google/uuid"
