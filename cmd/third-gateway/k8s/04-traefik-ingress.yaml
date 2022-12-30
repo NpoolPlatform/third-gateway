@@ -26,25 +26,11 @@ spec:
             backend:
               serviceName: third-gateway
               servicePort: 50260
-          - path: /api/third/v1/get/contacts
-            backend:
-              serviceName: third-gateway
-              servicePort: 50260
-
           - path: /api/third/v1/get/emailtemplate
             backend:
               serviceName: third-gateway
               servicePort: 50260
-          - path: /api/third/v1/get/emailtemplates
-            backend:
-              serviceName: third-gateway
-              servicePort: 50260
-
           - path: /api/third/v1/get/smstemplate
-            backend:
-              serviceName: third-gateway
-              servicePort: 50260
-          - path: /api/third/v1/get/smstemplates
             backend:
               serviceName: third-gateway
               servicePort: 50260
@@ -97,6 +83,18 @@ spec:
     - host: api.npool.top
       http: &http_rules
         paths:
+          - path: /api/third/v1/get/contacts
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/emailtemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/smstemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
           - path: /api/third/v1/create/contact
             backend:
               serviceName: third-gateway
@@ -132,6 +130,10 @@ spec:
               serviceName: third-gateway
               servicePort: 50260
           - path: /api/third/v1/get/app/emailtemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/app/smstemplates
             backend:
               serviceName: third-gateway
               servicePort: 50260
