@@ -2,10 +2,9 @@ package email
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
-	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	"github.com/NpoolPlatform/message/npool"
 	"github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -18,7 +17,11 @@ import (
 
 	appusermgrcli "github.com/NpoolPlatform/appuser-manager/pkg/client/app"
 
-	internationalizationcli "github.com/NpoolPlatform/internationalization/pkg/client/lang"
+	applangmwcli "github.com/NpoolPlatform/g11n-middleware/pkg/client/applang"
+	applangmgrpb "github.com/NpoolPlatform/message/npool/g11n/mgr/v1/applang"
+
+	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	commonpb "github.com/NpoolPlatform/message/npool"
 )
 
 //nolint
@@ -44,15 +47,22 @@ func validate(ctx context.Context, in *email.CreateEmailTemplateRequest) error {
 		return status.Error(codes.InvalidArgument, "TargetLangID is invalid")
 	}
 
-	exist, err = internationalizationcli.ExistLang(ctx, in.GetTargetLangID())
+	appLang, err := applangmwcli.GetLangOnly(ctx, &applangmgrpb.Conds{
+		AppID: &commonpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetAppID(),
+		},
+		LangID: &commonpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetTargetLangID(),
+		},
+	})
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return status.Error(codes.Internal, err.Error())
+		return err
 	}
-
-	if !exist {
-		logger.Sugar().Errorw("validate", "TargetLangID", in.GetTargetLangID())
-		return status.Error(codes.InvalidArgument, "TargetLangID is not exist")
+	if appLang == nil {
+		return fmt.Errorf("applang not exist")
 	}
 
 	usedFor := false
@@ -81,15 +91,15 @@ func validate(ctx context.Context, in *email.CreateEmailTemplateRequest) error {
 	}
 
 	exist, err = mgrcli.ExistEmailTemplateConds(ctx, &mgrpb.Conds{
-		AppID: &npool.StringVal{
+		AppID: &commonpb.StringVal{
 			Op:    cruder.EQ,
 			Value: in.GetAppID(),
 		},
-		LangID: &npool.StringVal{
+		LangID: &commonpb.StringVal{
 			Op:    cruder.EQ,
 			Value: in.GetTargetLangID(),
 		},
-		UsedFor: &npool.Int32Val{
+		UsedFor: &commonpb.Int32Val{
 			Op:    cruder.EQ,
 			Value: int32(in.GetUsedFor().Number()),
 		},

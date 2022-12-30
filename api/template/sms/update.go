@@ -3,8 +3,6 @@ package sms
 import (
 	"context"
 
-	internationalizationcli "github.com/NpoolPlatform/internationalization/pkg/client/lang"
-
 	"github.com/google/uuid"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
@@ -18,6 +16,12 @@ import (
 
 	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/sms"
 	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/template/sms"
+
+	applangmwcli "github.com/NpoolPlatform/g11n-middleware/pkg/client/applang"
+	applangmgrpb "github.com/NpoolPlatform/message/npool/g11n/mgr/v1/applang"
+
+	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	commonpb "github.com/NpoolPlatform/message/npool"
 )
 
 func (s *Server) UpdateSMSTemplate(
@@ -65,15 +69,23 @@ func (s *Server) UpdateSMSTemplate(
 		return &npool.UpdateSMSTemplateResponse{}, status.Error(codes.InvalidArgument, "Subject is empty")
 	}
 
-	exist, err := internationalizationcli.ExistLang(ctx, in.GetTargetLangID())
+	appLang, err := applangmwcli.GetLangOnly(ctx, &applangmgrpb.Conds{
+		AppID: &commonpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetAppID(),
+		},
+		LangID: &commonpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetTargetLangID(),
+		},
+	})
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
 		return &npool.UpdateSMSTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
-
-	if !exist {
-		logger.Sugar().Errorw("validate", "LangID", in.GetTargetLangID())
-		return &npool.UpdateSMSTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is not exist")
+	if appLang == nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return &npool.UpdateSMSTemplateResponse{}, status.Error(codes.Internal, "Lang not exist")
 	}
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateSMSTemplate")
@@ -129,15 +141,23 @@ func (s *Server) UpdateAppSMSTemplate(
 		return &npool.UpdateAppSMSTemplateResponse{}, status.Error(codes.InvalidArgument, "Subject is empty")
 	}
 
-	exist, err := internationalizationcli.ExistLang(ctx, in.GetTargetLangID())
+	appLang, err := applangmwcli.GetLangOnly(ctx, &applangmgrpb.Conds{
+		AppID: &commonpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetTargetAppID(),
+		},
+		LangID: &commonpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetTargetLangID(),
+		},
+	})
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
 		return &npool.UpdateAppSMSTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
-
-	if !exist {
-		logger.Sugar().Errorw("validate", "LangID", in.GetTargetLangID())
-		return &npool.UpdateAppSMSTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is not exist")
+	if appLang == nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return &npool.UpdateAppSMSTemplateResponse{}, status.Error(codes.Internal, "AppLang not exist")
 	}
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateSMSTemplate")

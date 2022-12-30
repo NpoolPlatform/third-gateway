@@ -3,14 +3,13 @@ package email
 import (
 	"context"
 
-	internationalizationcli "github.com/NpoolPlatform/internationalization/pkg/client/lang"
-
 	"github.com/google/uuid"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/template/email"
 	constant "github.com/NpoolPlatform/third-gateway/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/third-gateway/pkg/tracer"
+
 	"go.opentelemetry.io/otel"
 	scodes "go.opentelemetry.io/otel/codes"
 	"google.golang.org/grpc/codes"
@@ -18,6 +17,12 @@ import (
 
 	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/email"
 	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/template/email"
+
+	applangmwcli "github.com/NpoolPlatform/g11n-middleware/pkg/client/applang"
+	applangmgrpb "github.com/NpoolPlatform/message/npool/g11n/mgr/v1/applang"
+
+	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
+	commonpb "github.com/NpoolPlatform/message/npool"
 )
 
 func (s *Server) UpdateEmailTemplate(
@@ -65,15 +70,23 @@ func (s *Server) UpdateEmailTemplate(
 		return &npool.UpdateEmailTemplateResponse{}, status.Error(codes.PermissionDenied, "permission denied")
 	}
 
-	exist, err := internationalizationcli.ExistLang(ctx, in.GetTargetLangID())
+	appLang, err := applangmwcli.GetLangOnly(ctx, &applangmgrpb.Conds{
+		AppID: &commonpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetAppID(),
+		},
+		LangID: &commonpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetTargetLangID(),
+		},
+	})
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
 		return &npool.UpdateEmailTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
-
-	if !exist {
-		logger.Sugar().Errorw("validate", "LangID", in.GetTargetLangID())
-		return &npool.UpdateEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is not exist")
+	if appLang == nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return &npool.UpdateEmailTemplateResponse{}, status.Error(codes.Internal, "AppLang not exist")
 	}
 
 	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateEmailTemplate")
@@ -135,15 +148,23 @@ func (s *Server) UpdateAppEmailTemplate(
 		return &npool.UpdateAppEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "Subject is empty")
 	}
 
-	exist, err := internationalizationcli.ExistLang(ctx, in.GetTargetLangID())
+	appLang, err := applangmwcli.GetLangOnly(ctx, &applangmgrpb.Conds{
+		AppID: &commonpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetTargetAppID(),
+		},
+		LangID: &commonpb.StringVal{
+			Op:    cruder.EQ,
+			Value: in.GetTargetLangID(),
+		},
+	})
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
 		return &npool.UpdateAppEmailTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
-
-	if !exist {
-		logger.Sugar().Errorw("validate", "LangID", in.GetTargetLangID())
-		return &npool.UpdateAppEmailTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is not exist")
+	if appLang == nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return &npool.UpdateAppEmailTemplateResponse{}, status.Error(codes.Internal, "AppLang not exist")
 	}
 
 	info, err := mgrcli.UpdateEmailTemplate(ctx, &mgrpb.EmailTemplateReq{
