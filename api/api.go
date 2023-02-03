@@ -3,6 +3,8 @@ package api
 import (
 	"context"
 
+	"github.com/NpoolPlatform/third-gateway/api/template/notif"
+
 	"github.com/NpoolPlatform/third-gateway/api/template/sms"
 	"github.com/NpoolPlatform/third-gateway/api/verify"
 
@@ -23,6 +25,7 @@ func Register(server grpc.ServiceRegistrar) {
 	contact.Register(server)
 	email.Register(server)
 	sms.Register(server)
+	notif.Register(server)
 	verify.Register(server)
 }
 
