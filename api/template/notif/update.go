@@ -191,7 +191,18 @@ func (s *Server) UpdateAppNotifTemplate(
 		return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.Internal, "AppLang not exist")
 	}
 
-	info, err := mgrcli.UpdateNotifTemplate(ctx, &mgrpb.NotifTemplateReq{
+	info, err := mgrcli.GetNotifTemplate(ctx, in.GetID())
+	if err != nil {
+		logger.Sugar().Errorw("validate", "err", err)
+		return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.Internal, err.Error())
+	}
+
+	if info.GetAppID() != in.GetTargetAppID() {
+		logger.Sugar().Errorw("validate", "err", err)
+		return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.PermissionDenied, "permission denied")
+	}
+
+	info, err = mgrcli.UpdateNotifTemplate(ctx, &mgrpb.NotifTemplateReq{
 		ID:      &in.ID,
 		AppID:   &in.TargetAppID,
 		LangID:  in.TargetLangID,
