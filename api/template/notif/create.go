@@ -48,6 +48,7 @@ func (s *Server) CreateNotifTemplate(
 		UsedFor: &in.UsedFor,
 		Title:   &in.Title,
 		Content: &in.Content,
+		Sender:  &in.Sender,
 	})
 
 	if err != nil {
@@ -87,6 +88,7 @@ func (s *Server) CreateAppNotifTemplate(
 		UsedFor:      in.UsedFor,
 		Title:        in.Title,
 		Content:      in.Content,
+		Sender:       in.Sender,
 	})
 	if err != nil {
 		return nil, err
@@ -98,6 +100,7 @@ func (s *Server) CreateAppNotifTemplate(
 		UsedFor: &in.UsedFor,
 		Title:   &in.Title,
 		Content: &in.Content,
+		Sender:  &in.Sender,
 	})
 
 	if err != nil {

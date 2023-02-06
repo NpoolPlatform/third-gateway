@@ -84,6 +84,10 @@ func validate(ctx context.Context, in *notif.CreateNotifTemplateRequest) error {
 		logger.Sugar().Errorw("validate", "Content", in.GetContent())
 		return status.Error(codes.InvalidArgument, "Content is empty")
 	}
+	if in.GetSender() == "" {
+		logger.Sugar().Errorw("validate", "Sender", in.GetSender())
+		return status.Error(codes.InvalidArgument, "Sender is empty")
+	}
 	exist, err = mgrcli.ExistNotifTemplateConds(ctx, &mgrpb.Conds{
 		AppID: &commonpb.StringVal{
 			Op:    cruder.EQ,

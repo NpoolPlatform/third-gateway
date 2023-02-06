@@ -72,6 +72,11 @@ func (s *Server) UpdateNotifTemplate(
 		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "Content is empty")
 	}
 
+	if in.GetSender() == "" && in.Sender != nil {
+		logger.Sugar().Errorw("validate", "Sender", in.GetSender())
+		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "Sender is empty")
+	}
+
 	info, err := mgrcli.GetNotifTemplate(ctx, in.GetID())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)

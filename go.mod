@@ -9,7 +9,7 @@ require (
 	github.com/NpoolPlatform/g11n-middleware v0.0.0-20221230025311-f3e9126dfc0d
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20221102072657-7fcc5e6f1012
 	github.com/NpoolPlatform/libent-cruder v0.0.0-20221109023947-366125b690fb
-	github.com/NpoolPlatform/message v0.0.0-20230202083938-595afcb6c395
+	github.com/NpoolPlatform/message v0.0.0-20230203075156-d9d9ff5bd794
 	github.com/NpoolPlatform/third-manager v0.0.0-20230131081608-e053177163bd
 	github.com/NpoolPlatform/third-middleware v0.0.0-20221009023028-a03f61587619
 	github.com/go-resty/resty/v2 v2.7.0

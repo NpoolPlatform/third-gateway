@@ -57,8 +57,8 @@ github.com/NpoolPlatform/go-service-framework v0.0.0-20221102072657-7fcc5e6f1012
 github.com/NpoolPlatform/go-service-framework v0.0.0-20221102072657-7fcc5e6f1012/go.mod h1:/sor3E0i0XR8BaKInJwWC85aXLmbMFRNLdIuw+ed+ig=
 github.com/NpoolPlatform/libent-cruder v0.0.0-20221109023947-366125b690fb h1:IAQOJ0xQWdJS1BnimNdM6GZMLgTL/FnIa8C8K4xffUA=
 github.com/NpoolPlatform/libent-cruder v0.0.0-20221109023947-366125b690fb/go.mod h1:zvvqlRwbOdTUauPQ9dFDhDuxa91ILV0CQfVdPBZj+eA=
-github.com/NpoolPlatform/message v0.0.0-20230202083938-595afcb6c395 h1:UvWr1vzzcjSI3Ejxi+lQH7aaKnP5NmCQQgDOG1N73fo=
-github.com/NpoolPlatform/message v0.0.0-20230202083938-595afcb6c395/go.mod h1:G4b3QmQYYHn2okxu8KfD6INUALqno3369SLciqevhtQ=
+github.com/NpoolPlatform/message v0.0.0-20230203075156-d9d9ff5bd794 h1:uQ06SbSnk+0LPWspDdw+xyNSp0CI4HDZLXcGPGwRW8k=
+github.com/NpoolPlatform/message v0.0.0-20230203075156-d9d9ff5bd794/go.mod h1:G4b3QmQYYHn2okxu8KfD6INUALqno3369SLciqevhtQ=
 github.com/NpoolPlatform/third-manager v0.0.0-20230131081608-e053177163bd h1:MysTOXe1YsO5VkBkQj3syHeIlOp9r3PuFZW+PKO+Cuc=
 github.com/NpoolPlatform/third-manager v0.0.0-20230131081608-e053177163bd/go.mod h1:kTNfRgnbPaZ5EnacR5JeuLuUTf8ZIR8YmVB19OHYX7g=
 github.com/NpoolPlatform/third-middleware v0.0.0-20221009023028-a03f61587619 h1:ah0zRiPjFcBdQTcm2htoMvkgUlwLteMJjgunDWN5J9s=
