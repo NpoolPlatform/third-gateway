@@ -72,6 +72,7 @@ func validate(ctx context.Context, in *notif.CreateNotifTemplateRequest) error {
 	case usedfor.EventType_DepositReceived:
 	case usedfor.EventType_KYCApproved:
 	case usedfor.EventType_KYCRejected:
+	case usedfor.EventType_Announcement:
 	default:
 		return fmt.Errorf("EventType is invalid")
 	}
