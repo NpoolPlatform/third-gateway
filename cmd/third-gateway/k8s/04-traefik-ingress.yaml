@@ -171,6 +171,35 @@ spec:
             backend:
               serviceName: third-gateway
               servicePort: 50260
+
+          - path: /api/third/v1/create/notiftemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/create/app/notiftemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/notiftemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/notiftemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/get/app/notiftemplates
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/update/notiftemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
+          - path: /api/third/v1/update/app/notiftemplate
+            backend:
+              serviceName: third-gateway
+              servicePort: 50260
     - host: api.procyon.vip
       http: *http_rules
     - host: api.lpsecretbase.com
