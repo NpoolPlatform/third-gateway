@@ -53,6 +53,9 @@ func SendCode( //nolint
 		}
 	}
 
+	if account == nil {
+		return fmt.Errorf("invalid account")
+	}
 	if *account == "" {
 		return fmt.Errorf("invalid account")
 	}
