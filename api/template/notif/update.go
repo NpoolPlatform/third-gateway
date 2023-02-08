@@ -98,7 +98,7 @@ func (s *Server) UpdateNotifTemplate(
 		case usedfor.EventType_Announcement:
 		default:
 			logger.Sugar().Errorw("validate", "err", err)
-			return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.PermissionDenied, "UsedFor is invalid")
+			return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "UsedFor is invalid")
 		}
 	}
 
@@ -204,10 +204,25 @@ func (s *Server) UpdateAppNotifTemplate(
 		return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.PermissionDenied, "permission denied")
 	}
 
+	if in.UsedFor != nil {
+		switch in.GetUsedFor() {
+		case usedfor.EventType_WithdrawalRequest:
+		case usedfor.EventType_WithdrawalCompleted:
+		case usedfor.EventType_DepositReceived:
+		case usedfor.EventType_KYCApproved:
+		case usedfor.EventType_KYCRejected:
+		case usedfor.EventType_Announcement:
+		default:
+			logger.Sugar().Errorw("validate", "err", err)
+			return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "UsedFor is invalid")
+		}
+	}
+
 	info, err = mgrcli.UpdateNotifTemplate(ctx, &mgrpb.NotifTemplateReq{
 		ID:      &in.ID,
 		AppID:   &in.TargetAppID,
 		LangID:  in.TargetLangID,
+		UsedFor: in.UsedFor,
 		Title:   in.Title,
 		Content: in.Content,
 		Sender:  in.Sender,
