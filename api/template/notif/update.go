@@ -143,6 +143,7 @@ func (s *Server) UpdateNotifTemplate(
 	}, nil
 }
 
+//nolint:gocyclo
 func (s *Server) UpdateAppNotifTemplate(
 	ctx context.Context,
 	in *npool.UpdateAppNotifTemplateRequest,
