@@ -192,7 +192,7 @@ spec:
             backend:
               serviceName: third-gateway
               servicePort: 50260
-          - path: /api/third/v1/get/n/app/announcements
+          - path: /api/third/v1/get/n/app/notiftemplates
             backend:
               serviceName: third-gateway
               servicePort: 50260
