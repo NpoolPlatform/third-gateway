@@ -129,6 +129,7 @@ func (s *Server) UpdateNotifTemplate(
 		UsedFor: in.UsedFor,
 		Title:   in.Title,
 		Content: in.Content,
+		Sender:  in.Sender,
 	})
 
 	if err != nil {
@@ -208,6 +209,7 @@ func (s *Server) UpdateAppNotifTemplate(
 		LangID:  in.TargetLangID,
 		Title:   in.Title,
 		Content: in.Content,
+		Sender:  in.Sender,
 	})
 
 	if err != nil {
