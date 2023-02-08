@@ -59,10 +59,10 @@ github.com/NpoolPlatform/libent-cruder v0.0.0-20221109023947-366125b690fb h1:IAQ
 github.com/NpoolPlatform/libent-cruder v0.0.0-20221109023947-366125b690fb/go.mod h1:zvvqlRwbOdTUauPQ9dFDhDuxa91ILV0CQfVdPBZj+eA=
 github.com/NpoolPlatform/message v0.0.0-20230208082240-d860e643050c h1:pIRYnjTIb/Tt/EBs7+d/pIxNM7FsKBBsYyGfuyY0b9s=
 github.com/NpoolPlatform/message v0.0.0-20230208082240-d860e643050c/go.mod h1:G4b3QmQYYHn2okxu8KfD6INUALqno3369SLciqevhtQ=
-github.com/NpoolPlatform/third-manager v0.0.0-20230131081608-e053177163bd h1:MysTOXe1YsO5VkBkQj3syHeIlOp9r3PuFZW+PKO+Cuc=
-github.com/NpoolPlatform/third-manager v0.0.0-20230131081608-e053177163bd/go.mod h1:kTNfRgnbPaZ5EnacR5JeuLuUTf8ZIR8YmVB19OHYX7g=
-github.com/NpoolPlatform/third-middleware v0.0.0-20221009023028-a03f61587619 h1:ah0zRiPjFcBdQTcm2htoMvkgUlwLteMJjgunDWN5J9s=
-github.com/NpoolPlatform/third-middleware v0.0.0-20221009023028-a03f61587619/go.mod h1:vGgAT7niMklrlL8a0wScAln1Hfciif9plWJLf4+o9E0=
+github.com/NpoolPlatform/third-manager v0.0.0-20230208133322-11604a203f86 h1:Ze15vNmzMxcZ59hMydyZ9rvzp0jfglgmJRvTISYV+/M=
+github.com/NpoolPlatform/third-manager v0.0.0-20230208133322-11604a203f86/go.mod h1:gBDQJCMbnXFxfNv/Hh6G0b3bimmBTx/rdb4D5TnnXF4=
+github.com/NpoolPlatform/third-middleware v0.0.0-20230208133448-326713fdcc28 h1:1z0N1gog+O7uhMWawTxFu0tRXJykq0vRNQMONxDlSRQ=
+github.com/NpoolPlatform/third-middleware v0.0.0-20230208133448-326713fdcc28/go.mod h1:uJBOgl0OSZnkhYQ3FijqUlGnR1gg/qCTqkLEDORn/Sw=
 github.com/OneOfOne/xxhash v1.2.2 h1:KMrpdQIwFcEqXDklaen+P1axHaj9BSKzvpUUfnHldSE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/Shonminh/apollo-client v0.4.0 h1:AXGp4wOahrEKjheMXehgsG9B8dEfLQHttRLHeEefvus=
@@ -789,8 +789,8 @@ google.golang.org/protobuf v1.28.1/go.mod h1:HV8QOd/L58Z+nl8r43ehVNZIU/HEI6OcFqw
 gopkg.in/alecthomas/kingpin.v2 v2.2.6/go.mod h1:FMv+mEhP44yOT+4EoQTLFTRgOQ1FBLkstjWtayDeSgw=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
-gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 h1:YR8cESwS4TdDjEe65xsg0ogRM/Nc3DYOhEAlW+xobZo=
 gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c h1:Hei/4ADfdWqJk1ZMxUNpqntNwaWcugrBjAiHlqqRiVk=
 gopkg.in/errgo.v2 v2.1.0/go.mod h1:hNsd1EY+bozCKY1Ytp96fpM3vjJbqLJn88ws8XvfDNI=
 gopkg.in/go-playground/assert.v1 v1.2.1/go.mod h1:9RXL0bg/zibRAgZUYszZSwO/z8Y/a8bDuhia5mkpMnE=
 gopkg.in/go-playground/validator.v8 v8.18.2 h1:lFB4DoMU6B626w8ny76MV7VX6W2VHct2GVOI3xgiMrQ=
