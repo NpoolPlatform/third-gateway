@@ -10,8 +10,8 @@ require (
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20221102072657-7fcc5e6f1012
 	github.com/NpoolPlatform/libent-cruder v0.0.0-20221109023947-366125b690fb
 	github.com/NpoolPlatform/message v0.0.0-20230208082240-d860e643050c
-	github.com/NpoolPlatform/third-manager v0.0.0-20230208133322-11604a203f86
-	github.com/NpoolPlatform/third-middleware v0.0.0-20230208133448-326713fdcc28
+	github.com/NpoolPlatform/third-manager v0.0.0-20230208134631-3b2be3e4bfe0
+	github.com/NpoolPlatform/third-middleware v0.0.0-20230208134809-c42fa4e3415f
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3
