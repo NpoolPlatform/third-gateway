@@ -174,31 +174,31 @@ spec:
               serviceName: third-gateway
               servicePort: 50260
 
-          - path: /api/third/v1/create/notiftemplate
+          - path: /api/third/v1/create/frontendtemplate
             backend:
               serviceName: third-gateway
               servicePort: 50260
-          - path: /api/third/v1/create/app/notiftemplate
+          - path: /api/third/v1/create/app/frontendtemplate
             backend:
               serviceName: third-gateway
               servicePort: 50260
-          - path: /api/third/v1/get/notiftemplate
+          - path: /api/third/v1/get/frontendtemplate
             backend:
               serviceName: third-gateway
               servicePort: 50260
-          - path: /api/third/v1/get/notiftemplates
+          - path: /api/third/v1/get/frontendtemplates
             backend:
               serviceName: third-gateway
               servicePort: 50260
-          - path: /api/third/v1/get/app/notiftemplates
+          - path: /api/third/v1/get/app/frontendtemplates
             backend:
               serviceName: third-gateway
               servicePort: 50260
-          - path: /api/third/v1/update/notiftemplate
+          - path: /api/third/v1/update/frontendtemplate
             backend:
               serviceName: third-gateway
               servicePort: 50260
-          - path: /api/third/v1/update/app/notiftemplate
+          - path: /api/third/v1/update/app/frontendtemplate
             backend:
               serviceName: third-gateway
               servicePort: 50260
