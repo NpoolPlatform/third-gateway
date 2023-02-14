@@ -1,10 +1,10 @@
-package notif
+package frontend
 
 import (
 	"context"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
-	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/template/notif"
+	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/template/frontend"
 	constant "github.com/NpoolPlatform/third-gateway/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/third-gateway/pkg/tracer"
 	"go.opentelemetry.io/otel"
@@ -12,15 +12,15 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/notif"
-	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/template/notif"
+	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/frontend"
+	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/template/frontend"
 )
 
-func (s *Server) CreateNotifTemplate(
+func (s *Server) CreateFrontendTemplate(
 	ctx context.Context,
-	in *npool.CreateNotifTemplateRequest,
+	in *npool.CreateFrontendTemplateRequest,
 ) (
-	*npool.CreateNotifTemplateResponse,
+	*npool.CreateFrontendTemplateResponse,
 	error,
 ) {
 	var err error
@@ -40,9 +40,9 @@ func (s *Server) CreateNotifTemplate(
 		return nil, err
 	}
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateNotifTemplate")
+	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateFrontendTemplate")
 
-	info, err := mgrcli.CreateNotifTemplate(ctx, &mgrpb.NotifTemplateReq{
+	info, err := mgrcli.CreateFrontendTemplate(ctx, &mgrpb.FrontendTemplateReq{
 		AppID:   &in.AppID,
 		LangID:  &in.TargetLangID,
 		UsedFor: &in.UsedFor,
@@ -53,19 +53,19 @@ func (s *Server) CreateNotifTemplate(
 
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.CreateNotifTemplateResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.CreateFrontendTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	return &npool.CreateNotifTemplateResponse{
+	return &npool.CreateFrontendTemplateResponse{
 		Info: info,
 	}, nil
 }
 
-func (s *Server) CreateAppNotifTemplate(
+func (s *Server) CreateAppFrontendTemplate(
 	ctx context.Context,
-	in *npool.CreateAppNotifTemplateRequest,
+	in *npool.CreateAppFrontendTemplateRequest,
 ) (
-	*npool.CreateAppNotifTemplateResponse,
+	*npool.CreateAppFrontendTemplateResponse,
 	error,
 ) {
 	var err error
@@ -80,9 +80,9 @@ func (s *Server) CreateAppNotifTemplate(
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateNotifTemplate")
+	span = commontracer.TraceInvoker(span, "contact", "manager", "CreateFrontendTemplate")
 
-	err = validate(ctx, &npool.CreateNotifTemplateRequest{
+	err = validate(ctx, &npool.CreateFrontendTemplateRequest{
 		AppID:        in.TargetAppID,
 		TargetLangID: in.TargetLangID,
 		UsedFor:      in.UsedFor,
@@ -94,7 +94,7 @@ func (s *Server) CreateAppNotifTemplate(
 		return nil, err
 	}
 
-	info, err := mgrcli.CreateNotifTemplate(ctx, &mgrpb.NotifTemplateReq{
+	info, err := mgrcli.CreateFrontendTemplate(ctx, &mgrpb.FrontendTemplateReq{
 		AppID:   &in.TargetAppID,
 		LangID:  &in.TargetLangID,
 		UsedFor: &in.UsedFor,
@@ -105,10 +105,10 @@ func (s *Server) CreateAppNotifTemplate(
 
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.CreateAppNotifTemplateResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.CreateAppFrontendTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	return &npool.CreateAppNotifTemplateResponse{
+	return &npool.CreateAppFrontendTemplateResponse{
 		Info: info,
 	}, nil
 }

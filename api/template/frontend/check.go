@@ -1,20 +1,20 @@
-package notif
+package frontend
 
 import (
 	"context"
 	"fmt"
 
-	usedfor "github.com/NpoolPlatform/message/npool/notif/mgr/v1/notif"
+	usedfor "github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/NpoolPlatform/message/npool/third/gw/v1/template/notif"
+	"github.com/NpoolPlatform/message/npool/third/gw/v1/template/frontend"
 
-	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/notif"
-	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/template/notif"
+	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/frontend"
+	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/template/frontend"
 
 	appusermgrcli "github.com/NpoolPlatform/appuser-manager/pkg/client/app"
 
@@ -26,7 +26,7 @@ import (
 )
 
 //nolint
-func validate(ctx context.Context, in *notif.CreateNotifTemplateRequest) error {
+func validate(ctx context.Context, in *frontend.CreateFrontendTemplateRequest) error {
 	if _, err := uuid.Parse(in.GetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "AppID", in.GetAppID())
 		return status.Error(codes.InvalidArgument, "AppID is invalid")
@@ -67,14 +67,14 @@ func validate(ctx context.Context, in *notif.CreateNotifTemplateRequest) error {
 	}
 
 	switch in.GetUsedFor() {
-	case usedfor.EventType_WithdrawalRequest:
-	case usedfor.EventType_WithdrawalCompleted:
-	case usedfor.EventType_DepositReceived:
-	case usedfor.EventType_KYCApproved:
-	case usedfor.EventType_KYCRejected:
-	case usedfor.EventType_Announcement:
+	case usedfor.UsedFor_WithdrawalRequest:
+	case usedfor.UsedFor_WithdrawalCompleted:
+	case usedfor.UsedFor_DepositReceived:
+	case usedfor.UsedFor_KYCApproved:
+	case usedfor.UsedFor_KYCRejected:
+	case usedfor.UsedFor_Announcement:
 	default:
-		return fmt.Errorf("EventType is invalid")
+		return fmt.Errorf("UsedFor is invalid")
 	}
 
 	if in.GetTitle() == "" {
@@ -89,7 +89,7 @@ func validate(ctx context.Context, in *notif.CreateNotifTemplateRequest) error {
 		logger.Sugar().Errorw("validate", "Sender", in.GetSender())
 		return status.Error(codes.InvalidArgument, "Sender is empty")
 	}
-	exist, err = mgrcli.ExistNotifTemplateConds(ctx, &mgrpb.Conds{
+	exist, err = mgrcli.ExistFrontendTemplateConds(ctx, &mgrpb.Conds{
 		AppID: &commonpb.StringVal{
 			Op:    cruder.EQ,
 			Value: in.GetAppID(),
@@ -108,8 +108,8 @@ func validate(ctx context.Context, in *notif.CreateNotifTemplateRequest) error {
 		return status.Error(codes.Internal, err.Error())
 	}
 	if exist {
-		logger.Sugar().Errorw("validate", "Notif template already exists")
-		return status.Error(codes.AlreadyExists, "Notif template already exists")
+		logger.Sugar().Errorw("validate", "Frontend template already exists")
+		return status.Error(codes.AlreadyExists, "Frontend template already exists")
 	}
 
 	return nil

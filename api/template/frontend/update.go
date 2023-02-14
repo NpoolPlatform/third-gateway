@@ -1,14 +1,14 @@
-package notif
+package frontend
 
 import (
 	"context"
 
-	usedfor "github.com/NpoolPlatform/message/npool/notif/mgr/v1/notif"
+	usedfor "github.com/NpoolPlatform/message/npool/third/mgr/v1/usedfor"
 
 	"github.com/google/uuid"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
-	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/template/notif"
+	npool "github.com/NpoolPlatform/message/npool/third/gw/v1/template/frontend"
 	constant "github.com/NpoolPlatform/third-gateway/pkg/message/const"
 	commontracer "github.com/NpoolPlatform/third-gateway/pkg/tracer"
 
@@ -17,8 +17,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/notif"
-	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/template/notif"
+	mgrpb "github.com/NpoolPlatform/message/npool/third/mgr/v1/template/frontend"
+	mgrcli "github.com/NpoolPlatform/third-manager/pkg/client/template/frontend"
 
 	applangmwcli "github.com/NpoolPlatform/g11n-middleware/pkg/client/applang"
 	applangmgrpb "github.com/NpoolPlatform/message/npool/g11n/mgr/v1/applang"
@@ -28,16 +28,16 @@ import (
 )
 
 //nolint:funlen,gocyclo
-func (s *Server) UpdateNotifTemplate(
+func (s *Server) UpdateFrontendTemplate(
 	ctx context.Context,
-	in *npool.UpdateNotifTemplateRequest,
+	in *npool.UpdateFrontendTemplateRequest,
 ) (
-	*npool.UpdateNotifTemplateResponse,
+	*npool.UpdateFrontendTemplateResponse,
 	error,
 ) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateNotifTemplate")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateFrontendTemplate")
 	defer span.End()
 
 	defer func() {
@@ -49,56 +49,56 @@ func (s *Server) UpdateNotifTemplate(
 
 	if _, err := uuid.Parse(in.GetID()); err != nil {
 		logger.Sugar().Errorw("validate", "ID", in.GetID())
-		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "ID is invalid")
+		return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.InvalidArgument, "ID is invalid")
 	}
 
 	if _, err := uuid.Parse(in.GetTargetLangID()); err != nil {
 		logger.Sugar().Errorw("validate", "ID", in.GetID())
-		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
+		return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
 	}
 
 	if _, err := uuid.Parse(in.GetAppID()); err != nil {
 		logger.Sugar().Errorw("validate", "ID", in.GetID())
-		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
+		return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
 	}
 
 	if in.GetTitle() == "" && in.Title != nil {
 		logger.Sugar().Errorw("validate", "Title", in.GetTitle())
-		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "Title is empty")
+		return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.InvalidArgument, "Title is empty")
 	}
 
 	if in.GetContent() == "" && in.Content != nil {
 		logger.Sugar().Errorw("validate", "Content", in.GetContent())
-		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "Content is empty")
+		return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.InvalidArgument, "Content is empty")
 	}
 
 	if in.GetSender() == "" && in.Sender != nil {
 		logger.Sugar().Errorw("validate", "Sender", in.GetSender())
-		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "Sender is empty")
+		return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.InvalidArgument, "Sender is empty")
 	}
 
-	info, err := mgrcli.GetNotifTemplate(ctx, in.GetID())
+	info, err := mgrcli.GetFrontendTemplate(ctx, in.GetID())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
 	if info.GetAppID() != in.GetAppID() {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.PermissionDenied, "permission denied")
+		return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.PermissionDenied, "permission denied")
 	}
 
 	if in.UsedFor != nil {
 		switch in.GetUsedFor() {
-		case usedfor.EventType_WithdrawalRequest:
-		case usedfor.EventType_WithdrawalCompleted:
-		case usedfor.EventType_DepositReceived:
-		case usedfor.EventType_KYCApproved:
-		case usedfor.EventType_KYCRejected:
-		case usedfor.EventType_Announcement:
+		case usedfor.UsedFor_WithdrawalRequest:
+		case usedfor.UsedFor_WithdrawalCompleted:
+		case usedfor.UsedFor_DepositReceived:
+		case usedfor.UsedFor_KYCApproved:
+		case usedfor.UsedFor_KYCRejected:
+		case usedfor.UsedFor_Announcement:
 		default:
 			logger.Sugar().Errorw("validate", "err", err)
-			return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "UsedFor is invalid")
+			return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.InvalidArgument, "UsedFor is invalid")
 		}
 	}
 
@@ -114,16 +114,16 @@ func (s *Server) UpdateNotifTemplate(
 	})
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	if appLang == nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.Internal, "AppLang not exist")
+		return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.Internal, "AppLang not exist")
 	}
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateNotifTemplate")
+	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateFrontendTemplate")
 
-	info, err = mgrcli.UpdateNotifTemplate(ctx, &mgrpb.NotifTemplateReq{
+	info, err = mgrcli.UpdateFrontendTemplate(ctx, &mgrpb.FrontendTemplateReq{
 		ID:      &in.ID,
 		AppID:   &in.AppID,
 		LangID:  in.TargetLangID,
@@ -135,25 +135,25 @@ func (s *Server) UpdateNotifTemplate(
 
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.UpdateNotifTemplateResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.UpdateFrontendTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	return &npool.UpdateNotifTemplateResponse{
+	return &npool.UpdateFrontendTemplateResponse{
 		Info: info,
 	}, nil
 }
 
 //nolint:gocyclo
-func (s *Server) UpdateAppNotifTemplate(
+func (s *Server) UpdateAppFrontendTemplate(
 	ctx context.Context,
-	in *npool.UpdateAppNotifTemplateRequest,
+	in *npool.UpdateAppFrontendTemplateRequest,
 ) (
-	*npool.UpdateAppNotifTemplateResponse,
+	*npool.UpdateAppFrontendTemplateResponse,
 	error,
 ) {
 	var err error
 
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateNotifTemplate")
+	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateFrontendTemplate")
 	defer span.End()
 
 	defer func() {
@@ -163,16 +163,16 @@ func (s *Server) UpdateAppNotifTemplate(
 		}
 	}()
 
-	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateNotifTemplate")
+	span = commontracer.TraceInvoker(span, "contact", "manager", "UpdateFrontendTemplate")
 
 	if _, err := uuid.Parse(in.GetID()); err != nil {
 		logger.Sugar().Errorw("validate", "ID", in.GetID())
-		return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "ID is invalid")
+		return &npool.UpdateAppFrontendTemplateResponse{}, status.Error(codes.InvalidArgument, "ID is invalid")
 	}
 
 	if _, err := uuid.Parse(in.GetTargetLangID()); err != nil {
 		logger.Sugar().Errorw("validate", "ID", in.GetID())
-		return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
+		return &npool.UpdateAppFrontendTemplateResponse{}, status.Error(codes.InvalidArgument, "LangID is invalid")
 	}
 
 	appLang, err := applangmwcli.GetLangOnly(ctx, &applangmgrpb.Conds{
@@ -187,39 +187,39 @@ func (s *Server) UpdateAppNotifTemplate(
 	})
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.UpdateAppFrontendTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
 	if appLang == nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.Internal, "AppLang not exist")
+		return &npool.UpdateAppFrontendTemplateResponse{}, status.Error(codes.Internal, "AppLang not exist")
 	}
 
-	info, err := mgrcli.GetNotifTemplate(ctx, in.GetID())
+	info, err := mgrcli.GetFrontendTemplate(ctx, in.GetID())
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.UpdateAppFrontendTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
 	if info.GetAppID() != in.GetTargetAppID() {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.PermissionDenied, "permission denied")
+		return &npool.UpdateAppFrontendTemplateResponse{}, status.Error(codes.PermissionDenied, "permission denied")
 	}
 
 	if in.UsedFor != nil {
 		switch in.GetUsedFor() {
-		case usedfor.EventType_WithdrawalRequest:
-		case usedfor.EventType_WithdrawalCompleted:
-		case usedfor.EventType_DepositReceived:
-		case usedfor.EventType_KYCApproved:
-		case usedfor.EventType_KYCRejected:
-		case usedfor.EventType_Announcement:
+		case usedfor.UsedFor_WithdrawalRequest:
+		case usedfor.UsedFor_WithdrawalCompleted:
+		case usedfor.UsedFor_DepositReceived:
+		case usedfor.UsedFor_KYCApproved:
+		case usedfor.UsedFor_KYCRejected:
+		case usedfor.UsedFor_Announcement:
 		default:
 			logger.Sugar().Errorw("validate", "err", err)
-			return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.InvalidArgument, "UsedFor is invalid")
+			return &npool.UpdateAppFrontendTemplateResponse{}, status.Error(codes.InvalidArgument, "UsedFor is invalid")
 		}
 	}
 
-	info, err = mgrcli.UpdateNotifTemplate(ctx, &mgrpb.NotifTemplateReq{
+	info, err = mgrcli.UpdateFrontendTemplate(ctx, &mgrpb.FrontendTemplateReq{
 		ID:      &in.ID,
 		AppID:   &in.TargetAppID,
 		LangID:  in.TargetLangID,
@@ -231,10 +231,10 @@ func (s *Server) UpdateAppNotifTemplate(
 
 	if err != nil {
 		logger.Sugar().Errorw("validate", "err", err)
-		return &npool.UpdateAppNotifTemplateResponse{}, status.Error(codes.Internal, err.Error())
+		return &npool.UpdateAppFrontendTemplateResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
-	return &npool.UpdateAppNotifTemplateResponse{
+	return &npool.UpdateAppFrontendTemplateResponse{
 		Info: info,
 	}, nil
 }

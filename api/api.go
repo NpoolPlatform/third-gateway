@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 
-	"github.com/NpoolPlatform/third-gateway/api/template/notif"
+	"github.com/NpoolPlatform/third-gateway/api/template/frontend"
 
 	"github.com/NpoolPlatform/third-gateway/api/template/sms"
 	"github.com/NpoolPlatform/third-gateway/api/verify"
@@ -25,7 +25,7 @@ func Register(server grpc.ServiceRegistrar) {
 	contact.Register(server)
 	email.Register(server)
 	sms.Register(server)
-	notif.Register(server)
+	frontend.Register(server)
 	verify.Register(server)
 }
 
@@ -45,7 +45,7 @@ func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOpt
 	if err := verify.RegisterGateway(mux, endpoint, opts); err != nil {
 		return err
 	}
-	if err := notif.RegisterGateway(mux, endpoint, opts); err != nil {
+	if err := frontend.RegisterGateway(mux, endpoint, opts); err != nil {
 		return err
 	}
 	return nil
