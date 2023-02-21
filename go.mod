@@ -3,9 +3,9 @@ module github.com/NpoolPlatform/third-gateway
 go 1.17
 
 require (
-	github.com/NpoolPlatform/basal-middleware v0.0.0-20221228013048-951da3e0461c
+	github.com/NpoolPlatform/basal-middleware v0.0.0-20230221094657-688f81366495
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20221102072657-7fcc5e6f1012
-	github.com/NpoolPlatform/message v0.0.0-20230215073058-649634136af3
+	github.com/NpoolPlatform/message v0.0.0-20230221074244-b2bf82fffce8
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3
 	github.com/stretchr/testify v1.8.0
