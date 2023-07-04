@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/NpoolPlatform/basal-middleware v0.0.0-20230518061816-62bd589c0f63
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20230602083207-1c0e6203556b
-	github.com/NpoolPlatform/message v0.0.0-20230703074353-83a5e27d9ad4
+	github.com/NpoolPlatform/message v0.0.0-20230704074320-3b0736660660
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3
 	github.com/stretchr/testify v1.8.1
