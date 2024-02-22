@@ -322,6 +322,7 @@ pipeline {
         expression { TARGET_ENV ==~ /.*development.*/ }
       }
       steps {
+        sh(returnStdout: false, script: '''
           branch=latest
           if [ "x$BRANCH_NAME" != "xmaster" ]; then
             branch=`echo $BRANCH_NAME | awk -F '/' '{ print $2 }'`
@@ -333,6 +334,7 @@ pipeline {
           fi
           sed -i "s/replicas: 2/replicas: $REPLICAS_COUNT/g" cmd/third-gateway/k8s/02-third-gateway.yaml
           make deploy-to-k8s-cluster
+        '''.stripIndent())
       }
     }
 
