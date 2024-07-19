@@ -65,6 +65,10 @@ spec:
       http: *http_rules
     - host: api.epool.tech
       http: *http_rules
+    - host: api.xhash.ai
+      http: *http_rules
+    - host: api.tokyo-xhash-production.npool.top
+      http: *http_rules
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -223,4 +227,8 @@ spec:
     - host: api.japan-procyon-production.npool.top
       http: *http_rules
     - host: api.epool.tech
+      http: *http_rules
+    - host: api.xhash.ai
+      http: *http_rules
+    - host: api.tokyo-xhash-production.npool.top
       http: *http_rules
